@@ -8,13 +8,14 @@ import {
 import { Album } from '../album/album.entity';
 
 @Entity()
-export class Author {
-  @PrimaryGeneratedColumn('uuid') id: number;
+export class Type {
+  @PrimaryGeneratedColumn('uuid')
+  id: number;
 
   @Column()
   name: string;
 
   @ManyToMany(() => Album)
   @JoinTable()
-  albums: Album[];
+  authors: Album[];
 }

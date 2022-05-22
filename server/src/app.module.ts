@@ -11,6 +11,8 @@ import { AuthorsModule } from './modules/authors/authors.module';
 import { LanguagesModule } from './modules/languages/languages.module';
 import { SeriesModule } from './modules/series/series.module';
 import { UsersModule } from './modules/users/users.module';
+import { TypeModule } from './modules/type/type.module';
+import { GroupModule } from './modules/group/group.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { UsersModule } from './modules/users/users.module';
     LanguagesModule,
     SeriesModule,
     UsersModule,
+    TypeModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,10 +2,12 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Album } from 'src/modules/album/album.entity';
 import { Author } from 'src/modules/authors/authors.entity';
 import { Gallery } from 'src/modules/gallery/gallery.entity';
+import { Group } from 'src/modules/group/group.entity';
 import { Image } from 'src/modules/image/image.entity';
 import { Language } from 'src/modules/languages/languages.entity';
 import { Series } from 'src/modules/series/series.entity';
 import { Tag } from 'src/modules/tags/tags.entity';
+import { Type } from 'src/modules/type/type.entity';
 import { UsersController } from 'src/modules/users/users.controller';
 import { User } from 'src/modules/users/users.entity';
 
@@ -58,6 +60,8 @@ class ConfigService {
         UsersController,
         Language,
         Tag,
+        Type,
+        Group,
       ],
 
       synchronize: true,

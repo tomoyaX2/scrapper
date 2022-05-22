@@ -6,7 +6,7 @@ export class ScrapperController {
   constructor(private readonly scrapperService: ScrapperService) {}
 
   @Get()
-  getHello(): string {
-    return this.scrapperService.init();
+  init(): void {
+    this.scrapperService.init();
   }
 }
