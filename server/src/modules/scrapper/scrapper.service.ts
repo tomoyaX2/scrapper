@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 import * as puppeteer from 'puppeteer';
+import { hostUrl } from 'src/shared/constants';
 import { ExpectedTypes } from 'src/shared/enums/ExpectedTypes';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
 import { getSelectors, groupBySelector } from 'src/shared/selectors';
-import { SelectorArgs, SelectorTypes } from 'src/shared/types';
 
-const hostUrl = process.env.CURERNT_HOST;
 const expectedClassNames = [
   ExpectedTypes.ArtistCG,
   ExpectedTypes.Doujinshi,
@@ -21,6 +20,7 @@ const expectedFields = [
   HitomiFields.Languages,
   HitomiFields.Series,
   HitomiFields.Tags,
+  HitomiFields.Pictures,
 ];
 
 @Injectable()

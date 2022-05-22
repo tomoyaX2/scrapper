@@ -1,6 +1,7 @@
 import { HitomiFields } from './enums/HitomiFields';
 import { SelectorArgs, SelectorTypes } from './types';
 import * as cheerio from 'cheerio';
+import { hostUrl } from './constants';
 
 export const getSelectors: Record<HitomiFields, SelectorArgs> = {
   [HitomiFields.Artists]: {
@@ -28,6 +29,10 @@ export const getSelectors: Record<HitomiFields, SelectorArgs> = {
     selector: '#gallery-brand',
     type: SelectorTypes.String,
   },
+  [HitomiFields.Pictures]: {
+    selector: 'ul.thumbnail-list li',
+    type: SelectorTypes.Pictures,
+  },
 };
 
 export const groupBySelector = (
@@ -47,6 +52,14 @@ export const groupBySelector = (
           ? textFormatter($(item).children('a').text())
           : $(item).children('a').text();
         items.push(result);
+      }
+      break;
+    }
+    case SelectorTypes.Pictures: {
+      const list = $(selector);
+      for (const item of list) {
+        const result = $(item).children('div').children('a').attr('href');
+        items.push(hostUrl + result);
       }
       break;
     }

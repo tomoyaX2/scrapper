@@ -5,4 +5,5 @@ export enum HitomiFields {
   Languages = 'languages',
   Series = 'series',
   Tags = 'tags',
+  Pictures = 'pictures',
 }

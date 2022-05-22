@@ -1,6 +1,7 @@
 export enum SelectorTypes {
   List = 'list',
   String = 'string',
+  Pictures = 'pictures',
 }
 
 export interface SelectorArgs {
