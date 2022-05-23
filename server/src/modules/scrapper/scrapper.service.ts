@@ -6,6 +6,8 @@ import { ExpectedTypes } from 'src/shared/enums/ExpectedTypes';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
 import { getSelectors, groupBySelector } from 'src/shared/selectors';
 import { AlbumService } from '../album/album.service';
+import axios from 'axios';
+import * as fs from 'fs';
 
 const expectedClassNames = [
   ExpectedTypes.ArtistCG,
@@ -17,7 +19,7 @@ const expectedClassNames = [
 const expectedFields = [
   HitomiFields.Title,
   HitomiFields.Author,
-  HitomiFields.Groups,
+  HitomiFields.Group,
   HitomiFields.Languages,
   HitomiFields.Series,
   HitomiFields.Tags,
@@ -36,10 +38,14 @@ export class ScrapperService {
       url: hostUrl,
       selector: 'img.lazyload',
     });
-    await this.processData(page, htmlData);
+    await this.processData(page, htmlData, browser);
   };
 
-  processData = async (page: puppeteer.Page, htmlData: string) => {
+  processData = async (
+    page: puppeteer.Page,
+    htmlData: string,
+    browser: puppeteer.Browser,
+  ) => {
     const urls = await this.generateUrlsToParse(htmlData);
     const result = [];
     for (const url of urls) {
@@ -47,6 +53,7 @@ export class ScrapperService {
       result.push(detailsData);
     }
     this.saveDetailsData(result);
+    await browser.close();
   };
 
   generateUrlsToParse = async (htmlData: string) => {
@@ -86,30 +93,15 @@ export class ScrapperService {
       selector: '.gallery-preview',
     });
     const $ = cheerio.load(htmlData);
-    const fieldData = [];
+    const fieldData = {};
     for (const key of expectedFields) {
-      const data = await groupBySelector(getSelectors[key], $);
-      fieldData.push({
-        [key]: data,
-      });
+      const data = await groupBySelector(getSelectors[key], $, page);
+      fieldData[key] = data;
     }
     return fieldData;
   };
 
   saveDetailsData = async (albumModel: Record<HitomiFields, any[]>[]) => {
     this.albumService.generateAlbum(albumModel);
-  };
-
-  scrapImagePage = async (url: string) => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    const htmlData = await this.parsePage({
-      page,
-      url,
-      selector: 'img.lillie',
-    });
-    const $ = cheerio.load(htmlData);
-    const imageUrl = $('img.lillie').attr('src');
-    return imageUrl;
   };
 }

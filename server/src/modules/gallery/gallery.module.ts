@@ -8,5 +8,6 @@ import { GalleryService } from './gallery.service';
   imports: [TypeOrmModule.forFeature([Gallery])],
   controllers: [GalleryController],
   providers: [GalleryService],
+  exports: [GalleryService],
 })
 export class GalleryModule {}

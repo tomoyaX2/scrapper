@@ -13,7 +13,7 @@ export class GalleryController {
   }
 
   @Post()
-  createGallery(gallery: GalleryDto): Promise<void> {
+  createGallery(gallery: GalleryDto): Promise<Gallery> {
     return this.galleryService.createGallery(gallery);
   }
 }

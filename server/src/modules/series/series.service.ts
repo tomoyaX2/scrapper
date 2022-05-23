@@ -16,9 +16,7 @@ export class SeriesService {
     return data;
   }
 
-  async createSeries(series: SeriesDto): Promise<void> {
-    const result = await this.seriesRepository.save(series);
-    console.log(result, 'series');
-    return;
+  async createSeries(series: SeriesDto): Promise<Series> {
+    return await this.seriesRepository.save(series);
   }
 }

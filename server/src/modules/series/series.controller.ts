@@ -13,7 +13,9 @@ export class SeriesController {
   }
 
   @Post()
-  createSeries(series: SeriesDto): Promise<void> {
-    return this.seriesService.createSeries(series);
+  createSeries(series: SeriesDto): Promise<Series> {
+    try {
+      return this.seriesService.createSeries(series);
+    } catch (e) {}
   }
 }

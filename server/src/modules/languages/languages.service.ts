@@ -15,9 +15,9 @@ export class LanguagesService {
     return this.languagesRepository.find();
   }
 
-  async createLanguage(language: LanguageDto): Promise<void> {
-    const result = await this.languagesRepository.save(language);
-    console.log(result, 'language');
-    return;
+  async createLanguage(language: LanguageDto): Promise<Language> {
+    try {
+      return await this.languagesRepository.save(language);
+    } catch (e) {}
   }
 }

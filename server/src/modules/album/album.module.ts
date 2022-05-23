@@ -1,11 +1,25 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthorsModule } from '../authors/authors.module';
+import { GroupModule } from '../group/group.module';
+import { ImageModule } from '../image/image.module';
+import { LanguagesModule } from '../languages/languages.module';
+import { SeriesModule } from '../series/series.module';
+import { TagsModule } from '../tags/tags.module';
 import { AlbumController } from './album.controller';
 import { Album } from './album.entity';
 import { AlbumService } from './album.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Album])],
+  imports: [
+    TypeOrmModule.forFeature([Album]),
+    ImageModule,
+    TagsModule,
+    SeriesModule,
+    LanguagesModule,
+    GroupModule,
+    AuthorsModule,
+  ],
   controllers: [AlbumController],
   providers: [AlbumService],
   exports: [AlbumService],

@@ -3,11 +3,11 @@ import { Album } from '../album/album.entity';
 
 @Entity()
 export class Group {
-  @PrimaryGeneratedColumn('uuid') id: number;
+  @PrimaryGeneratedColumn('uuid') id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @OneToMany(() => Album, (album) => album.group)
-  albums: Album[];
+  albums?: Album[];
 }

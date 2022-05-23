@@ -3,14 +3,14 @@ import { Album } from '../album/album.entity';
 
 @Entity()
 export class Image {
-  @PrimaryGeneratedColumn('uuid') id: number;
+  @PrimaryGeneratedColumn('uuid') id: string;
 
-  @Column()
-  name: string;
+  @Column({ nullable: true })
+  name?: string;
 
-  @Column()
-  url: string;
+  @Column({ nullable: true })
+  url?: string;
 
   @ManyToOne(() => Album, (album) => album.images)
-  album: Album;
+  album?: Album;
 }

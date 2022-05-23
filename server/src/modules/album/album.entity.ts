@@ -18,31 +18,34 @@ import { Tag } from '../tags/tags.entity';
 @Entity()
 export class Album {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @ManyToOne(() => Gallery)
-  gallery: Gallery;
+  gallery?: Gallery;
+
+  @Column({ nullable: true })
+  path?: string;
 
   @OneToMany(() => Image, (image) => image.album)
-  images: Image[];
+  images?: Image[];
 
   @ManyToMany(() => Author)
   @JoinTable()
-  authors: Author[];
+  authors?: Author[];
 
   @ManyToOne(() => Series)
-  series: Series;
+  series?: Series;
 
   @ManyToOne(() => Language)
-  language: Language;
+  language?: Language;
 
   @ManyToOne(() => Group)
-  group: Group;
+  group?: Group;
 
   @ManyToMany(() => Tag)
   @JoinTable()
-  tags: Tag[];
+  tags?: Tag[];
 }

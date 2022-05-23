@@ -10,9 +10,9 @@ import { Album } from '../album/album.entity';
 @Entity()
 export class Type {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @ManyToMany(() => Album)

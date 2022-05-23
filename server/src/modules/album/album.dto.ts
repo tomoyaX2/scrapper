@@ -7,12 +7,13 @@ import { Series } from '../series/series.entity';
 import { Tag } from '../tags/tags.entity';
 
 export interface AlbumDto {
-  name: string;
-  gallery: Gallery;
-  images: Image[];
-  authors: Author[];
-  series: Series;
-  language: Language;
-  group: Group;
-  tags: Tag[];
+  name?: string;
+  gallery?: Gallery;
+  images?: Image[];
+  authors?: Author[];
+  series?: Series;
+  language?: Language;
+  group?: Group;
+  tags?: Tag[];
+  path?: string;
 }

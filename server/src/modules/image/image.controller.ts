@@ -13,7 +13,7 @@ export class ImageController {
   }
 
   @Post()
-  createImage(image: ImageDto): Promise<void> {
-    return this.imageService.createImage(image);
+  saveImage(image: ImageDto): Promise<Image> {
+    return this.imageService.saveImage(image);
   }
 }

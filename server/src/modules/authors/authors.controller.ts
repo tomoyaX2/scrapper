@@ -13,7 +13,7 @@ export class AuthorController {
   }
 
   @Post()
-  createAuthors(author: AuthorDto): Promise<void> {
-    return this.authorService.createAuthors(author);
+  createAuthors(author: AuthorDto): Promise<Author> {
+    return this.authorService.createAuthor(author);
   }
 }

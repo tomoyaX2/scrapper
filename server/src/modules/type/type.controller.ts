@@ -13,7 +13,7 @@ export class TypeController {
   }
 
   @Post()
-  createType(type: TypeDto): Promise<void> {
+  createType(type: TypeDto): Promise<Type> {
     return this.typeService.createType(type);
   }
 }

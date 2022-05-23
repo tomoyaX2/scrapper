@@ -13,7 +13,7 @@ export class TagsController {
   }
 
   @Post()
-  createTag(tag: TagsDto): Promise<void> {
+  createTag(tag: TagsDto): Promise<Tag> {
     return this.tagsService.createTag(tag);
   }
 }

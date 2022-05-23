@@ -13,7 +13,7 @@ export class LanguagesController {
   }
 
   @Post()
-  createLanguage(language: LanguageDto): Promise<void> {
+  createLanguage(language: LanguageDto): Promise<Language> {
     return this.languageService.createLanguage(language);
   }
 }

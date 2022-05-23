@@ -15,9 +15,9 @@ export class AuthorService {
     return this.authorRepository.find();
   }
 
-  async createAuthors(author: AuthorDto): Promise<void> {
-    const result = await this.authorRepository.save(author);
-    console.log(result);
-    return;
+  async createAuthor(author: AuthorDto): Promise<Author> {
+    try {
+      return await this.authorRepository.save(author);
+    } catch (e) {}
   }
 }

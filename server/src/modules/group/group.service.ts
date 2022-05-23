@@ -15,8 +15,9 @@ export class GroupService {
     return this.groupRepository.find();
   }
 
-  async createGroups(group: GroupDto): Promise<void> {
-    await this.groupRepository.save(group);
-    return;
+  async createGroup(group: GroupDto): Promise<Group> {
+    try {
+      return await this.groupRepository.save(group);
+    } catch (e) {}
   }
 }

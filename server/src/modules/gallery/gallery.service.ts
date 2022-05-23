@@ -15,9 +15,7 @@ export class GalleryService {
     return this.galleryRepository.find();
   }
 
-  async createGallery(gallery: GalleryDto): Promise<void> {
-    const result = await this.galleryRepository.save(gallery);
-    console.log(result);
-    return;
+  async createGallery(gallery: GalleryDto): Promise<Gallery> {
+    return await this.galleryRepository.save(gallery);
   }
 }

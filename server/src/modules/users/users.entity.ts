@@ -3,7 +3,7 @@ import { Gallery } from '../gallery/gallery.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid') id: number;
+  @PrimaryGeneratedColumn('uuid') id: string;
 
   @Column()
   name: string;

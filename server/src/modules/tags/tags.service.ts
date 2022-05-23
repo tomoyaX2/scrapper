@@ -15,9 +15,9 @@ export class TagsService {
     return this.tagsRepository.find();
   }
 
-  async createTag(tag: TagsDto): Promise<void> {
-    const result = await this.tagsRepository.save(tag);
-    console.log(result, 'tag');
-    return;
+  async createTag(tag: TagsDto): Promise<Tag> {
+    try {
+      return await this.tagsRepository.save(tag);
+    } catch (e) {}
   }
 }

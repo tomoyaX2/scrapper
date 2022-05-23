@@ -15,9 +15,9 @@ export class TypeService {
     return this.typesRepository.find();
   }
 
-  async createType(type: TypeDto): Promise<void> {
-    const result = await this.typesRepository.save(type);
-    console.log(result, 'result');
-    return;
+  async createType(type: TypeDto): Promise<Type> {
+    try {
+      return await this.typesRepository.save(type);
+    } catch (e) {}
   }
 }

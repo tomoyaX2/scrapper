@@ -7,5 +7,6 @@ import { ScrapperService } from './scrapper.service';
   imports: [AlbumModule],
   controllers: [ScrapperController],
   providers: [ScrapperService],
+  exports: [ScrapperService],
 })
 export class ScrapperModule {}

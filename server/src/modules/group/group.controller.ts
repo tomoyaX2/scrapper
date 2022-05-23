@@ -12,7 +12,7 @@ export class GroupController {
   }
 
   @Post()
-  createGroups(group): Promise<void> {
-    return this.groupService.createGroups(group);
+  createGroup(group): Promise<Group> {
+    return this.groupService.createGroup(group);
   }
 }
