@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio';
 import { hostUrl } from './constants';
 
 export const getSelectors: Record<HitomiFields, SelectorArgs> = {
-  [HitomiFields.Artists]: {
+  [HitomiFields.Author]: {
     selector: 'h2 ul.comma-list li',
     type: SelectorTypes.List,
   },
@@ -29,9 +29,9 @@ export const getSelectors: Record<HitomiFields, SelectorArgs> = {
     selector: '#gallery-brand',
     type: SelectorTypes.String,
   },
-  [HitomiFields.Pictures]: {
+  [HitomiFields.Images]: {
     selector: 'ul.thumbnail-list li',
-    type: SelectorTypes.Pictures,
+    type: SelectorTypes.Images,
   },
 };
 
@@ -55,7 +55,7 @@ export const groupBySelector = (
       }
       break;
     }
-    case SelectorTypes.Pictures: {
+    case SelectorTypes.Images: {
       const list = $(selector);
       for (const item of list) {
         const result = $(item).children('div').children('a').attr('href');

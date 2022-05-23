@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Album } from '../album/album.entity';
 
 @Entity()
 export class Language {
@@ -6,4 +7,7 @@ export class Language {
 
   @Column()
   name: string;
+
+  @OneToMany(() => Album, (album) => album.language)
+  albums: Album[];
 }

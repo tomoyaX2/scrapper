@@ -17,5 +17,5 @@ export class Type {
 
   @ManyToMany(() => Album)
   @JoinTable()
-  authors: Album[];
+  albums: Album[];
 }

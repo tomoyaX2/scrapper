@@ -12,5 +12,5 @@ export class Image {
   url: string;
 
   @ManyToOne(() => Album, (album) => album.images)
-  albums: Album;
+  album: Album;
 }

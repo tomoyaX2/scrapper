@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
+import { SeriesDto } from './series.dto';
 import { Series } from './series.entity';
 import { SeriesService } from './series.service';
 
@@ -9,5 +10,10 @@ export class SeriesController {
   @Get()
   getSeries(): Promise<Series[]> {
     return this.seriesService.getSeries();
+  }
+
+  @Post()
+  createSeries(series: SeriesDto): Promise<void> {
+    return this.seriesService.createSeries(series);
   }
 }

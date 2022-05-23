@@ -1,9 +1,9 @@
 export enum HitomiFields {
   Title = 'title',
-  Artists = 'artists',
+  Author = 'author',
   Groups = 'groups',
   Languages = 'languages',
   Series = 'series',
   Tags = 'tags',
-  Pictures = 'pictures',
+  Images = 'images',
 }

@@ -1,13 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Album } from '../album/album.entity';
 
-@Entity()
-export class Image {
-  @PrimaryGeneratedColumn('uuid') id: number;
-
-  @Column()
+export interface ImageDto {
   name: string;
-
-  // @OneToMany(() => Album, (album) => album.gallery)
-  // albums: Album[];
+  url: string;
+  album?: Album;
 }

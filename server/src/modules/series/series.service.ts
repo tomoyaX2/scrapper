@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { SeriesDto } from './series.dto';
 import { Series } from './series.entity';
 
 @Injectable()
@@ -10,8 +11,14 @@ export class SeriesService {
     private seriesRepository: Repository<Series>,
   ) {}
 
-  getSeries = async (): Promise<Series[]> => {
+  async getSeries(): Promise<Series[]> {
     const data = await this.seriesRepository.find();
     return data;
-  };
+  }
+
+  async createSeries(series: SeriesDto): Promise<void> {
+    const result = await this.seriesRepository.save(series);
+    console.log(result, 'series');
+    return;
+  }
 }

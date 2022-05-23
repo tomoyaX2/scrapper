@@ -13,6 +13,7 @@ import { Group } from '../group/group.entity';
 import { Image } from '../image/image.entity';
 import { Language } from '../languages/languages.entity';
 import { Series } from '../series/series.entity';
+import { Tag } from '../tags/tags.entity';
 
 @Entity()
 export class Album {
@@ -25,7 +26,7 @@ export class Album {
   @ManyToOne(() => Gallery)
   gallery: Gallery;
 
-  @OneToMany(() => Image, (image) => image.albums)
+  @OneToMany(() => Image, (image) => image.album)
   images: Image[];
 
   @ManyToMany(() => Author)
@@ -40,4 +41,8 @@ export class Album {
 
   @ManyToOne(() => Group)
   group: Group;
+
+  @ManyToMany(() => Tag)
+  @JoinTable()
+  tags: Tag[];
 }
