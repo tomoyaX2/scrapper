@@ -10,6 +10,9 @@ import { SeriesService } from '../series/series.service';
 import { TagsService } from '../tags/tags.service';
 import { AlbumDto } from './album.dto';
 import { Album } from './album.entity';
+import * as fs from 'fs';
+import { TypeService } from '../type/type.service';
+import { map } from 'cheerio/lib/api/traversing';
 
 @Injectable()
 export class AlbumService {
@@ -22,10 +25,13 @@ export class AlbumService {
     private seriesService: SeriesService,
     private tagsService: TagsService,
     private imageService: ImageService,
+    private typeService: TypeService,
   ) {}
 
   getAlbums(): Promise<Album[]> {
-    return this.albumRepository.find({ relations: ['authors'] });
+    return this.albumRepository.find({
+      relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
+    });
   }
 
   async createAlbum(album: AlbumDto): Promise<Album> {
@@ -47,57 +53,62 @@ export class AlbumService {
       series,
       tags,
       images,
+      type,
     } of albums) {
-      const albumAuthors = [];
-      const albumTags = [];
-      const albumImages = [];
       const album = await this.createAlbum({ name: title[0] });
       const albumPath = `images/${album.id}`;
-
-      for (const author of authors) {
-        const albumAuthor = await this.authorsService.createAuthor({
-          name: author,
-        });
-        albumAuthors.push(albumAuthor);
+      if (!fs.existsSync('images')) {
+        fs.mkdirSync('images');
       }
-      for (const image of images) {
-        const adImage = await this.imageService.saveImage({});
-        const imagePath = await this.imageService.writeImage(
-          image,
-          adImage.id,
+      if (!fs.existsSync(albumPath)) {
+        fs.mkdirSync(albumPath);
+      }
+      if (authors.length) {
+        const result = await this.authorsService.assignAuthorToAlbum(authors);
+        album.authors = result;
+      }
+      if (tags.length) {
+        const albumTags = await this.tagsService.generateAlbumTags(tags);
+        album.tags = albumTags;
+      }
+      if (images.length) {
+        const albumImages = await this.imageService.assignImageToAlbum(
+          images,
           albumPath,
         );
-        const albumImage = await this.imageService.saveImage({
-          url: imagePath,
-          name: adImage.id,
-        });
-        albumImages.push(albumImage);
+        album.images = albumImages;
       }
-      for (const tag of tags) {
-        const albumTag = await this.tagsService.createTag({
-          name: tag,
-        });
-        albumTags.push(albumTag);
+      if (series.length) {
+        const albumSeries = await this.seriesService.assignSeries(series[0]);
+        album.series = albumSeries;
       }
-      const albumSeries = await this.seriesService.createSeries({
-        name: series[0],
-      });
-      const albumGroup = await this.groupService.createGroup({
-        name: group[0],
-      });
-      const albumLanguage = await this.languageService.createLanguage({
-        name: languages[0],
-      });
+      if (group.length) {
+        const albumGroup = await this.groupService.assignGroup(group[0]);
+        album.group = albumGroup;
+      }
+      const albumLanguage = await this.languageService.assignLanguage(
+        languages[0],
+      );
 
-      album.authors = albumAuthors;
-      album.series = albumSeries;
-      album.group = albumGroup;
+      const albumType = await this.typeService.assignType(type[0]);
+
+      album.type = albumType;
+
       album.language = albumLanguage;
-      album.tags = albumTags;
+
       album.path = albumPath;
-      album.images = albumImages;
-      album.name = album.id;
-      await this.albumRepository.save(album);
+      const albumResult = await this.albumRepository.save(album);
+      tags.length && (await this.tagsService.assignAlbumToTag(albumResult));
+      images.length &&
+        (await this.imageService.assignAlbumToImage(albumResult));
+      series.length &&
+        (await this.seriesService.assignAlbumToSeries(albumResult));
+      authors.length &&
+        (await this.authorsService.assignAlbumToAuthor(albumResult));
+      group.length && (await this.groupService.assignAlbumToGroup(albumResult));
+      languages.length &&
+        (await this.languageService.assignAlbumToLanguage(albumResult));
+      type.length && (await this.typeService.assignAlbumToType(albumResult));
     }
   }
 }

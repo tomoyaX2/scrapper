@@ -14,6 +14,7 @@ import { Image } from '../image/image.entity';
 import { Language } from '../languages/languages.entity';
 import { Series } from '../series/series.entity';
 import { Tag } from '../tags/tags.entity';
+import { Type } from '../type/type.entity';
 
 @Entity()
 export class Album {
@@ -35,6 +36,9 @@ export class Album {
   @ManyToMany(() => Author)
   @JoinTable()
   authors?: Author[];
+
+  @ManyToOne(() => Type)
+  type?: Type;
 
   @ManyToOne(() => Series)
   series?: Series;

@@ -6,14 +6,12 @@ import { ExpectedTypes } from 'src/shared/enums/ExpectedTypes';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
 import { getSelectors, groupBySelector } from 'src/shared/selectors';
 import { AlbumService } from '../album/album.service';
-import axios from 'axios';
-import * as fs from 'fs';
 
 const expectedClassNames = [
-  ExpectedTypes.ArtistCG,
+  // ExpectedTypes.ArtistCG,
   ExpectedTypes.Doujinshi,
-  ExpectedTypes.Manga,
-  ExpectedTypes.GameCG,
+  // ExpectedTypes.Manga,
+  // ExpectedTypes.GameCG,
 ];
 
 const expectedFields = [
@@ -24,6 +22,7 @@ const expectedFields = [
   HitomiFields.Series,
   HitomiFields.Tags,
   HitomiFields.Images,
+  HitomiFields.Type,
 ];
 
 @Injectable()
@@ -48,11 +47,14 @@ export class ScrapperService {
   ) => {
     const urls = await this.generateUrlsToParse(htmlData);
     const result = [];
+    let index = 0;
     for (const url of urls) {
+      index++;
+      console.log(`${index}/${urls.length} urls`);
       const detailsData = await this.collectDetailsData(page, url);
       result.push(detailsData);
     }
-    this.saveDetailsData(result);
+    await this.saveDetailsData(result);
     await browser.close();
   };
 
@@ -102,6 +104,6 @@ export class ScrapperService {
   };
 
   saveDetailsData = async (albumModel: Record<HitomiFields, any[]>[]) => {
-    this.albumService.generateAlbum(albumModel);
+    return this.albumService.generateAlbum(albumModel);
   };
 }

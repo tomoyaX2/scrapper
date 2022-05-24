@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Album } from '../album/album.entity';
 import { SeriesDto } from './series.dto';
 import { Series } from './series.entity';
 
@@ -12,11 +13,44 @@ export class SeriesService {
   ) {}
 
   async getSeries(): Promise<Series[]> {
-    const data = await this.seriesRepository.find();
+    const data = await this.seriesRepository.find({
+      relations: [
+        'albums',
+        'albums.images',
+        'albums.authors',
+        'albums.type',
+        'albums.series',
+        'albums.language',
+        'albums.group',
+      ],
+    });
     return data;
   }
 
   async createSeries(series: SeriesDto): Promise<Series> {
-    return await this.seriesRepository.save(series);
+    try {
+      return await this.seriesRepository.save(series);
+    } catch (e) {}
+  }
+
+  async assignSeries(name: string): Promise<Series> {
+    try {
+      const series = await this.seriesRepository.findOne({ name });
+      if (series?.name) {
+        return series;
+      }
+      return await this.seriesRepository.save({ name });
+    } catch (e) {}
+  }
+
+  async assignAlbumToSeries(album: Album): Promise<Series> {
+    try {
+      return await this.seriesRepository.save({
+        ...album.series,
+        albums: [...(album.series?.albums || []), album],
+      });
+    } catch (e) {
+      console.log(e, 'assign album to series error', album);
+    }
   }
 }

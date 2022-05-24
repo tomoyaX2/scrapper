@@ -5,6 +5,7 @@ import { ImageDto } from './image.dto';
 import { Image } from './image.entity';
 import axios from 'axios';
 import * as fs from 'fs';
+import { Album } from '../album/album.entity';
 
 @Injectable()
 export class ImageService {
@@ -14,7 +15,17 @@ export class ImageService {
   ) {}
 
   getImages(): Promise<Image[]> {
-    return this.imagesRepository.find();
+    return this.imagesRepository.find({
+      relations: [
+        'album',
+        'album.images',
+        'album.authors',
+        'album.type',
+        'album.series',
+        'album.language',
+        'album.group',
+      ],
+    });
   }
 
   async saveImage(image: ImageDto): Promise<Image> {
@@ -32,26 +43,54 @@ export class ImageService {
     imageId: string,
     albumPath: string,
   ) {
-    console.log(imageUrl, 'imageUrl');
-    const response = await axios.get<string>(imageUrl, {
-      responseType: 'arraybuffer',
-      headers: {
-        referer,
-      },
-    });
-    if (!fs.existsSync('images')) {
-      fs.mkdirSync('images');
+    try {
+      const response = await axios.get<string>(imageUrl, {
+        responseType: 'arraybuffer',
+        headers: {
+          referer,
+        },
+      });
+      const PNGBase64 = Buffer.from(response.data, 'binary').toString('base64');
+      const path = `${albumPath}/${imageId}.webp`;
+      await fs.writeFile(path, PNGBase64, 'base64', function (err) {
+        if (err) throw err;
+        console.log('File saved.');
+      });
+      return path;
+    } catch (e) {
+      console.log('ERROR HAPPENED', imageUrl, referer);
     }
-    if (!fs.existsSync(albumPath)) {
-      fs.mkdirSync(albumPath);
-    }
+  }
 
-    const PNGBase64 = Buffer.from(response.data, 'binary').toString('base64');
-    const path = `${albumPath}/${imageId}.webp`;
-    fs.writeFile(path, PNGBase64, 'base64', function (err) {
-      if (err) throw err;
-      console.log('File saved.');
-    });
-    return path;
+  async assignImageToAlbum(
+    images: { imageUrl: string; referer: string }[],
+    albumPath: string,
+  ) {
+    let index = 0;
+    const albumImages: Image[] = [];
+    for (const image of images) {
+      index++;
+      console.log(`${index}/${images.length} images`);
+      const adImage = await this.saveImage({});
+      const imagePath = await this.writeImage(image, adImage.id, albumPath);
+      if (imagePath) {
+        const albumImage = await this.saveImage({
+          url: imagePath,
+          name: adImage.id,
+        });
+        albumImages.push(albumImage);
+      }
+    }
+    return albumImages;
+  }
+
+  async assignAlbumToImage(album: Album): Promise<void> {
+    for (const albumImage of album.images) {
+      try {
+        await this.imagesRepository.save({ ...albumImage, album });
+      } catch (e) {
+        console.log(e, 'assign album to image error', album);
+      }
+    }
   }
 }

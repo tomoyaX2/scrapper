@@ -6,6 +6,7 @@ import { ImageModule } from '../image/image.module';
 import { LanguagesModule } from '../languages/languages.module';
 import { SeriesModule } from '../series/series.module';
 import { TagsModule } from '../tags/tags.module';
+import { TypeModule } from '../type/type.module';
 import { AlbumController } from './album.controller';
 import { Album } from './album.entity';
 import { AlbumService } from './album.service';
@@ -19,6 +20,7 @@ import { AlbumService } from './album.service';
     LanguagesModule,
     GroupModule,
     AuthorsModule,
+    TypeModule,
   ],
   controllers: [AlbumController],
   providers: [AlbumService],

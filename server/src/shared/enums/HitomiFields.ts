@@ -6,4 +6,5 @@ export enum HitomiFields {
   Series = 'series',
   Tags = 'tags',
   Images = 'images',
+  Type = 'type',
 }

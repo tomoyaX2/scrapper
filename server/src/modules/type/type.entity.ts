@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Album } from '../album/album.entity';
 
 @Entity()
@@ -15,7 +9,6 @@ export class Type {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => Album)
-  @JoinTable()
+  @OneToMany(() => Album, (album) => album.type)
   albums: Album[];
 }

@@ -34,6 +34,10 @@ export const getSelectors: Record<HitomiFields, SelectorArgs> = {
     selector: 'ul.thumbnail-list li',
     type: SelectorTypes.Images,
   },
+  [HitomiFields.Type]: {
+    selector: '#type',
+    type: SelectorTypes.String,
+  },
 };
 
 export const groupBySelector = async (

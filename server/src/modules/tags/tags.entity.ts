@@ -16,5 +16,5 @@ export class Tag {
 
   @ManyToMany(() => Album)
   @JoinTable()
-  albums: Album[];
+  albums?: Album[];
 }
