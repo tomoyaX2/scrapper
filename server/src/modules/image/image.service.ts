@@ -38,9 +38,11 @@ export class ImageService {
     {
       imageUrl,
       referer,
+      originalUrl,
     }: {
       imageUrl: string;
       referer: string;
+      originalUrl: string;
     },
     imageId: string,
     albumPath: string,
@@ -56,16 +58,21 @@ export class ImageService {
       const path = `${albumPath}/${imageId}.webp`;
       await fs.writeFile(path, PNGBase64, 'base64', (err) => {
         if (err) throw err;
-        this.logService.saveLog('File saved.' + imageUrl);
+        this.logService.saveLog(
+          `File saved. Original URL: ${originalUrl}, current URL: http://localhost:3000/${path}`,
+        );
       });
       return path;
     } catch (e) {
-      this.logService.saveLog(`ERROR HAPPENED, ${imageUrl}, ${referer}`);
+      this.logService.saveLog(
+        `ERROR HAPPENED, ${imageUrl}, ${referer}`,
+        'warn',
+      );
     }
   }
 
   async assignImageToAlbum(
-    images: { imageUrl: string; referer: string }[],
+    images: { imageUrl: string; referer: string; originalUrl: string }[],
     albumPath: string,
   ) {
     let index = 0;
@@ -92,7 +99,8 @@ export class ImageService {
         await this.imagesRepository.save({ ...albumImage, album });
       } catch (e) {
         this.logService.saveLog(
-          `${e}, 'assign album to image error', ${album}`,
+          `${e}, 'assign album to image error', ${JSON.stringify(album)}`,
+          'warn',
         );
       }
     }

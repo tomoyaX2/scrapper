@@ -8,6 +8,6 @@ export class Series {
   @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => Album, (album) => album.gallery)
+  @OneToMany(() => Album, (album) => album.series)
   albums: Album[];
 }

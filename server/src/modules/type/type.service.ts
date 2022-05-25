@@ -51,7 +51,10 @@ export class TypeService {
         albums: [...(album.type?.albums || []), album],
       });
     } catch (e) {
-      this.logService.saveLog(`${e}, 'assign album to tag error', ${album}`);
+      this.logService.saveLog(
+        `${e}, 'assign album to tag error', ${JSON.stringify(album)}`,
+        'warn',
+      );
     }
   }
 }

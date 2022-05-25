@@ -51,7 +51,10 @@ export class GroupService {
         albums: [...(album.group?.albums || []), album],
       });
     } catch (e) {
-      this.logService.saveLog(`${e}, 'assign album to group error', ${album}`);
+      this.logService.saveLog(
+        `${e}, 'assign album to group error', ${JSON.stringify(album)}`,
+        'warn',
+      );
     }
   }
 }

@@ -8,7 +8,7 @@ export class LogService {
   logData = { logPath: '', text: '' };
 
   createLogFile = async (path: string) => {
-    if (!process.env.ENABLE_LOGS) {
+    if (process.env.ENABLE_LOGS === 'false') {
       return;
     }
     const logPath = `${this.parentLogDir}/${path}_${moment(new Date())
@@ -29,11 +29,11 @@ export class LogService {
     this.logData = { logPath, text: '' };
   };
 
-  saveLog = (text: string) => {
-    if (!process.env.ENABLE_LOGS) {
+  saveLog = (text: string, variant: 'warn' | 'log' = 'log') => {
+    console[variant](text);
+    if (process.env.ENABLE_LOGS === 'false') {
       return;
     }
-    console.log(text);
     this.logData = { ...this.logData, text };
     const stream = fs.createWriteStream(this.logData.logPath, {
       flags: 'a', // 'a' means appending (old data will be preserved)

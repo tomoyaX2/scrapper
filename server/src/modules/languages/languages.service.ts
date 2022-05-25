@@ -52,7 +52,8 @@ export class LanguagesService {
       });
     } catch (e) {
       this.logService.saveLog(
-        `${e}, 'assign album to language error', ${album}`,
+        `${e}, 'assign album to language error', ${JSON.stringify(album)}`,
+        'warn',
       );
     }
   }

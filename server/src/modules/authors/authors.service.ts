@@ -63,6 +63,7 @@ export class AuthorService {
       } catch (e) {
         this.logService.saveLog(
           `${e}, 'assign album to author error', ${album}`,
+          'warn',
         );
       }
     }

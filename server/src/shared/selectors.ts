@@ -86,6 +86,7 @@ export const groupBySelector = async (
         items.push({
           imageUrl,
           referer: referer.split('#')[0].replace('avif', 'webp'),
+          originalUrl: referer + `#${pageIndex + 1}`,
         });
       }
       break;

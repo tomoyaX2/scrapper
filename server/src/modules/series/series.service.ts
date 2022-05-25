@@ -53,7 +53,8 @@ export class SeriesService {
       });
     } catch (e) {
       this.logService.saveLog(
-        `${e}, 'assign album to series error', ${album.toString()}`,
+        `${e}, 'assign album to series error', ${JSON.stringify(album)}`,
+        'warn',
       );
     }
   }
