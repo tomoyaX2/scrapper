@@ -6,11 +6,12 @@ import { ExpectedTypes } from 'src/shared/enums/ExpectedTypes';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
 import { getSelectors, groupBySelector } from 'src/shared/selectors';
 import { AlbumService } from '../album/album.service';
+import { LogService } from '../log/log.service';
 
 const expectedClassNames = [
-  // ExpectedTypes.ArtistCG,
-  // ExpectedTypes.Doujinshi,
-  // ExpectedTypes.Manga,
+  ExpectedTypes.ArtistCG,
+  ExpectedTypes.Doujinshi,
+  ExpectedTypes.Manga,
   ExpectedTypes.GameCG,
 ];
 
@@ -27,7 +28,10 @@ const expectedFields = [
 
 @Injectable()
 export class ScrapperService {
-  constructor(private albumService: AlbumService) {}
+  constructor(
+    private albumService: AlbumService,
+    private logService: LogService,
+  ) {}
 
   init = async (): Promise<void> => {
     const browser = await puppeteer.launch();
@@ -40,7 +44,8 @@ export class ScrapperService {
     const lastPageIndex = this.getPagesAmount(htmlData);
     const pages = Array.from(Array(lastPageIndex).keys());
     for (const pageIndex of pages) {
-      console.log(`${pageIndex + 1}/${lastPageIndex} page`);
+      await this.logService.createLogFile(`hitomi`);
+      this.logService.saveLog(`${pageIndex + 1}/${lastPageIndex} page`);
       const htmlData = await this.parsePage({
         page,
         url: hostUrl + `/?page=${pageIndex + 1}`,
@@ -60,7 +65,7 @@ export class ScrapperService {
     let index = 0;
     for (const url of urls) {
       index++;
-      console.log(`${index}/${urls.length} urls`);
+      this.logService.saveLog(`${index}/${urls.length} urls`);
       const detailsData = await this.collectDetailsData(page, url);
       result.push(detailsData);
     }

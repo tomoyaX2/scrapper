@@ -13,6 +13,7 @@ import { SeriesModule } from './modules/series/series.module';
 import { UsersModule } from './modules/users/users.module';
 import { TypeModule } from './modules/type/type.module';
 import { GroupModule } from './modules/group/group.module';
+import { LogModule } from './modules/log/log.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { GroupModule } from './modules/group/group.module';
     UsersModule,
     TypeModule,
     GroupModule,
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

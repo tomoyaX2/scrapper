@@ -57,8 +57,8 @@ export class AlbumService {
     } of albums) {
       const album = await this.createAlbum({ name: title[0] });
       const albumPath = `public/images/${album.id}`;
-      if (!fs.existsSync('images')) {
-        fs.mkdirSync('images');
+      if (!fs.existsSync('public/images')) {
+        fs.mkdirSync('public/images');
       }
       if (!fs.existsSync(albumPath)) {
         fs.mkdirSync(albumPath);

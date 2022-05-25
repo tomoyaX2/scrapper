@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
+import { LogService } from '../log/log.service';
 import { GroupDto } from './group.dto';
 import { Group } from './group.entity';
 
@@ -10,6 +11,7 @@ export class GroupService {
   constructor(
     @InjectRepository(Group)
     private groupRepository: Repository<Group>,
+    private logService: LogService,
   ) {}
 
   getGroups(): Promise<Group[]> {
@@ -49,7 +51,7 @@ export class GroupService {
         albums: [...(album.group?.albums || []), album],
       });
     } catch (e) {
-      console.log(e, 'assign album to group error', album);
+      this.logService.saveLog(`${e}, 'assign album to group error', ${album}`);
     }
   }
 }

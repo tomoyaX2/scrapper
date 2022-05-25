@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
+import { LogService } from '../log/log.service';
 import { AuthorDto } from './authors.dto';
 import { Author } from './authors.entity';
 
@@ -10,6 +11,7 @@ export class AuthorService {
   constructor(
     @InjectRepository(Author)
     private authorRepository: Repository<Author>,
+    private logService: LogService,
   ) {}
 
   getAuthors(): Promise<Author[]> {
@@ -59,7 +61,9 @@ export class AuthorService {
           albums: [...(albumAuthor?.albums || []), album],
         });
       } catch (e) {
-        console.log(e, 'assign album to author error', album);
+        this.logService.saveLog(
+          `${e}, 'assign album to author error', ${album}`,
+        );
       }
     }
   }

@@ -3,3 +3,5 @@ server/node_modules
 server/dist
 server/.env
 server/images
+server/public
+server/log

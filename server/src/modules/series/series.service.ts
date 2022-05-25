@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
+import { LogService } from '../log/log.service';
 import { SeriesDto } from './series.dto';
 import { Series } from './series.entity';
 
@@ -10,6 +11,7 @@ export class SeriesService {
   constructor(
     @InjectRepository(Series)
     private seriesRepository: Repository<Series>,
+    private logService: LogService,
   ) {}
 
   async getSeries(): Promise<Series[]> {
@@ -50,7 +52,9 @@ export class SeriesService {
         albums: [...(album.series?.albums || []), album],
       });
     } catch (e) {
-      console.log(e, 'assign album to series error', album);
+      this.logService.saveLog(
+        `${e}, 'assign album to series error', ${album.toString()}`,
+      );
     }
   }
 }

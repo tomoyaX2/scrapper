@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
+import { LogService } from '../log/log.service';
 import { TypeDto } from './type.dto';
 import { Type } from './type.entity';
 
@@ -10,6 +11,7 @@ export class TypeService {
   constructor(
     @InjectRepository(Type)
     private typesRepository: Repository<Type>,
+    private logService: LogService,
   ) {}
 
   getTypes(): Promise<Type[]> {
@@ -49,7 +51,7 @@ export class TypeService {
         albums: [...(album.type?.albums || []), album],
       });
     } catch (e) {
-      console.log(e, 'assign album to type error', album);
+      this.logService.saveLog(`${e}, 'assign album to tag error', ${album}`);
     }
   }
 }

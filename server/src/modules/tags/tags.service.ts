@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
+import { LogService } from '../log/log.service';
 import { TagsDto } from './tags.dto';
 import { Tag } from './tags.entity';
 
@@ -10,6 +11,7 @@ export class TagsService {
   constructor(
     @InjectRepository(Tag)
     private tagsRepository: Repository<Tag>,
+    private logService: LogService,
   ) {}
 
   getTags(): Promise<Tag[]> {
@@ -62,7 +64,7 @@ export class TagsService {
           albums: [...(albumTag?.albums || []), album],
         });
       } catch (e) {
-        console.log(e, 'assign album to tag error', album);
+        this.logService.saveLog(`${e}, 'assign album to tag error', ${album}`);
       }
     }
   }

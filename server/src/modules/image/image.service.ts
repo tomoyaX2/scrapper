@@ -6,12 +6,14 @@ import { Image } from './image.entity';
 import axios from 'axios';
 import * as fs from 'fs';
 import { Album } from '../album/album.entity';
+import { LogService } from '../log/log.service';
 
 @Injectable()
 export class ImageService {
   constructor(
     @InjectRepository(Image)
     private imagesRepository: Repository<Image>,
+    private logService: LogService,
   ) {}
 
   getImages(): Promise<Image[]> {
@@ -52,13 +54,13 @@ export class ImageService {
       });
       const PNGBase64 = Buffer.from(response.data, 'binary').toString('base64');
       const path = `${albumPath}/${imageId}.webp`;
-      await fs.writeFile(path, PNGBase64, 'base64', function (err) {
+      await fs.writeFile(path, PNGBase64, 'base64', (err) => {
         if (err) throw err;
-        console.log('File saved.');
+        this.logService.saveLog('File saved.' + imageUrl);
       });
       return path;
     } catch (e) {
-      console.log('ERROR HAPPENED', imageUrl, referer);
+      this.logService.saveLog(`ERROR HAPPENED, ${imageUrl}, ${referer}`);
     }
   }
 
@@ -70,7 +72,7 @@ export class ImageService {
     const albumImages: Image[] = [];
     for (const image of images) {
       index++;
-      console.log(`${index}/${images.length} images`);
+      this.logService.saveLog(`${index}/${images.length} images`);
       const adImage = await this.saveImage({});
       const imagePath = await this.writeImage(image, adImage.id, albumPath);
       if (imagePath) {
@@ -89,7 +91,9 @@ export class ImageService {
       try {
         await this.imagesRepository.save({ ...albumImage, album });
       } catch (e) {
-        console.log(e, 'assign album to image error', album);
+        this.logService.saveLog(
+          `${e}, 'assign album to image error', ${album}`,
+        );
       }
     }
   }
