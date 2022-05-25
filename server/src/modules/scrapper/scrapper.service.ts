@@ -9,9 +9,9 @@ import { AlbumService } from '../album/album.service';
 
 const expectedClassNames = [
   // ExpectedTypes.ArtistCG,
-  ExpectedTypes.Doujinshi,
+  // ExpectedTypes.Doujinshi,
   // ExpectedTypes.Manga,
-  // ExpectedTypes.GameCG,
+  ExpectedTypes.GameCG,
 ];
 
 const expectedFields = [
@@ -37,15 +37,25 @@ export class ScrapperService {
       url: hostUrl,
       selector: 'img.lazyload',
     });
-    await this.processData(page, htmlData, browser);
+    const lastPageIndex = this.getPagesAmount(htmlData);
+    const pages = Array.from(Array(lastPageIndex).keys());
+    for (const pageIndex of pages) {
+      console.log(`${pageIndex + 1}/${lastPageIndex} page`);
+      const htmlData = await this.parsePage({
+        page,
+        url: hostUrl + `/?page=${pageIndex + 1}`,
+        selector: 'img.lazyload',
+      });
+      await this.processData(page, htmlData);
+      if (pageIndex + 1 === lastPageIndex) {
+        await browser.close();
+      }
+    }
   };
 
-  processData = async (
-    page: puppeteer.Page,
-    htmlData: string,
-    browser: puppeteer.Browser,
-  ) => {
+  processData = async (page: puppeteer.Page, htmlData: string) => {
     const urls = await this.generateUrlsToParse(htmlData);
+
     const result = [];
     let index = 0;
     for (const url of urls) {
@@ -55,7 +65,6 @@ export class ScrapperService {
       result.push(detailsData);
     }
     await this.saveDetailsData(result);
-    await browser.close();
   };
 
   generateUrlsToParse = async (htmlData: string) => {
@@ -69,6 +78,13 @@ export class ScrapperService {
       }
     }
     return urls;
+  };
+
+  getPagesAmount = (htmlData: string) => {
+    const $ = cheerio.load(htmlData);
+    const pagesList = $('.page-container ul li');
+    const lastPageData = pagesList[pagesList.length - 1];
+    return parseInt($(lastPageData).children('a').text());
   };
 
   parsePage = async ({

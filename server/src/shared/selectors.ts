@@ -57,16 +57,26 @@ export const groupBySelector = async (
         const result = textFormatter
           ? textFormatter($(item).children('a').text())
           : $(item).children('a').text();
-        items.push(result);
+        !!result && items.push(result);
       }
       break;
     }
     case SelectorTypes.Images: {
       const list = $(selector);
-      for (const item of list) {
-        const result = $(item).children('div').children('a').attr('href');
-        const referer = hostUrl + result;
-        await page.goto(referer);
+      const lastItem = $(list[list.length - 1])
+        .children('div')
+        .children('a')
+        .attr('href');
+      const badge = parseInt($(lastItem).children('.badge').text());
+      const lastIndex =
+        parseInt(lastItem.split('#')[1]) + (!isNaN(badge) ? badge : 0);
+      const referer =
+        hostUrl +
+        $(list[0]).children('div').children('a').attr('href').replace('#1', '');
+      const pageIndexes = Array.from(Array(lastIndex).keys());
+
+      for (const pageIndex of pageIndexes) {
+        await page.goto(referer + `#${pageIndex + 1}`);
         await page.waitForSelector('img.lillie');
         const htmlData = await page.evaluate(
           () => document.querySelector('*').outerHTML,

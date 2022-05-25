@@ -56,7 +56,7 @@ export class AlbumService {
       type,
     } of albums) {
       const album = await this.createAlbum({ name: title[0] });
-      const albumPath = `images/${album.id}`;
+      const albumPath = `public/images/${album.id}`;
       if (!fs.existsSync('images')) {
         fs.mkdirSync('images');
       }
@@ -86,15 +86,16 @@ export class AlbumService {
         const albumGroup = await this.groupService.assignGroup(group[0]);
         album.group = albumGroup;
       }
-      const albumLanguage = await this.languageService.assignLanguage(
-        languages[0],
-      );
+      if (languages.length) {
+        const albumLanguage = await this.languageService.assignLanguage(
+          languages[0],
+        );
+        album.language = albumLanguage;
+      }
 
       const albumType = await this.typeService.assignType(type[0]);
 
       album.type = albumType;
-
-      album.language = albumLanguage;
 
       album.path = albumPath;
       const albumResult = await this.albumRepository.save(album);
