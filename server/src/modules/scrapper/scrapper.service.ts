@@ -51,14 +51,18 @@ export class ScrapperService {
         url: hostUrl + `/?page=${pageIndex + 1}`,
         selector: 'img.lazyload',
       });
-      await this.processData(page, htmlData);
+      await this.processData(page, htmlData, pageIndex + 1);
       if (pageIndex + 1 === lastPageIndex) {
         await browser.close();
       }
     }
   };
 
-  processData = async (page: puppeteer.Page, htmlData: string) => {
+  processData = async (
+    page: puppeteer.Page,
+    htmlData: string,
+    currentPageIndex: number,
+  ) => {
     const urls = await this.generateUrlsToParse(htmlData);
 
     const result = [];
@@ -69,7 +73,7 @@ export class ScrapperService {
       const detailsData = await this.collectDetailsData(page, url);
       result.push(detailsData);
     }
-    await this.saveDetailsData(result);
+    await this.saveDetailsData(result, currentPageIndex);
   };
 
   generateUrlsToParse = async (htmlData: string) => {
@@ -124,7 +128,10 @@ export class ScrapperService {
     return fieldData;
   };
 
-  saveDetailsData = async (albumModel: Record<HitomiFields, any[]>[]) => {
-    return this.albumService.generateAlbum(albumModel);
+  saveDetailsData = async (
+    albumModel: Record<HitomiFields, any[]>[],
+    currentPageIndex: number,
+  ) => {
+    return this.albumService.generateAlbum(albumModel, currentPageIndex);
   };
 }

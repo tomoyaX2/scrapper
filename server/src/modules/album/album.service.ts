@@ -12,7 +12,7 @@ import { AlbumDto } from './album.dto';
 import { Album } from './album.entity';
 import * as fs from 'fs';
 import { TypeService } from '../type/type.service';
-import { map } from 'cheerio/lib/api/traversing';
+import { LogService } from '../log/log.service';
 
 @Injectable()
 export class AlbumService {
@@ -26,6 +26,7 @@ export class AlbumService {
     private tagsService: TagsService,
     private imageService: ImageService,
     private typeService: TypeService,
+    private logService: LogService,
   ) {}
 
   getAlbums(): Promise<Album[]> {
@@ -44,7 +45,11 @@ export class AlbumService {
     return result;
   }
 
-  async generateAlbum(albums: Record<HitomiFields, any[]>[]) {
+  async generateAlbum(
+    albums: Record<HitomiFields, any[]>[],
+    currentPageIndex: number,
+  ) {
+    let index = 0;
     for (const {
       title,
       authors,
@@ -55,6 +60,10 @@ export class AlbumService {
       images,
       type,
     } of albums) {
+      index++;
+      this.logService.saveLog(
+        `current album: ${index}/${albums.length}, current page index: ${currentPageIndex}`,
+      );
       const album = await this.createAlbum({ name: title[0] });
       const albumPath = `public/images/${album.id}`;
       if (!fs.existsSync('public/images')) {

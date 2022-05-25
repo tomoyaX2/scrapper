@@ -4,6 +4,7 @@ import { AuthorsModule } from '../authors/authors.module';
 import { GroupModule } from '../group/group.module';
 import { ImageModule } from '../image/image.module';
 import { LanguagesModule } from '../languages/languages.module';
+import { LogModule } from '../log/log.module';
 import { SeriesModule } from '../series/series.module';
 import { TagsModule } from '../tags/tags.module';
 import { TypeModule } from '../type/type.module';
@@ -21,6 +22,7 @@ import { AlbumService } from './album.service';
     GroupModule,
     AuthorsModule,
     TypeModule,
+    LogModule,
   ],
   controllers: [AlbumController],
   providers: [AlbumService],

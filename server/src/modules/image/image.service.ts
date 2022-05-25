@@ -46,6 +46,7 @@ export class ImageService {
     },
     imageId: string,
     albumPath: string,
+    currentCount: string,
   ) {
     try {
       const response = await axios.get<string>(imageUrl, {
@@ -59,7 +60,7 @@ export class ImageService {
       await fs.writeFile(path, PNGBase64, 'base64', (err) => {
         if (err) throw err;
         this.logService.saveLog(
-          `File saved. Original URL: ${originalUrl}, current URL: http://localhost:3000/${path}`,
+          `File ${currentCount}. Original URL: ${originalUrl}, current URL: http://localhost:3000/${path}`,
         );
       });
       return path;
@@ -79,9 +80,13 @@ export class ImageService {
     const albumImages: Image[] = [];
     for (const image of images) {
       index++;
-      this.logService.saveLog(`${index}/${images.length} images`);
       const adImage = await this.saveImage({});
-      const imagePath = await this.writeImage(image, adImage.id, albumPath);
+      const imagePath = await this.writeImage(
+        image,
+        adImage.id,
+        albumPath,
+        `${index}/${images.length}`,
+      );
       if (imagePath) {
         const albumImage = await this.saveImage({
           url: imagePath,
