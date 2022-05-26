@@ -1,3 +1,5 @@
+import { AlbumFilters } from './enums/AlbumFilters';
+
 export enum SelectorTypes {
   List = 'list',
   String = 'string',
@@ -19,13 +21,12 @@ export type PaginatedResponse<T> = Promise<{
 export interface DefaultPaginationQuery {
   page?: number;
   perPage?: number;
-  name?: string;
+  [AlbumFilters.Name]?: string;
 }
-export interface AlbumPaginationQuery {
-  name?: string;
-  authorIds?: string[];
-  seriesIds?: string[];
-  languageIds?: string[];
-  groupIds?: string[];
-  tagIds?: string[];
+export interface AlbumPaginationQuery extends DefaultPaginationQuery {
+  [AlbumFilters.Author]?: string[];
+  [AlbumFilters.Series]?: string[];
+  [AlbumFilters.Language]?: string[];
+  [AlbumFilters.Group]?: string[];
+  [AlbumFilters.Tag]?: string[];
 }

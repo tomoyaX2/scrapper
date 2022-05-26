@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
+import { AlbumFilters } from 'src/shared/enums/AlbumFilters';
 import { PaginatedResponse } from 'src/shared/types';
 import { Album } from './album.entity';
 import { AlbumService } from './album.service';
@@ -25,12 +26,12 @@ export class AlbumController {
     required: false,
   })
   @ApiQuery({
-    name: 'authorIds',
+    name: 'author',
     type: Array,
     required: false,
   })
   @ApiQuery({
-    name: 'seriesIds',
+    name: 'series',
     type: Array,
     required: false,
   })
@@ -40,44 +41,40 @@ export class AlbumController {
     required: false,
   })
   @ApiQuery({
-    name: 'languageIds',
+    name: 'languages',
     type: Array,
     required: false,
   })
   @ApiQuery({
-    name: 'groupIds',
+    name: 'groups',
     type: Array,
     required: false,
   })
   @ApiQuery({
-    name: 'tagIds',
+    name: 'tags',
     type: Array,
     required: false,
   })
   @Post('search')
   searchAlbums(
-    @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
     @Query('name') name?: string,
-    @Query('authorIds') authorIds?: string[],
-    @Query('seriesIds') seriesIds?: string[],
-    @Query('languageIds') languageIds?: string[],
-    @Query('groupIds') groupIds?: string[],
-    @Query('tagIds') tagIds?: string[],
+    @Query('author') authors?: string[],
+    @Query('series') series?: string[],
+    @Query('languages') language?: string[],
+    @Query('groups') group?: string[],
+    @Query('tags') tags?: string[],
   ): PaginatedResponse<Album> {
-    return this.albumService.searchAlbums(
-      {
-        page,
-        perPage,
-      },
-      {
-        name,
-        authorIds,
-        seriesIds,
-        languageIds,
-        groupIds,
-        tagIds,
-      },
-    );
+    return this.albumService.searchAlbums({
+      page: parseInt(page),
+      perPage: parseInt(perPage),
+      name,
+      authors,
+      series,
+      language,
+      group,
+      tags,
+    });
   }
 }

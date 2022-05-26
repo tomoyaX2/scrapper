@@ -10,11 +10,15 @@ export class AuthorController {
 
   @Get()
   getAuthors(
-    @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
     @Query('name') name: string,
   ): PaginatedResponse<Author> {
-    return this.authorService.getAuthors({ page, perPage, name });
+    return this.authorService.getAuthors({
+      page: parseInt(page),
+      perPage: parseInt(perPage),
+      name,
+    });
   }
 
   @Post()

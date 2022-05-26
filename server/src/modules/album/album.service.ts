@@ -48,18 +48,11 @@ export class AlbumService {
   }
 
   async searchAlbums(
-    { page, perPage }: DefaultPaginationQuery,
     albumParams: AlbumPaginationQuery,
   ): PaginatedResponse<Album> {
-    const where = buildAlbumPagination(albumParams);
-    console.log(where, 'zzzz');
-    const [data, total] = await this.albumRepository.findAndCount({
-      relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
-      // where: { 'authors.id': '187f8ed6-4f71-4bfc-bc65-826dfdbb4028' },
-      take: perPage,
-      skip: page * perPage,
-    });
-    return { data, total, currentPage: page };
+    const query = await this.albumRepository.createQueryBuilder('album');
+    const [data, total] = await buildAlbumPagination(albumParams, query);
+    return { data, total, currentPage: albumParams.page };
   }
 
   async createAlbum(album: AlbumDto): Promise<Album> {

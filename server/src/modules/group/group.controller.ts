@@ -9,11 +9,15 @@ export class GroupController {
 
   @Get()
   getGroups(
-    @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
     @Query('name') name: string,
   ): PaginatedResponse<Group> {
-    return this.groupService.getGroups({ page, perPage, name });
+    return this.groupService.getGroups({
+      page: parseInt(page),
+      perPage: parseInt(perPage),
+      name,
+    });
   }
 
   @Post()

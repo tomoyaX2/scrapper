@@ -1,30 +1,41 @@
+import { AlbumFilters } from 'src/shared/enums/AlbumFilters';
 import { AlbumPaginationQuery } from 'src/shared/types';
-import { In, Like } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm';
+import { Album } from './album.entity';
 
-const queryMapper = {
-  name: { key: 'name', query: (name: string[]) => Like('%' + name + '%') },
-  authorIds: { key: 'authors', query: (ids: number[]) => In(ids) },
-  seriesIds: { key: 'series', query: (ids: number[]) => In(ids) },
-  languageIds: { key: 'language', query: (ids: number[]) => In(ids) },
-  groupIds: { key: 'group', query: (ids: number[]) => In(ids) },
-  tagIds: { key: 'tags', query: (ids: number[]) => In(ids) },
-};
+const joinFields = [
+  AlbumFilters.Author,
+  AlbumFilters.Series,
+  AlbumFilters.Language,
+  AlbumFilters.Group,
+  AlbumFilters.Tag,
+];
 
-export const buildAlbumPagination = (data: AlbumPaginationQuery) => {
-  const result = {};
-  const filters = [];
-  const dataKeys = Object.keys(data);
-  for (const dataKey of dataKeys) {
-    if (data[dataKey]?.length) {
-      filters.push(dataKey);
-    }
+export const buildAlbumPagination = async (
+  data: AlbumPaginationQuery,
+  query: SelectQueryBuilder<Album>,
+) => {
+  let resultQuery = query;
+  const whereData = {};
+
+  for (const field of joinFields) {
+    resultQuery = resultQuery.leftJoinAndSelect(`album.${field}`, field);
   }
-  if (filters.length) {
-    for (const filter of filters) {
-      const fieldKey = queryMapper[filter].key;
-      console.log(data[filter], 'data[filter]');
-      result[fieldKey] = queryMapper[filter].query(data[filter]);
-    }
-  }
-  return result;
+
+  const activeFilters = Object.keys(data).filter((key) => {
+    const isActive = !!data[key]?.length;
+    if (isActive)
+      whereData[key] = Array.isArray(data[key]) ? data[key] : [data[key]];
+    return isActive;
+  });
+
+  const whereString = activeFilters
+    .map((key) => `${key}.id IN (:...${key})`)
+    .join(' AND ');
+
+  return resultQuery
+    .where(whereString, whereData)
+    .skip((data.page - 1) * data.perPage)
+    .take(data.perPage)
+    .getManyAndCount();
 };

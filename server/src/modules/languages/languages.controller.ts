@@ -10,11 +10,15 @@ export class LanguagesController {
 
   @Get()
   getLanguages(
-    @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
     @Query('name') name: string,
   ): PaginatedResponse<Language> {
-    return this.languageService.getLanguages({ page, perPage, name });
+    return this.languageService.getLanguages({
+      page: parseInt(page),
+      perPage: parseInt(perPage),
+      name,
+    });
   }
 
   @Post()

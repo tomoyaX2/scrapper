@@ -10,11 +10,15 @@ export class SeriesController {
 
   @Get()
   getSeries(
-    @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
     @Query('name') name: string,
   ): PaginatedResponse<Series> {
-    return this.seriesService.getSeries({ page, perPage, name });
+    return this.seriesService.getSeries({
+      page: parseInt(page),
+      perPage: parseInt(perPage),
+      name,
+    });
   }
 
   @Post()

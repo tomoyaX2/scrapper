@@ -10,11 +10,15 @@ export class TagsController {
 
   @Get()
   getTags(
-    @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
     @Query('name') name: string,
   ): PaginatedResponse<Tag> {
-    return this.tagsService.getTags({ page, perPage, name });
+    return this.tagsService.getTags({
+      page: parseInt(page),
+      perPage: parseInt(perPage),
+      name,
+    });
   }
 
   @Post()
