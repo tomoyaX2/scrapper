@@ -7,6 +7,8 @@ import axios from 'axios';
 import * as fs from 'fs';
 import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
+import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { albumRelations } from 'src/shared/constants';
 
 @Injectable()
 export class ImageService {
@@ -16,18 +18,16 @@ export class ImageService {
     private logService: LogService,
   ) {}
 
-  getImages(): Promise<Image[]> {
-    return this.imagesRepository.find({
-      relations: [
-        'album',
-        'album.images',
-        'album.authors',
-        'album.type',
-        'album.series',
-        'album.language',
-        'album.group',
-      ],
+  async getImages({
+    page,
+    perPage,
+  }: DefaultPaginationQuery): PaginatedResponse<Image> {
+    const [data, total] = await this.imagesRepository.findAndCount({
+      relations: albumRelations,
+      take: perPage,
+      skip: page * perPage,
     });
+    return { data, total, currentPage: page };
   }
 
   async saveImage(image: ImageDto): Promise<Image> {

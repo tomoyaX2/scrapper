@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { albumRelations } from 'src/shared/constants';
+import { PaginatedResponse, DefaultPaginationQuery } from 'src/shared/types';
+import { Like, Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
 import { AuthorDto } from './authors.dto';
@@ -14,18 +16,18 @@ export class AuthorService {
     private logService: LogService,
   ) {}
 
-  getAuthors(): Promise<Author[]> {
-    return this.authorRepository.find({
-      relations: [
-        'albums',
-        'albums.images',
-        'albums.authors',
-        'albums.type',
-        'albums.series',
-        'albums.language',
-        'albums.group',
-      ],
+  async getAuthors({
+    page,
+    perPage,
+    name,
+  }: DefaultPaginationQuery): PaginatedResponse<Author> {
+    const [data, total] = await this.authorRepository.findAndCount({
+      where: name ? { name: Like('%' + name + '%') } : {},
+      relations: albumRelations,
+      take: perPage,
+      skip: page * perPage,
     });
+    return { data, total, currentPage: page };
   }
 
   async createAuthor(author: AuthorDto): Promise<Author> {

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { albumRelations } from 'src/shared/constants';
+import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { Like, Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
 import { LanguageDto } from './languages.dto';
@@ -14,18 +16,18 @@ export class LanguagesService {
     private logService: LogService,
   ) {}
 
-  getLanguages(): Promise<Language[]> {
-    return this.languagesRepository.find({
-      relations: [
-        'albums',
-        'albums.images',
-        'albums.authors',
-        'albums.type',
-        'albums.series',
-        'albums.language',
-        'albums.group',
-      ],
+  async getLanguages({
+    page,
+    perPage,
+    name,
+  }: DefaultPaginationQuery): PaginatedResponse<Language> {
+    const [data, total] = await this.languagesRepository.findAndCount({
+      where: name ? { name: Like('%' + name + '%') } : {},
+      relations: albumRelations,
+      take: perPage,
+      skip: page * perPage,
     });
+    return { data, total, currentPage: page };
   }
 
   async createLanguage(language: LanguageDto): Promise<Language> {

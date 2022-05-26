@@ -1,4 +1,5 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
+import { PaginatedResponse } from 'src/shared/types';
 import { Group } from './group.entity';
 import { GroupService } from './group.service';
 
@@ -7,8 +8,12 @@ export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
   @Get()
-  getGroups(): Promise<Group[]> {
-    return this.groupService.getGroups();
+  getGroups(
+    @Query('page') page: number,
+    @Query('perPage') perPage: number,
+    @Query('name') name: string,
+  ): PaginatedResponse<Group> {
+    return this.groupService.getGroups({ page, perPage, name });
   }
 
   @Post()

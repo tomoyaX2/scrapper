@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { albumRelations } from 'src/shared/constants';
+import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { Like, Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
 import { TypeDto } from './type.dto';
@@ -14,18 +16,18 @@ export class TypeService {
     private logService: LogService,
   ) {}
 
-  getTypes(): Promise<Type[]> {
-    return this.typesRepository.find({
-      relations: [
-        'albums',
-        'albums.images',
-        'albums.authors',
-        'albums.type',
-        'albums.series',
-        'albums.language',
-        'albums.group',
-      ],
+  async getTypes({
+    page,
+    perPage,
+    name,
+  }: DefaultPaginationQuery): PaginatedResponse<Type> {
+    const [data, total] = await this.typesRepository.findAndCount({
+      where: name ? { name: Like('%' + name + '%') } : {},
+      relations: albumRelations,
+      take: perPage,
+      skip: page * perPage,
     });
+    return { data, total, currentPage: page };
   }
 
   async createType(type: TypeDto): Promise<Type> {

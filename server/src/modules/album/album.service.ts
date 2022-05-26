@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AuthorService } from '../authors/authors.service';
 import { GroupService } from '../group/group.service';
 import { ImageService } from '../image/image.service';
@@ -13,6 +13,12 @@ import { Album } from './album.entity';
 import * as fs from 'fs';
 import { TypeService } from '../type/type.service';
 import { LogService } from '../log/log.service';
+import {
+  PaginatedResponse,
+  AlbumPaginationQuery,
+  DefaultPaginationQuery,
+} from 'src/shared/types';
+import { buildAlbumPagination } from './utils';
 
 @Injectable()
 export class AlbumService {
@@ -29,10 +35,31 @@ export class AlbumService {
     private logService: LogService,
   ) {}
 
-  getAlbums(): Promise<Album[]> {
-    return this.albumRepository.find({
+  async getAlbums({
+    page,
+    perPage,
+  }: DefaultPaginationQuery): PaginatedResponse<Album> {
+    const [data, total] = await this.albumRepository.findAndCount({
       relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
+      take: perPage,
+      skip: page * perPage,
     });
+    return { data, total, currentPage: page };
+  }
+
+  async searchAlbums(
+    { page, perPage }: DefaultPaginationQuery,
+    albumParams: AlbumPaginationQuery,
+  ): PaginatedResponse<Album> {
+    const where = buildAlbumPagination(albumParams);
+    console.log(where, 'zzzz');
+    const [data, total] = await this.albumRepository.findAndCount({
+      relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
+      // where: { 'authors.id': '187f8ed6-4f71-4bfc-bc65-826dfdbb4028' },
+      take: perPage,
+      skip: page * perPage,
+    });
+    return { data, total, currentPage: page };
   }
 
   async createAlbum(album: AlbumDto): Promise<Album> {

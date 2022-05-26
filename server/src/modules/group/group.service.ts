@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { albumRelations } from 'src/shared/constants';
+import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { Like, Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
 import { GroupDto } from './group.dto';
@@ -14,18 +16,18 @@ export class GroupService {
     private logService: LogService,
   ) {}
 
-  getGroups(): Promise<Group[]> {
-    return this.groupRepository.find({
-      relations: [
-        'albums',
-        'albums.images',
-        'albums.authors',
-        'albums.type',
-        'albums.series',
-        'albums.language',
-        'albums.group',
-      ],
+  async getGroups({
+    page,
+    perPage,
+    name,
+  }: DefaultPaginationQuery): PaginatedResponse<Group> {
+    const [data, total] = await this.groupRepository.findAndCount({
+      where: name ? { name: Like('%' + name + '%') } : {},
+      relations: albumRelations,
+      take: perPage,
+      skip: page * perPage,
     });
+    return { data, total, currentPage: page };
   }
 
   async createGroup(group: GroupDto): Promise<Group> {

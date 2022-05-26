@@ -1,4 +1,5 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
+import { PaginatedResponse } from 'src/shared/types';
 import { SeriesDto } from './series.dto';
 import { Series } from './series.entity';
 import { SeriesService } from './series.service';
@@ -8,8 +9,12 @@ export class SeriesController {
   constructor(private readonly seriesService: SeriesService) {}
 
   @Get()
-  getSeries(): Promise<Series[]> {
-    return this.seriesService.getSeries();
+  getSeries(
+    @Query('page') page: number,
+    @Query('perPage') perPage: number,
+    @Query('name') name: string,
+  ): PaginatedResponse<Series> {
+    return this.seriesService.getSeries({ page, perPage, name });
   }
 
   @Post()
