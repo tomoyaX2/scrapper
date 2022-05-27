@@ -58,9 +58,12 @@ export class AuthorService {
   async assignAlbumToAuthor(album: Album): Promise<void> {
     for (const albumAuthor of album.authors) {
       try {
+        const targetAuthor = await this.authorRepository.findOne({
+          id: albumAuthor.id,
+        });
         await this.authorRepository.save({
-          ...albumAuthor,
-          albums: [...(albumAuthor?.albums || []), album],
+          ...targetAuthor,
+          albums: [...(targetAuthor?.albums || []), album],
         });
       } catch (e) {
         this.logService.saveLog(

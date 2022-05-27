@@ -38,9 +38,9 @@ export class TypeService {
 
   async assignType(name: string) {
     try {
-      const series = await this.typesRepository.findOne({ name });
-      if (series?.name) {
-        return series;
+      const type = await this.typesRepository.findOne({ name });
+      if (type?.name) {
+        return type;
       }
       return await this.typesRepository.save({ name });
     } catch (e) {}
@@ -48,9 +48,12 @@ export class TypeService {
 
   async assignAlbumToType(album: Album): Promise<void> {
     try {
+      const targetType = await this.typesRepository.findOne({
+        id: album.type.id,
+      });
       await this.typesRepository.save({
-        ...album.type,
-        albums: [...(album.type?.albums || []), album],
+        ...targetType,
+        albums: [...(targetType?.albums || []), album],
       });
     } catch (e) {
       this.logService.saveLog(

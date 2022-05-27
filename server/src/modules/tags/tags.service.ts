@@ -61,9 +61,12 @@ export class TagsService {
   async assignAlbumToTag(album: Album): Promise<void> {
     for (const albumTag of album.tags) {
       try {
+        const targetTag = await this.tagsRepository.findOne({
+          id: albumTag.id,
+        });
         await this.tagsRepository.save({
-          ...albumTag,
-          albums: [...(albumTag?.albums || []), album],
+          ...targetTag,
+          albums: [...(targetTag?.albums || []), album],
         });
       } catch (e) {
         this.logService.saveLog(

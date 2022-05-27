@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Album } from '../album/album.entity';
 import { User } from '../users/users.entity';
@@ -19,5 +20,6 @@ export class Gallery {
   albums?: Album[];
 
   @ManyToOne(() => User, (user) => user.galleries)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user?: User;
 }

@@ -6,6 +6,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
+  JoinColumn,
 } from 'typeorm';
 import { Author } from '../authors/authors.entity';
 import { Gallery } from '../gallery/gallery.entity';
@@ -24,7 +25,8 @@ export class Album {
   @Column({ nullable: true })
   name: string;
 
-  @ManyToOne(() => Gallery)
+  @ManyToOne(() => Gallery, (gallery) => gallery.albums)
+  @JoinColumn({ name: 'gallery_id', referencedColumnName: 'id' })
   gallery?: Gallery;
 
   @Column({ nullable: true })
@@ -33,23 +35,47 @@ export class Album {
   @OneToMany(() => Image, (image) => image.album)
   images?: Image[];
 
-  @ManyToMany(() => Author)
-  @JoinTable()
+  @ManyToMany(() => Author, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @JoinTable({
+    name: 'album_authors',
+    joinColumn: {
+      name: 'album_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'author_id',
+      referencedColumnName: 'id',
+    },
+  })
   authors?: Author[];
 
-  @ManyToOne(() => Type)
+  @ManyToOne(() => Type, (type) => type.albums)
+  @JoinColumn({ name: 'type_id', referencedColumnName: 'id' })
   type?: Type;
 
   @ManyToOne(() => Series)
+  @JoinColumn({ name: 'series_id', referencedColumnName: 'id' })
   series?: Series;
 
   @ManyToOne(() => Language)
+  @JoinColumn({ name: 'language_id', referencedColumnName: 'id' })
   language?: Language;
 
   @ManyToOne(() => Group)
+  @JoinColumn({ name: 'group_id', referencedColumnName: 'id' })
   group?: Group;
 
-  @ManyToMany(() => Tag)
-  @JoinTable()
+  @ManyToMany(() => Tag, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @JoinTable({
+    name: 'album_tags',
+    joinColumn: {
+      name: 'album_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'tag_id',
+      referencedColumnName: 'id',
+    },
+  })
   tags?: Tag[];
 }

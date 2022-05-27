@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
-import { In, Repository } from 'typeorm';
+import { getManager, In, Repository } from 'typeorm';
 import { AuthorService } from '../authors/authors.service';
 import { GroupService } from '../group/group.service';
 import { ImageService } from '../image/image.service';
@@ -50,6 +50,7 @@ export class AlbumService {
   async searchAlbums(
     albumParams: AlbumPaginationQuery,
   ): PaginatedResponse<Album> {
+    // const test = await getManager().query('SELECT * FROM album LEFT OUTER JOIN ')
     const query = await this.albumRepository.createQueryBuilder('album');
     const [data, total] = await buildAlbumPagination(albumParams, query);
     return { data, total, currentPage: albumParams.page };
@@ -92,6 +93,7 @@ export class AlbumService {
       if (!fs.existsSync(albumPath)) {
         fs.mkdirSync(albumPath);
       }
+      album.path = albumPath;
       if (authors.length) {
         const result = await this.authorsService.assignAuthorToAlbum(authors);
         album.authors = result;
@@ -99,13 +101,6 @@ export class AlbumService {
       if (tags.length) {
         const albumTags = await this.tagsService.generateAlbumTags(tags);
         album.tags = albumTags;
-      }
-      if (images.length) {
-        const albumImages = await this.imageService.assignImageToAlbum(
-          images,
-          albumPath,
-        );
-        album.images = albumImages;
       }
       if (series.length) {
         const albumSeries = await this.seriesService.assignSeries(series[0]);
@@ -121,24 +116,21 @@ export class AlbumService {
         );
         album.language = albumLanguage;
       }
-
+      if (images.length) {
+        const albumImages = await this.imageService.assignImageToAlbum(
+          images,
+          albumPath,
+        );
+        album.images = albumImages;
+      }
       const albumType = await this.typeService.assignType(type[0]);
 
       album.type = albumType;
-
-      album.path = albumPath;
-      const albumResult = await this.albumRepository.save(album);
-      tags.length && (await this.tagsService.assignAlbumToTag(albumResult));
-      images.length &&
-        (await this.imageService.assignAlbumToImage(albumResult));
-      series.length &&
-        (await this.seriesService.assignAlbumToSeries(albumResult));
+      const finalAlbum = await this.albumRepository.save(album);
+      tags.length && (await this.tagsService.assignAlbumToTag(finalAlbum));
+      images.length && (await this.imageService.assignAlbumToImage(finalAlbum));
       authors.length &&
-        (await this.authorsService.assignAlbumToAuthor(albumResult));
-      group.length && (await this.groupService.assignAlbumToGroup(albumResult));
-      languages.length &&
-        (await this.languageService.assignAlbumToLanguage(albumResult));
-      type.length && (await this.typeService.assignAlbumToType(albumResult));
+        (await this.authorsService.assignAlbumToAuthor(finalAlbum));
     }
   }
 }

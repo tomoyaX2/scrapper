@@ -15,27 +15,29 @@ export const buildAlbumPagination = async (
   data: AlbumPaginationQuery,
   query: SelectQueryBuilder<Album>,
 ) => {
-  let resultQuery = query;
-  const whereData = {};
+  // let resultQuery = query;
+  // const whereData = {};
 
-  for (const field of joinFields) {
-    resultQuery = resultQuery.leftJoinAndSelect(`album.${field}`, field);
-  }
+  // for (const field of joinFields) {
+  //   resultQuery = resultQuery.leftJoinAndSelect(`album.${field}`, field);
+  // }
 
-  const activeFilters = Object.keys(data).filter((key) => {
-    const isActive = !!data[key]?.length;
-    if (isActive)
-      whereData[key] = Array.isArray(data[key]) ? data[key] : [data[key]];
-    return isActive;
-  });
+  // const activeFilters = Object.keys(data).filter((key) => {
+  //   const isActive = !!data[key]?.length;
+  //   if (isActive)
+  //     whereData[key] = Array.isArray(data[key]) ? data[key] : [data[key]];
+  //   return isActive;
+  // });
 
-  const whereString = activeFilters
-    .map((key) => `${key}.id IN (:...${key})`)
-    .join(' AND ');
+  // const whereString = activeFilters
+  //   .map((key) => `${key}.id IN (:...${key})`)
+  //   .join(' AND ');
 
-  return resultQuery
-    .where(whereString, whereData)
-    .skip((data.page - 1) * data.perPage)
-    .take(data.perPage)
-    .getManyAndCount();
+  return (
+    query
+      // .where(whereString, whereData)
+      .skip((data.page - 1) * data.perPage)
+      .take(data.perPage)
+      .getManyAndCount()
+  );
 };

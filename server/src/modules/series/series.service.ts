@@ -48,9 +48,12 @@ export class SeriesService {
 
   async assignAlbumToSeries(album: Album): Promise<Series> {
     try {
+      const targetSeries = await this.seriesRepository.findOne({
+        id: album.series.id,
+      });
       return await this.seriesRepository.save({
-        ...album.series,
-        albums: [...(album.series?.albums || []), album],
+        ...targetSeries,
+        albums: [...(targetSeries?.albums || []), album],
       });
     } catch (e) {
       this.logService.saveLog(

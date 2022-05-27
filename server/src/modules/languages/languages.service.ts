@@ -48,9 +48,13 @@ export class LanguagesService {
 
   async assignAlbumToLanguage(album: Album): Promise<void> {
     try {
+      const targetLanguage = await this.languagesRepository.findOne({
+        id: album.language.id,
+      });
+      console.log(targetLanguage, 'targetLanguage');
       await this.languagesRepository.save({
-        ...album.language,
-        albums: [...(album.language?.albums || []), album],
+        ...targetLanguage,
+        albums: [...(targetLanguage?.albums || []), album],
       });
     } catch (e) {
       this.logService.saveLog(

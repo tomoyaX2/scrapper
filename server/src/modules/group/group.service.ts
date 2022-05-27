@@ -48,9 +48,12 @@ export class GroupService {
 
   async assignAlbumToGroup(album: Album): Promise<void> {
     try {
+      const targetGroup = await this.groupRepository.findOne({
+        id: album.group.id,
+      });
       await this.groupRepository.save({
-        ...album.group,
-        albums: [...(album.group?.albums || []), album],
+        ...targetGroup,
+        albums: [...(targetGroup?.albums || []), album],
       });
     } catch (e) {
       this.logService.saveLog(
