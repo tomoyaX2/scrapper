@@ -15,6 +15,7 @@ import { TypeModule } from './modules/type/type.module';
 import { GroupModule } from './modules/group/group.module';
 import { LogModule } from './modules/log/log.module';
 import { FileModule } from './modules/file/file.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FileModule } from './modules/file/file.module';
     GroupModule,
     LogModule,
     FileModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

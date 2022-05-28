@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PaginatedResponse } from 'src/shared/types';
 import { TagsDto } from './tags.dto';
 import { Tag } from './tags.entity';
@@ -22,7 +22,7 @@ export class TagsController {
   }
 
   @Post()
-  saveTag(tag: TagsDto): Promise<Tag> {
+  saveTag(@Body() tag: TagsDto) {
     return this.tagsService.saveTag(tag);
   }
 }

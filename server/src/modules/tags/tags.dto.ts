@@ -1,6 +1,6 @@
-import { Album } from '../album/album.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface TagsDto {
+export class TagsDto {
+  @ApiProperty()
   name: string;
-  albums?: Album[];
 }

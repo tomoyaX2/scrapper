@@ -8,7 +8,6 @@ import { Language } from 'src/modules/languages/languages.entity';
 import { Series } from 'src/modules/series/series.entity';
 import { Tag } from 'src/modules/tags/tags.entity';
 import { Type } from 'src/modules/type/type.entity';
-import { UsersController } from 'src/modules/users/users.controller';
 import { User } from 'src/modules/users/users.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -57,7 +56,6 @@ class ConfigService {
         Author,
         Image,
         Album,
-        UsersController,
         Language,
         Tag,
         Type,

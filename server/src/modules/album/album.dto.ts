@@ -6,7 +6,7 @@ import { Language } from '../languages/languages.entity';
 import { Series } from '../series/series.entity';
 import { Tag } from '../tags/tags.entity';
 
-export interface AlbumDto {
+export class AlbumDto {
   name?: string;
   gallery?: Gallery;
   images?: Image[];

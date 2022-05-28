@@ -1,6 +1,6 @@
-import { AlbumDto } from '../album/album.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface AuthorDto {
+export class AuthorDto {
+  @ApiProperty()
   name: string;
-  albums?: AlbumDto[];
 }

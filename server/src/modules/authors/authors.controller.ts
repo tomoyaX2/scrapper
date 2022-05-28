@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { AuthorService } from './authors.service';
 import { Author } from './authors.entity';
 import { AuthorDto } from './authors.dto';
@@ -22,7 +22,7 @@ export class AuthorController {
   }
 
   @Post()
-  createAuthors(author: AuthorDto): Promise<Author> {
+  createAuthors(@Body() author: AuthorDto): Promise<Author> {
     return this.authorService.createAuthor(author);
   }
 }

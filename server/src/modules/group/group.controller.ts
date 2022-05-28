@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PaginatedResponse } from 'src/shared/types';
+import { GroupDto } from './group.dto';
 import { Group } from './group.entity';
 import { GroupService } from './group.service';
 
@@ -21,7 +22,7 @@ export class GroupController {
   }
 
   @Post()
-  createGroup(group): Promise<Group> {
+  createGroup(@Body() group: GroupDto): Promise<Group> {
     return this.groupService.createGroup(group);
   }
 }

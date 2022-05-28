@@ -29,9 +29,6 @@ export class User {
   @Column()
   two_factor_code: string;
 
-  @Column()
-  phone: string;
-
   @OneToMany(() => Gallery, (gallery) => gallery.user)
   galleries: Gallery[];
 }

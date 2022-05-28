@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PaginatedResponse } from 'src/shared/types';
 import { LanguageDto } from './languages.dto';
 import { Language } from './languages.entity';
@@ -22,7 +22,7 @@ export class LanguagesController {
   }
 
   @Post()
-  createLanguage(language: LanguageDto): Promise<Language> {
+  createLanguage(@Body() language: LanguageDto): Promise<Language> {
     return this.languageService.createLanguage(language);
   }
 }

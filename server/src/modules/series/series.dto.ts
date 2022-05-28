@@ -1,6 +1,6 @@
-import { Album } from '../album/album.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface SeriesDto {
+export class SeriesDto {
+  @ApiProperty()
   name: string;
-  albums?: Album[];
 }

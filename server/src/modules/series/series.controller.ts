@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PaginatedResponse } from 'src/shared/types';
 import { SeriesDto } from './series.dto';
 import { Series } from './series.entity';
@@ -22,7 +22,7 @@ export class SeriesController {
   }
 
   @Post()
-  createSeries(series: SeriesDto): Promise<Series> {
+  createSeries(@Body() series: SeriesDto): Promise<Series> {
     try {
       return this.seriesService.createSeries(series);
     } catch (e) {}
