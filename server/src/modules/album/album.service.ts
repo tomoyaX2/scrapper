@@ -47,13 +47,12 @@ export class AlbumService {
     return { data, total, currentPage: page };
   }
 
-  async searchAlbums(
-    albumParams: AlbumPaginationQuery,
-  ): PaginatedResponse<Album> {
-    // const test = await getManager().query('SELECT * FROM album LEFT OUTER JOIN ')
-    const query = await this.albumRepository.createQueryBuilder('album');
-    const [data, total] = await buildAlbumPagination(albumParams, query);
-    return { data, total, currentPage: albumParams.page };
+  async searchAlbums(albumParams: AlbumPaginationQuery): Promise<any> {
+    const [data, total] = await buildAlbumPagination(
+      albumParams,
+      this.albumRepository,
+    );
+    return { data, total, page: albumParams.page };
   }
 
   async createAlbum(album: AlbumDto): Promise<Album> {
