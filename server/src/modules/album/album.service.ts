@@ -47,6 +47,14 @@ export class AlbumService {
     return { data, total, currentPage: page };
   }
 
+  async getAlbumById(id: string): Promise<Album> {
+    const album = await this.albumRepository.findOne({
+      relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
+      where: { id },
+    });
+    return album;
+  }
+
   async searchAlbums(albumParams: AlbumPaginationQuery): Promise<any> {
     const [data, total] = await buildAlbumPagination(
       albumParams,

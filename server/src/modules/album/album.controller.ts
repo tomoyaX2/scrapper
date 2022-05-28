@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { AlbumFilters } from 'src/shared/enums/AlbumFilters';
 import { PaginatedResponse } from 'src/shared/types';
 import { Album } from './album.entity';
 import { AlbumService } from './album.service';
@@ -18,6 +17,11 @@ export class AlbumController {
       page,
       perPage,
     });
+  }
+
+  @Get(':albumId')
+  getAlbumById(@Param('albumId') albumId: string): Promise<Album> {
+    return this.albumService.getAlbumById(albumId);
   }
 
   @ApiQuery({
