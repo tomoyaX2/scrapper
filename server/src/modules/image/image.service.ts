@@ -89,6 +89,7 @@ export class ImageService {
       );
       if (imagePath) {
         const albumImage = await this.saveImage({
+          ...adImage,
           url: imagePath,
           name: adImage.id,
         });
