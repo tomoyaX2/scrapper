@@ -36,7 +36,10 @@ export class Album {
   @OneToMany(() => Image, (image) => image.album)
   images?: Image[];
 
-  @OneToMany(() => Comment, (comment) => comment.album)
+  @OneToMany(() => Comment, (comment) => comment.album, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   comments?: Comment[];
 
   @ManyToMany(() => Author, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })

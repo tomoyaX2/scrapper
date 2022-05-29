@@ -1,5 +1,6 @@
 import { BadRequestException, HttpStatus } from '@nestjs/common';
 import { Errors } from 'src/errors/auth';
+import { RestorePasswordDto } from './auth.dto';
 
 export const isValidRegistrationInput = ({
   password,
@@ -42,5 +43,20 @@ export const isValidRegistrationInput = ({
       statusCode: HttpStatus.BAD_REQUEST,
     });
   }
+  return true;
+};
+
+export const isValidRestoreInput = ({
+  newPassword,
+  confirmPassword,
+}: RestorePasswordDto) => {
+  const errors = {} as Record<string, any>;
+  if (newPassword !== confirmPassword) {
+    errors.passwordsDontMatch = Errors.registrationErrors.passwordsDontMatch;
+  }
+  throw new BadRequestException({
+    message: errors,
+    statusCode: HttpStatus.BAD_REQUEST,
+  });
   return true;
 };

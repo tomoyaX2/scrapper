@@ -34,5 +34,19 @@ export const Errors = {
       message: 'Token has invalid structure or expired, please, re-log in',
       statusCode: HttpStatus.UNAUTHORIZED,
     },
+    invalidEmail: {
+      message:
+        'This email is not connected to any user account. Please, verify your data, or contact to support via email',
+      statusCode: HttpStatus.NOT_FOUND,
+    },
+    userResetTokenIsNotReady: {
+      message: 'Your next recovery link will be ready in 5 minutes',
+      statuscodE: HttpStatus.FORBIDDEN,
+    },
+    invalidRestoreToken: {
+      message:
+        'Token has invalid structure or expired. Please, repeat your restoration try or contact support via  email',
+      statusCode: HttpStatus.FORBIDDEN,
+    },
   },
 };

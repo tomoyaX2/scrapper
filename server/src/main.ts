@@ -11,6 +11,6 @@ async function bootstrap() {
 
   initSwagger(app);
   app.useGlobalFilters(new HttpExceptionFilter());
-  await app.listen(3000);
+  await app.listen(8000);
 }
 bootstrap();

@@ -38,6 +38,11 @@ export class UsersService {
     return data;
   }
 
+  async getUserByEmail(email: string): Promise<UserDto> {
+    const data = await this.usersRepository.findOne({ email });
+    return data;
+  }
+
   async saveUser(user: UserDto): Promise<UserDto> {
     return this.usersRepository.save(user);
   }

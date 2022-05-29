@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { isValidRegistrationInput } from './utils';
+import { isValidRegistrationInput, isValidRestoreInput } from './utils';
 import * as jwt from 'jsonwebtoken';
 import { Errors } from 'src/errors/auth';
 
@@ -25,10 +25,22 @@ export class AccessTokenGuard implements CanActivate {
         request.headers.access_token,
         process.env.JWT_SECRET,
       ) as jwt.JwtPayload;
+
+      if (token.exp < (new Date().getTime() + 1) / 1000) {
+        throw new UnauthorizedException(Errors.authErrors.invalidToken);
+      }
       request.sub = token.sub;
       return true;
     } catch (e) {
       throw new UnauthorizedException(Errors.authErrors.invalidToken);
     }
+  }
+}
+
+@Injectable()
+export class RestorePasswordGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    return isValidRestoreInput(request.body);
   }
 }

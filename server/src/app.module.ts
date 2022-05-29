@@ -17,9 +17,22 @@ import { LogModule } from './modules/log/log.module';
 import { FileModule } from './modules/file/file.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommentsModule } from './modules/comments/comments.module';
+import { MailModule } from './modules/mail/mail.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 
 @Module({
   imports: [
+    MailerModule.forRoot({
+      transport: `smtps://${process.env.EMAIL_USER}:${process.env.EMAIL_PASSWORD}@smtp.gmail.com`,
+      defaults: {
+        from: '"nest-modules" <modules@nestjs.com>',
+      },
+      template: {
+        dir: 'templates',
+        adapter: new EjsAdapter(),
+      },
+    }),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     ScrapperModule,
     ImageModule,
@@ -35,6 +48,7 @@ import { CommentsModule } from './modules/comments/comments.module';
     FileModule,
     AuthModule,
     CommentsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

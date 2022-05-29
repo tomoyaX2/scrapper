@@ -16,3 +16,14 @@ export class RegistrationDto {
 export class TokenReturnDto {
   accessToken: string;
 }
+
+export class ResetPasswordDto {
+  email?: string;
+  login?: string;
+}
+
+export class RestorePasswordDto {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}

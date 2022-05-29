@@ -16,5 +16,7 @@ export class UserDto {
   phone?: string;
   access_token?: string;
   refresh_token?: string;
+  recovery_code?: string;
+  next_recovery_request_in?: string;
   comments?: CommentDto[];
 }
