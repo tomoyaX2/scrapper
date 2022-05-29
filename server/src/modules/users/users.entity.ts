@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Comment } from '../comments/comments.entity';
 import { Gallery } from '../gallery/gallery.entity';
 
 @Entity()
@@ -37,4 +38,7 @@ export class User {
 
   @OneToMany(() => Gallery, (gallery) => gallery.user)
   galleries: Gallery[];
+
+  @OneToMany(() => Comment, (comment) => comment.author)
+  comments: Gallery[];
 }

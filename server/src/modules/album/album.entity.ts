@@ -9,6 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Author } from '../authors/authors.entity';
+import { Comment } from '../comments/comments.entity';
 import { Gallery } from '../gallery/gallery.entity';
 import { Group } from '../group/group.entity';
 import { Image } from '../image/image.entity';
@@ -34,6 +35,9 @@ export class Album {
 
   @OneToMany(() => Image, (image) => image.album)
   images?: Image[];
+
+  @OneToMany(() => Comment, (comment) => comment.album)
+  comments?: Comment[];
 
   @ManyToMany(() => Author, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinTable({
