@@ -1,18 +1,22 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { AuthorService } from './comments.service';
-import { AuthorDto, PaginatedAuthorDto } from './comments.dto';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { CommentsService } from './comments.service';
+import { CommentBodyDto, PaginatedCommentDto } from './comments.dto';
+import { AccessTokenGuard } from '../auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('comments')
+@UseGuards(AccessTokenGuard)
 export class CommentsController {
-  constructor(private readonly authorService: AuthorService) {}
+  constructor(private readonly commentsService: CommentsService) {}
 
   @Get()
-  getAuthors(
+  @ApiBearerAuth()
+  getComments(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('name') name: string,
-  ): Promise<PaginatedAuthorDto> {
-    return this.authorService.getAuthors({
+  ): Promise<PaginatedCommentDto> {
+    return this.commentsService.getComments({
       page: parseInt(page),
       perPage: parseInt(perPage),
       name,
@@ -20,7 +24,8 @@ export class CommentsController {
   }
 
   @Post()
-  createComment(@Body() author: AuthorDto): Promise<AuthorDto> {
-    return this.authorService.createAuthor(author);
+  @ApiBearerAuth()
+  createComment(@Body() comment: CommentBodyDto): Promise<void> {
+    return this.commentsService.saveComment(comment);
   }
 }

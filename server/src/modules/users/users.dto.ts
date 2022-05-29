@@ -1,3 +1,5 @@
+import { CommentDto } from '../comments/comments.dto';
+
 export class PaginatedUsersDto {
   data: UserDto[];
   total: number;
@@ -14,4 +16,5 @@ export class UserDto {
   phone?: string;
   access_token?: string;
   refresh_token?: string;
+  comments?: CommentDto[];
 }

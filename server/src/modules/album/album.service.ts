@@ -45,7 +45,15 @@ export class AlbumService {
 
   async getAlbumById(id: string): Promise<AlbumDto> {
     const album = await this.albumRepository.findOne({
-      relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
+      relations: [
+        'authors',
+        'images',
+        'series',
+        'language',
+        'group',
+        'tags',
+        'comments',
+      ],
       where: { id },
     });
     return album;

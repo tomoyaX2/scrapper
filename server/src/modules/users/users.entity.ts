@@ -6,16 +6,16 @@ import { Gallery } from '../gallery/gallery.entity';
 export class User {
   @PrimaryGeneratedColumn('uuid') id: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 255 })
   login: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 255 })
   email: string;
 
-  @Column()
+  @Column({ length: 255 })
   name: string;
 
-  @Column()
+  @Column({ length: 255 })
   password: string;
 
   @Column({ default: true })
@@ -33,7 +33,7 @@ export class User {
   @Column({ nullable: true })
   two_factor_code: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 255 })
   phone: string;
 
   @OneToMany(() => Gallery, (gallery) => gallery.user)

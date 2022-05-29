@@ -4,9 +4,9 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Errors } from 'src/errors/auth';
-import { AuthService } from './auth.service';
 import { isValidRegistrationInput } from './utils';
+import * as jwt from 'jsonwebtoken';
+import { Errors } from 'src/errors/auth';
 
 @Injectable()
 export class RegistrationGuard implements CanActivate {
@@ -18,16 +18,17 @@ export class RegistrationGuard implements CanActivate {
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const user = await this.authService.validateAccessToken(
-      request.headers.access_token,
-    );
-    if (!user) {
+    try {
+      const request = context.switchToHttp().getRequest();
+      const token = jwt.verify(
+        request.headers.access_token,
+        process.env.JWT_SECRET,
+      ) as jwt.JwtPayload;
+      request.sub = token.sub;
+      return true;
+    } catch (e) {
       throw new UnauthorizedException(Errors.authErrors.invalidToken);
     }
-    request.sub = user.id;
-    return true;
   }
 }

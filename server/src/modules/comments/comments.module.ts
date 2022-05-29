@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LogModule } from '../log/log.module';
+import { AlbumModule } from '../album/album.module';
+import { UsersModule } from '../users/users.module';
 import { CommentsController } from './comments.controller';
 import { Comment } from './comments.entity';
-import { AuthorService } from './comments.service';
+import { CommentsService } from './comments.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment]), LogModule],
+  imports: [TypeOrmModule.forFeature([Comment]), AlbumModule, UsersModule],
   controllers: [CommentsController],
-  providers: [AuthorService],
-  exports: [AuthorService],
+  providers: [CommentsService],
+  exports: [CommentsService],
 })
-export class AuthorsModule {}
+export class CommentsModule {}

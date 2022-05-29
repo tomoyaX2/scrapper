@@ -1,30 +1,46 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, HttpStatus } from '@nestjs/common';
 import { Errors } from 'src/errors/auth';
 
 export const isValidRegistrationInput = ({
   password,
   matchPassword,
   phone,
+  email,
 }: {
   password: string;
   matchPassword: string;
   phone: string;
+  email: string;
 }) => {
-  const isValid = true;
+  const errors = {} as Record<string, any>;
   const passwordMatchRequirements = password.match(
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/,
   );
-  const phoneMatchREgExp = phone
+  const phoneMatchRegExp = phone
     ? phone.match(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{6})$/)
     : true;
+
+  const emailMatchRegExp = email
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    );
+
   if (!passwordMatchRequirements) {
-    throw new BadRequestException(Errors.registrationErrors.invalidPassword);
+    errors.invalidPassword = Errors.registrationErrors.invalidPassword;
   }
   if (password !== matchPassword) {
-    throw new BadRequestException(Errors.registrationErrors.passwordsDontMatch);
+    errors.passwordsDontMatch = Errors.registrationErrors.passwordsDontMatch;
   }
-  if (!phoneMatchREgExp) {
-    throw new BadRequestException(Errors.registrationErrors.invalidPhone);
+  if (!phoneMatchRegExp) {
+    errors.invalidPhone = Errors.registrationErrors.invalidPhone;
   }
-  return isValid;
+  if (!emailMatchRegExp) {
+    errors.invalidEmail = Errors.registrationErrors.invalidEmail;
+    throw new BadRequestException({
+      message: errors,
+      statusCode: HttpStatus.BAD_REQUEST,
+    });
+  }
+  return true;
 };

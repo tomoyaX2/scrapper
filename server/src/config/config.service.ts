@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Album } from 'src/modules/album/album.entity';
 import { Author } from 'src/modules/authors/authors.entity';
+import { Comment } from 'src/modules/comments/comments.entity';
 import { Gallery } from 'src/modules/gallery/gallery.entity';
 import { Group } from 'src/modules/group/group.entity';
 import { Image } from 'src/modules/image/image.entity';
@@ -60,6 +61,7 @@ class ConfigService {
         Tag,
         Type,
         Group,
+        Comment,
       ],
 
       synchronize: true,

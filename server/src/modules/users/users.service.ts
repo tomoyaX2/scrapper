@@ -8,7 +8,7 @@ import { User } from './users.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private usersRepository: Repository<UserDto>,
   ) {}
 
   async getUsers({ page, perPage, name, email }): Promise<PaginatedUsersDto> {
@@ -23,17 +23,22 @@ export class UsersService {
     return { data, total, currentPage: page };
   }
 
-  async getUserById(id: string): Promise<User> {
-    const data = await this.usersRepository.findOne({ id });
+  async getUserById(id: string): Promise<UserDto> {
+    const data = await this.usersRepository.findOne(
+      {
+        id,
+      },
+      { relations: ['comments'] },
+    );
     return data;
   }
 
-  async getUserByLogin(login: string): Promise<User> {
+  async getUserByLogin(login: string): Promise<UserDto> {
     const data = await this.usersRepository.findOne({ login });
     return data;
   }
 
-  async saveUser(user: UserDto): Promise<User> {
+  async saveUser(user: UserDto): Promise<UserDto> {
     return this.usersRepository.save(user);
   }
 }

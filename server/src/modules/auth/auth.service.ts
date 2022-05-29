@@ -2,16 +2,13 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDto, RegistrationDto, TokenReturnDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
 import { Errors } from 'src/errors/auth';
-import { User } from '../users/users.entity';
+import * as jwt from 'jsonwebtoken';
+import { UserDto } from '../users/users.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   async login({ login, password }: LoginDto): Promise<TokenReturnDto> {
     const user = await this.usersService.getUserByLogin(login);
@@ -28,30 +25,19 @@ export class AuthService {
     throw new UnauthorizedException(Errors.loginErrors.incorrentInput);
   }
 
-  async saveUserToken(user: User) {
-    const accessToken = this.jwtService.sign({ sub: user.id });
-    await this.usersService.saveUser({ ...user, access_token: accessToken });
+  async saveUserToken(user: UserDto) {
+    const accessToken = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1314000s',
+    });
+    user.access_token = 'accessToken';
+    await this.usersService.saveUser(user);
     return accessToken;
   }
 
-  async registration({
-    email,
-    login,
-    password,
-    name,
-    avatarUrl,
-    phone,
-  }: RegistrationDto): Promise<{ accessToken: string }> {
+  async registration(data: RegistrationDto): Promise<{ accessToken: string }> {
     const saltOrRounds = 10;
-    const hash = await bcrypt.hash(password, saltOrRounds);
-    const user = await this.usersService.saveUser({
-      email,
-      login,
-      password: hash,
-      name,
-      avatarUrl,
-      phone,
-    });
+    const hash = await bcrypt.hash(data.password, saltOrRounds);
+    const user = await this.usersService.saveUser({ ...data, password: hash });
     const accessToken = await this.saveUserToken(user);
     return {
       accessToken,
@@ -59,7 +45,10 @@ export class AuthService {
   }
 
   async validateAccessToken(token: string) {
-    const tokenData = this.jwtService.verify(token);
+    const tokenData = jwt.verify(
+      token,
+      process.env.JWT_SECRET,
+    ) as jwt.JwtPayload;
     const user = await this.usersService.getUserById(tokenData.sub);
     return user;
   }

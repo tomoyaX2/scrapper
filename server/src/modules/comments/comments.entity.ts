@@ -6,7 +6,7 @@ import { User } from '../users/users.entity';
 export class Comment {
   @PrimaryGeneratedColumn('uuid') id: string;
 
-  @Column({ unique: true })
+  @Column({ length: 1500 })
   text: string;
 
   @ManyToOne(() => Album, (album) => album.comments)

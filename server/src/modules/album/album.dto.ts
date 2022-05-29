@@ -1,4 +1,5 @@
 import { AuthorDto } from '../authors/authors.dto';
+import { CommentDto } from '../comments/comments.dto';
 import { GalleryDto } from '../gallery/gallery.dto';
 import { GroupDto } from '../group/group.dto';
 import { ImageDto } from '../image/image.dto';
@@ -25,4 +26,5 @@ export class AlbumDto {
   tags?: TagsDto[];
   path?: string;
   type?: TypeDto;
+  comments?: CommentDto[];
 }

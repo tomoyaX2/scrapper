@@ -9,8 +9,13 @@ export class PaginatedCommentDto {
 
 export class CommentDto {
   id: string;
-  title: string;
   text: string;
   author: UserDto;
   album: AlbumDto;
+}
+
+export class CommentBodyDto {
+  text: string;
+  authorId: string;
+  albumId: string;
 }

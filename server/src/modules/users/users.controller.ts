@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { PaginatedUsersDto, UserDto } from './users.dto';
 import { UsersService } from './users.service';
 
@@ -27,6 +27,7 @@ export class UsersController {
     return this.usersService.getUsers({ page, perPage, name, email });
   }
 
+  @ApiBearerAuth()
   @Get(':userId')
   getUserById(@Param('userId') userId: string): Promise<UserDto> {
     return this.usersService.getUserById(userId);
