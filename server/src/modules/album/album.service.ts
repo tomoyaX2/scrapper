@@ -1,30 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
-import { getManager, In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AuthorService } from '../authors/authors.service';
 import { GroupService } from '../group/group.service';
 import { ImageService } from '../image/image.service';
 import { LanguagesService } from '../languages/languages.service';
 import { SeriesService } from '../series/series.service';
 import { TagsService } from '../tags/tags.service';
-import { AlbumDto } from './album.dto';
+import { AlbumDto, PaginatedAlbumDto } from './album.dto';
 import { Album } from './album.entity';
 import * as fs from 'fs';
 import { TypeService } from '../type/type.service';
 import { LogService } from '../log/log.service';
-import {
-  PaginatedResponse,
-  AlbumPaginationQuery,
-  DefaultPaginationQuery,
-} from 'src/shared/types';
+import { AlbumPaginationQuery, DefaultPaginationQuery } from 'src/shared/types';
 import { buildAlbumPagination } from './utils';
 
 @Injectable()
 export class AlbumService {
   constructor(
     @InjectRepository(Album)
-    private albumRepository: Repository<Album>,
+    private albumRepository: Repository<AlbumDto>,
     private authorsService: AuthorService,
     private groupService: GroupService,
     private languageService: LanguagesService,
@@ -38,7 +34,7 @@ export class AlbumService {
   async getAlbums({
     page,
     perPage,
-  }: DefaultPaginationQuery): PaginatedResponse<Album> {
+  }: DefaultPaginationQuery): Promise<PaginatedAlbumDto> {
     const [data, total] = await this.albumRepository.findAndCount({
       relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
       take: perPage,
@@ -47,7 +43,7 @@ export class AlbumService {
     return { data, total, currentPage: page };
   }
 
-  async getAlbumById(id: string): Promise<Album> {
+  async getAlbumById(id: string): Promise<AlbumDto> {
     const album = await this.albumRepository.findOne({
       relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
       where: { id },
@@ -55,15 +51,17 @@ export class AlbumService {
     return album;
   }
 
-  async searchAlbums(albumParams: AlbumPaginationQuery): Promise<any> {
+  async searchAlbums(
+    albumParams: AlbumPaginationQuery,
+  ): Promise<PaginatedAlbumDto> {
     const [data, total] = await buildAlbumPagination(
       albumParams,
       this.albumRepository,
     );
-    return { data, total, page: albumParams.page };
+    return { data, total, currentPage: albumParams.page };
   }
 
-  async createAlbum(album: AlbumDto): Promise<Album> {
+  async createAlbum(album: AlbumDto): Promise<AlbumDto> {
     const result = await this.albumRepository.save(album);
     return result;
   }

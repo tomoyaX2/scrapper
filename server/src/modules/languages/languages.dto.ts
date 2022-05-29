@@ -1,6 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { AlbumDto } from '../album/album.dto';
+
+export class PaginatedLanguageDto {
+  data: LanguageDto[];
+  total: number;
+  currentPage: number;
+}
 
 export class LanguageDto {
-  @ApiProperty()
+  id: string;
   name: string;
+  albums?: AlbumDto[];
 }

@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { albumRelations } from 'src/shared/constants';
-import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { DefaultPaginationQuery } from 'src/shared/types';
 import { Like, Repository } from 'typeorm';
-import { Album } from '../album/album.entity';
+import { AlbumDto } from '../album/album.dto';
 import { LogService } from '../log/log.service';
-import { LanguageDto } from './languages.dto';
+import { LanguageDto, PaginatedLanguageDto } from './languages.dto';
 import { Language } from './languages.entity';
 
 @Injectable()
 export class LanguagesService {
   constructor(
     @InjectRepository(Language)
-    private languagesRepository: Repository<Language>,
+    private languagesRepository: Repository<LanguageDto>,
     private logService: LogService,
   ) {}
 
@@ -20,7 +20,7 @@ export class LanguagesService {
     page,
     perPage,
     name,
-  }: DefaultPaginationQuery): PaginatedResponse<Language> {
+  }: DefaultPaginationQuery): Promise<PaginatedLanguageDto> {
     const [data, total] = await this.languagesRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
       relations: albumRelations,
@@ -30,13 +30,13 @@ export class LanguagesService {
     return { data, total, currentPage: page };
   }
 
-  async createLanguage(language: LanguageDto): Promise<Language> {
+  async createLanguage(language: LanguageDto): Promise<LanguageDto> {
     try {
       return await this.languagesRepository.save(language);
     } catch (e) {}
   }
 
-  async assignLanguage(name: string): Promise<Language> {
+  async assignLanguage(name: string): Promise<LanguageDto> {
     try {
       const language = await this.languagesRepository.findOne({ name });
       if (language?.name) {
@@ -46,7 +46,7 @@ export class LanguagesService {
     } catch (e) {}
   }
 
-  async assignAlbumToLanguage(album: Album): Promise<void> {
+  async assignAlbumToLanguage(album: AlbumDto): Promise<void> {
     try {
       const targetLanguage = await this.languagesRepository.findOne({
         id: album.language.id,

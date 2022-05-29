@@ -1,19 +1,28 @@
-import { Author } from '../authors/authors.entity';
-import { Gallery } from '../gallery/gallery.entity';
-import { Group } from '../group/group.entity';
-import { Image } from '../image/image.entity';
-import { Language } from '../languages/languages.entity';
-import { Series } from '../series/series.entity';
-import { Tag } from '../tags/tags.entity';
+import { AuthorDto } from '../authors/authors.dto';
+import { GalleryDto } from '../gallery/gallery.dto';
+import { GroupDto } from '../group/group.dto';
+import { ImageDto } from '../image/image.dto';
+import { LanguageDto } from '../languages/languages.dto';
+import { SeriesDto } from '../series/series.dto';
+import { TagsDto } from '../tags/tags.dto';
+import { TypeDto } from '../type/type.dto';
+
+export class PaginatedAlbumDto {
+  data: AlbumDto[];
+  total: number;
+  currentPage: number;
+}
 
 export class AlbumDto {
+  id?: string;
   name?: string;
-  gallery?: Gallery;
-  images?: Image[];
-  authors?: Author[];
-  series?: Series;
-  language?: Language;
-  group?: Group;
-  tags?: Tag[];
+  gallery?: GalleryDto;
+  images?: ImageDto[];
+  authors?: AuthorDto[];
+  series?: SeriesDto;
+  language?: LanguageDto;
+  group?: GroupDto;
+  tags?: TagsDto[];
   path?: string;
+  type?: TypeDto;
 }

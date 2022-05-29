@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginatedResponse } from 'src/shared/types';
 import { FindOperator, Like, Repository } from 'typeorm';
-import { UserDto } from './users.dto';
+import { PaginatedUsersDto, UserDto } from './users.dto';
 import { User } from './users.entity';
 
 @Injectable()
@@ -12,7 +11,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async getUsers({ page, perPage, name, email }): PaginatedResponse<UserDto> {
+  async getUsers({ page, perPage, name, email }): Promise<PaginatedUsersDto> {
     const where = {} as Record<string, FindOperator<string>>;
     name && (where.name = Like('%' + name + '%'));
     email && (where.email = Like('%' + email + '%'));

@@ -12,12 +12,6 @@ export interface SelectorArgs {
   type: SelectorTypes;
 }
 
-export type PaginatedResponse<T> = Promise<{
-  data: T[];
-  total: number;
-  currentPage: number;
-}>;
-
 export interface DefaultPaginationQuery {
   page?: number;
   perPage?: number;

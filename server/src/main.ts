@@ -3,12 +3,14 @@ import * as express from 'express';
 import { AppModule } from './app.module';
 import { initSwagger } from './config/swagger';
 import { join } from 'path';
+import { HttpExceptionFilter } from './errors/filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use('/public', express.static(join(__dirname, '..', 'public'))); // <-
 
   initSwagger(app);
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(3000);
 }
 bootstrap();

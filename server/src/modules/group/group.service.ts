@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { albumRelations } from 'src/shared/constants';
-import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { DefaultPaginationQuery } from 'src/shared/types';
 import { Like, Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
-import { GroupDto } from './group.dto';
+import { GroupDto, PaginatedGroupDto } from './group.dto';
 import { Group } from './group.entity';
 
 @Injectable()
 export class GroupService {
   constructor(
     @InjectRepository(Group)
-    private groupRepository: Repository<Group>,
+    private groupRepository: Repository<GroupDto>,
     private logService: LogService,
   ) {}
 
@@ -20,7 +20,7 @@ export class GroupService {
     page,
     perPage,
     name,
-  }: DefaultPaginationQuery): PaginatedResponse<Group> {
+  }: DefaultPaginationQuery): Promise<PaginatedGroupDto> {
     const [data, total] = await this.groupRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
       relations: albumRelations,
@@ -30,13 +30,13 @@ export class GroupService {
     return { data, total, currentPage: page };
   }
 
-  async createGroup(group: GroupDto): Promise<Group> {
+  async createGroup(group: GroupDto): Promise<GroupDto> {
     try {
       return await this.groupRepository.save(group);
     } catch (e) {}
   }
 
-  async assignGroup(name: string): Promise<Group> {
+  async assignGroup(name: string): Promise<GroupDto> {
     try {
       const group = await this.groupRepository.findOne({ name });
       if (group?.name) {

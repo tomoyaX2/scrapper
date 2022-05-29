@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { PaginatedResponse } from 'src/shared/types';
-import { UserDto } from './users.dto';
+import { PaginatedUsersDto, UserDto } from './users.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -24,7 +23,7 @@ export class UsersController {
     @Query('perPage') perPage: number,
     @Query('name') name: number,
     @Query('email') email: number,
-  ): PaginatedResponse<UserDto> {
+  ): Promise<PaginatedUsersDto> {
     return this.usersService.getUsers({ page, perPage, name, email });
   }
 

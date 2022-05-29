@@ -1,7 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { PaginatedResponse } from 'src/shared/types';
-import { LanguageDto } from './languages.dto';
-import { Language } from './languages.entity';
+import { LanguageDto, PaginatedLanguageDto } from './languages.dto';
 import { LanguagesService } from './languages.service';
 
 @Controller('languages')
@@ -13,7 +11,7 @@ export class LanguagesController {
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('name') name: string,
-  ): PaginatedResponse<Language> {
+  ): Promise<PaginatedLanguageDto> {
     return this.languageService.getLanguages({
       page: parseInt(page),
       perPage: parseInt(perPage),
@@ -22,7 +20,7 @@ export class LanguagesController {
   }
 
   @Post()
-  createLanguage(@Body() language: LanguageDto): Promise<Language> {
+  createLanguage(@Body() language: LanguageDto): Promise<LanguageDto> {
     return this.languageService.createLanguage(language);
   }
 }

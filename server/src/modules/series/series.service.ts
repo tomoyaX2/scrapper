@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { albumRelations } from 'src/shared/constants';
-import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { DefaultPaginationQuery } from 'src/shared/types';
 import { Like, Repository } from 'typeorm';
 import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
-import { SeriesDto } from './series.dto';
+import { PaginatedSeriesDto, SeriesDto } from './series.dto';
 import { Series } from './series.entity';
 
 @Injectable()
 export class SeriesService {
   constructor(
     @InjectRepository(Series)
-    private seriesRepository: Repository<Series>,
+    private seriesRepository: Repository<SeriesDto>,
     private logService: LogService,
   ) {}
 
@@ -20,7 +20,7 @@ export class SeriesService {
     page,
     perPage,
     name,
-  }: DefaultPaginationQuery): PaginatedResponse<Series> {
+  }: DefaultPaginationQuery): Promise<PaginatedSeriesDto> {
     const [data, total] = await this.seriesRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
       relations: albumRelations,
@@ -30,13 +30,13 @@ export class SeriesService {
     return { data, total, currentPage: page };
   }
 
-  async createSeries(series: SeriesDto): Promise<Series> {
+  async createSeries(series: SeriesDto): Promise<SeriesDto> {
     try {
       return await this.seriesRepository.save(series);
     } catch (e) {}
   }
 
-  async assignSeries(name: string): Promise<Series> {
+  async assignSeries(name: string): Promise<SeriesDto> {
     try {
       const series = await this.seriesRepository.findOne({ name });
       if (series?.name) {
@@ -46,7 +46,7 @@ export class SeriesService {
     } catch (e) {}
   }
 
-  async assignAlbumToSeries(album: Album): Promise<Series> {
+  async assignAlbumToSeries(album: Album): Promise<SeriesDto> {
     try {
       const targetSeries = await this.seriesRepository.findOne({
         id: album.series.id,

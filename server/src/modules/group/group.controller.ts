@@ -1,7 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { PaginatedResponse } from 'src/shared/types';
-import { GroupDto } from './group.dto';
-import { Group } from './group.entity';
+import { GroupDto, PaginatedGroupDto } from './group.dto';
 import { GroupService } from './group.service';
 
 @Controller('group')
@@ -13,7 +11,7 @@ export class GroupController {
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('name') name: string,
-  ): PaginatedResponse<Group> {
+  ): Promise<PaginatedGroupDto> {
     return this.groupService.getGroups({
       page: parseInt(page),
       perPage: parseInt(perPage),
@@ -22,7 +20,7 @@ export class GroupController {
   }
 
   @Post()
-  createGroup(@Body() group: GroupDto): Promise<Group> {
+  createGroup(@Body() group: GroupDto): Promise<GroupDto> {
     return this.groupService.createGroup(group);
   }
 }

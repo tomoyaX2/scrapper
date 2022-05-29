@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { PaginatedResponse } from 'src/shared/types';
-import { Album } from './album.entity';
+import { AlbumDto, PaginatedAlbumDto } from './album.dto';
 import { AlbumService } from './album.service';
 
 @Controller('album')
@@ -12,7 +11,7 @@ export class AlbumController {
   getAlbums(
     @Query('page') page: number,
     @Query('perPage') perPage: number,
-  ): PaginatedResponse<Album> {
+  ): Promise<PaginatedAlbumDto> {
     return this.albumService.getAlbums({
       page,
       perPage,
@@ -20,7 +19,7 @@ export class AlbumController {
   }
 
   @Get(':albumId')
-  getAlbumById(@Param('albumId') albumId: string): Promise<Album> {
+  getAlbumById(@Param('albumId') albumId: string): Promise<AlbumDto> {
     return this.albumService.getAlbumById(albumId);
   }
 
@@ -69,7 +68,7 @@ export class AlbumController {
     @Query('languages') language?: string[],
     @Query('groups') group?: string[],
     @Query('tags') tags?: string[],
-  ): PaginatedResponse<Album> {
+  ): Promise<PaginatedAlbumDto> {
     return this.albumService.searchAlbums({
       page: parseInt(page),
       perPage: parseInt(perPage),

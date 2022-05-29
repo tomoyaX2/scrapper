@@ -1,6 +1,10 @@
 import { HttpStatus } from '@nestjs/common';
 
 export const Errors = {
+  unknownError: {
+    message: 'Unknown error',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
   loginErrors: {
     incorrentInput: {
       message: 'Email or Password is incorrect',

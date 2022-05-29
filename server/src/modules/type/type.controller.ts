@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Query } from '@nestjs/common';
-import { PaginatedResponse } from 'src/shared/types';
-import { TypeDto } from './type.dto';
-import { Type } from './type.entity';
+import { PaginatedTypeDto, TypeDto } from './type.dto';
 import { TypeService } from './type.service';
 
 @Controller('type')
@@ -13,7 +11,7 @@ export class TypeController {
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('name') name: string,
-  ): PaginatedResponse<Type> {
+  ): Promise<PaginatedTypeDto> {
     return this.typeService.getTypes({
       page: parseInt(page),
       perPage: parseInt(perPage),
@@ -22,7 +20,7 @@ export class TypeController {
   }
 
   @Post()
-  createType(type: TypeDto): Promise<Type> {
+  createType(type: TypeDto): Promise<TypeDto> {
     return this.typeService.createType(type);
   }
 }

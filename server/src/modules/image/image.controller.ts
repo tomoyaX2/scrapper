@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Query } from '@nestjs/common';
-import { PaginatedResponse } from 'src/shared/types';
-import { ImageDto } from './image.dto';
-import { Image } from './image.entity';
+import { ImageDto, PaginatedImageDto } from './image.dto';
 import { ImageService } from './image.service';
 
 @Controller('image')
@@ -12,12 +10,12 @@ export class ImageController {
   getImages(
     @Query('page') page: number,
     @Query('perPage') perPage: number,
-  ): PaginatedResponse<Image> {
+  ): Promise<PaginatedImageDto> {
     return this.imageService.getImages({ page, perPage });
   }
 
   @Post()
-  saveImage(image: ImageDto): Promise<Image> {
+  saveImage(image: ImageDto): Promise<ImageDto> {
     return this.imageService.saveImage(image);
   }
 }

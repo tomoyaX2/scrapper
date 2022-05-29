@@ -1,7 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { PaginatedResponse } from 'src/shared/types';
-import { TagsDto } from './tags.dto';
-import { Tag } from './tags.entity';
+import { PaginatedTagsDto, TagsDto } from './tags.dto';
 import { TagsService } from './tags.service';
 
 @Controller('tags')
@@ -13,7 +11,7 @@ export class TagsController {
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('name') name: string,
-  ): PaginatedResponse<Tag> {
+  ): Promise<PaginatedTagsDto> {
     return this.tagsService.getTags({
       page: parseInt(page),
       perPage: parseInt(perPage),

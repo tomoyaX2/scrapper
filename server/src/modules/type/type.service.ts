@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { albumRelations } from 'src/shared/constants';
-import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { DefaultPaginationQuery } from 'src/shared/types';
 import { Like, Repository } from 'typeorm';
-import { Album } from '../album/album.entity';
+import { AlbumDto } from '../album/album.dto';
 import { LogService } from '../log/log.service';
-import { TypeDto } from './type.dto';
+import { PaginatedTypeDto, TypeDto } from './type.dto';
 import { Type } from './type.entity';
 
 @Injectable()
 export class TypeService {
   constructor(
     @InjectRepository(Type)
-    private typesRepository: Repository<Type>,
+    private typesRepository: Repository<TypeDto>,
     private logService: LogService,
   ) {}
 
@@ -20,7 +20,7 @@ export class TypeService {
     page,
     perPage,
     name,
-  }: DefaultPaginationQuery): PaginatedResponse<Type> {
+  }: DefaultPaginationQuery): Promise<PaginatedTypeDto> {
     const [data, total] = await this.typesRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
       relations: albumRelations,
@@ -30,7 +30,7 @@ export class TypeService {
     return { data, total, currentPage: page };
   }
 
-  async createType(type: TypeDto): Promise<Type> {
+  async createType(type: TypeDto): Promise<TypeDto> {
     try {
       return await this.typesRepository.save(type);
     } catch (e) {}
@@ -46,7 +46,7 @@ export class TypeService {
     } catch (e) {}
   }
 
-  async assignAlbumToType(album: Album): Promise<void> {
+  async assignAlbumToType(album: AlbumDto): Promise<void> {
     try {
       const targetType = await this.typesRepository.findOne({
         id: album.type.id,

@@ -1,7 +1,7 @@
 import { AlbumFilters } from 'src/shared/enums/AlbumFilters';
 import { AlbumPaginationQuery } from 'src/shared/types';
 import { In, Repository } from 'typeorm';
-import { Album } from './album.entity';
+import { AlbumDto } from './album.dto';
 
 const joinFields = [
   AlbumFilters.Author,
@@ -13,7 +13,7 @@ const joinFields = [
 
 export const buildAlbumPagination = async (
   filterData: AlbumPaginationQuery,
-  albumRepository: Repository<Album>,
+  albumRepository: Repository<AlbumDto>,
 ) => {
   const whereData = {};
   const query = await albumRepository.createQueryBuilder('album');

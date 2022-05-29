@@ -1,10 +1,8 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { Errors } from 'src/errors/auth';
-import { ErrorResponses } from 'src/errors/utils';
-import { User } from '../users/users.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { UserDto } from '../users/users.dto';
 import { UsersService } from '../users/users.service';
-import { LoginDto, RegistrationDto } from './auth.dto';
+import { LoginDto, RegistrationDto, TokenReturnDto } from './auth.dto';
 import { AccessTokenGuard, RegistrationGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
@@ -15,18 +13,14 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  @ApiResponse(ErrorResponses.internalError())
-  @ApiResponse(ErrorResponses.unauthorized(Errors.loginErrors.incorrentInput))
   @Post('/login')
-  getUsers(@Body() body: LoginDto) {
+  getUsers(@Body() body: LoginDto): Promise<TokenReturnDto> {
     return this.authService.login(body);
   }
 
-  @ApiResponse(ErrorResponses.internalError())
-  @ApiResponse(ErrorResponses.badRequest(Errors.registrationErrors))
   @UseGuards(RegistrationGuard)
   @Post('/registration')
-  getUserById(@Body() data: RegistrationDto) {
+  getUserById(@Body() data: RegistrationDto): Promise<TokenReturnDto> {
     return this.authService.registration(data);
   }
 
@@ -40,7 +34,7 @@ export class AuthController {
   @Get('user')
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
-  getUserByToken(@Req() req): Promise<User> {
+  getUserByToken(@Req() req): Promise<UserDto> {
     return this.usersService.getUserById(req.sub);
   }
 }

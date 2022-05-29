@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ImageDto } from './image.dto';
+import { ImageDto, PaginatedImageDto } from './image.dto';
 import { Image } from './image.entity';
 import axios from 'axios';
 import * as fs from 'fs';
-import { Album } from '../album/album.entity';
 import { LogService } from '../log/log.service';
-import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { DefaultPaginationQuery } from 'src/shared/types';
 import { albumRelations } from 'src/shared/constants';
+import { AlbumDto } from '../album/album.dto';
 
 @Injectable()
 export class ImageService {
@@ -21,7 +21,7 @@ export class ImageService {
   async getImages({
     page,
     perPage,
-  }: DefaultPaginationQuery): PaginatedResponse<Image> {
+  }: DefaultPaginationQuery): Promise<PaginatedImageDto> {
     const [data, total] = await this.imagesRepository.findAndCount({
       relations: albumRelations,
       take: perPage,
@@ -99,7 +99,7 @@ export class ImageService {
     return albumImages;
   }
 
-  async assignAlbumToImage(album: Album): Promise<void> {
+  async assignAlbumToImage(album: AlbumDto): Promise<void> {
     for (const albumImage of album.images) {
       try {
         await this.imagesRepository.save({ ...albumImage, album });

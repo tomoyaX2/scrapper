@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { LoginDto, RegistrationDto } from './auth.dto';
+import { LoginDto, RegistrationDto, TokenReturnDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Errors } from 'src/errors/auth';
@@ -13,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login({ login, password }: LoginDto) {
+  async login({ login, password }: LoginDto): Promise<TokenReturnDto> {
     const user = await this.usersService.getUserByLogin(login);
     if (!user) {
       throw new UnauthorizedException(Errors.loginErrors.incorrentInput);

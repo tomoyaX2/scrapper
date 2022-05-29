@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { albumRelations } from 'src/shared/constants';
-import { DefaultPaginationQuery, PaginatedResponse } from 'src/shared/types';
+import { DefaultPaginationQuery } from 'src/shared/types';
 import { Like, Repository } from 'typeorm';
-import { Album } from '../album/album.entity';
+import { AlbumDto } from '../album/album.dto';
 import { LogService } from '../log/log.service';
-import { TagsDto } from './tags.dto';
+import { PaginatedTagsDto, TagsDto } from './tags.dto';
 import { Tag } from './tags.entity';
 
 @Injectable()
 export class TagsService {
   constructor(
     @InjectRepository(Tag)
-    private tagsRepository: Repository<Tag>,
+    private tagsRepository: Repository<TagsDto>,
     private logService: LogService,
   ) {}
 
@@ -20,7 +20,7 @@ export class TagsService {
     page,
     perPage,
     name,
-  }: DefaultPaginationQuery): PaginatedResponse<Tag> {
+  }: DefaultPaginationQuery): Promise<PaginatedTagsDto> {
     const [data, total] = await this.tagsRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
       relations: albumRelations,
@@ -30,13 +30,13 @@ export class TagsService {
     return { data, total, currentPage: page };
   }
 
-  async saveTag(tag: TagsDto): Promise<Tag> {
+  async saveTag(tag: TagsDto): Promise<TagsDto> {
     try {
       return await this.tagsRepository.save(tag);
     } catch (e) {}
   }
 
-  async assignTag(name: string): Promise<Tag> {
+  async assignTag(name: string): Promise<TagsDto> {
     try {
       const tag = await this.tagsRepository.findOne({ name });
       if (tag?.name) {
@@ -45,8 +45,8 @@ export class TagsService {
       return await this.tagsRepository.save({ name });
     } catch (e) {}
   }
-  async generateAlbumTags(tags: string[]): Promise<Tag[]> {
-    const albumTags = new Map<string, Tag>();
+  async generateAlbumTags(tags: string[]): Promise<TagsDto[]> {
+    const albumTags = new Map<string, TagsDto>();
 
     for (const tag of tags) {
       const albumTag = await this.assignTag(tag);
@@ -58,7 +58,7 @@ export class TagsService {
     return result;
   }
 
-  async assignAlbumToTag(album: Album): Promise<void> {
+  async assignAlbumToTag(album: AlbumDto): Promise<void> {
     for (const albumTag of album.tags) {
       try {
         const targetTag = await this.tagsRepository.findOne({
