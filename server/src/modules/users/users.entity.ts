@@ -5,10 +5,10 @@ import { Gallery } from '../gallery/gallery.entity';
 export class User {
   @PrimaryGeneratedColumn('uuid') id: string;
 
-  @Column()
+  @Column({ unique: true })
   login: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -17,19 +17,22 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ default: true })
   isActive: boolean;
 
-  @Column()
+  @Column({ default: false })
   twoFaEnabled: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   avatarUrl: string;
 
-  @Column()
+  @Column({ nullable: true })
+  access_token: string;
+
+  @Column({ nullable: true })
   two_factor_code: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone: string;
 
   @OneToMany(() => Gallery, (gallery) => gallery.user)

@@ -1,8 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiQuery } from '@nestjs/swagger';
 import { PaginatedResponse } from 'src/shared/types';
 import { UserDto } from './users.dto';
-import { User } from './users.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')

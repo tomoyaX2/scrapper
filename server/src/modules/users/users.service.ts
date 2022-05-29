@@ -24,8 +24,17 @@ export class UsersService {
     return { data, total, currentPage: page };
   }
 
-  async getUserById(id: string): Promise<UserDto> {
+  async getUserById(id: string): Promise<User> {
     const data = await this.usersRepository.findOne({ id });
     return data;
+  }
+
+  async getUserByLogin(login: string): Promise<User> {
+    const data = await this.usersRepository.findOne({ login });
+    return data;
+  }
+
+  async saveUser(user: UserDto): Promise<User> {
+    return this.usersRepository.save(user);
   }
 }

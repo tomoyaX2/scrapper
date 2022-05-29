@@ -1,38 +1,35 @@
 import { HttpStatus } from '@nestjs/common';
 
-export const LoginErrors = {
-  incorrectInput: {
-    message: 'Email or Password is incorrect',
-    status: HttpStatus.UNAUTHORIZED,
+export const Errors = {
+  loginErrors: {
+    incorrentInput: {
+      message: 'Email or Password is incorrect',
+      status: HttpStatus.UNAUTHORIZED,
+    },
   },
-  emptyInput: {
-    message: 'Email and password are required',
-    status: HttpStatus.UNAUTHORIZED,
-  },
-};
-
-export const RegistrationErrors = {
-  invalidPassword: {
-    errors: [
-      {
-        password:
-          "Password shouldn't have less that 6 symbols and more than 32 symbols",
-      },
-    ],
+  registrationErrors: {
+    invalidPassword: {
+      message:
+        "Password shouldn't have less that 6 symbols and more than 32 symbols, contains 1 uppercase letter and 1 number",
+      status: HttpStatus.BAD_REQUEST,
+    },
     invalidLogin: {
-      errors: [
-        {
-          login: "Login shouldn't be empty or longer than 32 symbols",
-        },
-      ],
+      message: "Login shouldn't be empty or longer than 32 symbols",
+      status: HttpStatus.BAD_REQUEST,
     },
     passwordsDontMatch: {
-      errors: [
-        {
-          password: "Passwords doesn't match",
-          matchPassword: "Passwords doesn't match",
-        },
-      ],
+      message: "Passwords doesn't match",
+      status: HttpStatus.BAD_REQUEST,
+    },
+    invalidPhone: {
+      message: 'Phone has invalid format',
+      status: HttpStatus.BAD_REQUEST,
+    },
+  },
+  authErrors: {
+    invalidToken: {
+      message: 'Unauthorized',
+      status: HttpStatus.UNAUTHORIZED,
     },
   },
 };
