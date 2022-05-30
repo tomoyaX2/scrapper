@@ -106,7 +106,7 @@ export class ScrapperService {
         );
         imagesPaths.push(path);
       }
-      const isRequestOversized = imagesPaths.length > 300;
+      const isRequestOversized = imagesPaths.length > 100;
       if (!isRequestOversized) {
         detailsData.images = imagesPaths;
         await axios.post(
@@ -119,7 +119,7 @@ export class ScrapperService {
           },
         );
       } else {
-        const albumId = await axios.post(
+        const album = await axios.post<{ id: string }>(
           `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
           {
             albumData: detailsData,
@@ -129,12 +129,11 @@ export class ScrapperService {
           },
         );
         for (const chunk of chunkArray(imagesPaths)) {
-          detailsData.images = chunk;
-          axios.post(
+          await axios.post(
             `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
             {
               images: chunk,
-              albumId,
+              albumId: album.data,
             },
           );
         }
