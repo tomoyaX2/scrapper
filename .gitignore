@@ -9,3 +9,4 @@ scrapper/node_modules
 scrapper/log
 scrapper/.env
 scrapper/dist
+scrapper/public
