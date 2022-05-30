@@ -3,8 +3,6 @@
 TODO:
 ### Scrapper enhancements:
     - [ ] Save original album URl to avoid duplicates
-    - [ ] Move scrapper to separate service, use POST Request to save album
-    - [ ] Implement stop Scrapper
     - [ ] Don't save album if DB contains already the same: name, author, language, name, series, 
 
 
