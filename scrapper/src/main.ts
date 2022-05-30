@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import * as express from 'express';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import { initSwagger } from './config/swagger';
-import { join } from 'path';
 import { HttpExceptionFilter } from './errors/filter';
 
 async function bootstrap() {

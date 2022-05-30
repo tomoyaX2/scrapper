@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
+import { HitomiFields } from 'src/shared/enums/HitomiFields';
 import { AlbumDto, PaginatedAlbumDto } from './album.dto';
 import { AlbumService } from './album.service';
 
@@ -79,5 +80,18 @@ export class AlbumController {
       group,
       tags,
     });
+  }
+
+  @Post('scrapper-album')
+  saveScrapperData(
+    @Body()
+    data: {
+      albumData: Record<HitomiFields, any[]>;
+      currentPageIndex: number;
+      albumIndex: number;
+      albumPath: string;
+    },
+  ): void {
+    this.albumService.generateAlbum(data);
   }
 }

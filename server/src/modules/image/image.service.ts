@@ -34,63 +34,14 @@ export class ImageService {
     return await this.imagesRepository.save(image);
   }
 
-  async writeImage(
-    {
-      imageUrl,
-      referer,
-      originalUrl,
-    }: {
-      imageUrl: string;
-      referer: string;
-      originalUrl: string;
-    },
-    imageId: string,
-    albumPath: string,
-    currentCount: string,
-  ) {
-    try {
-      const response = await axios.get<string>(imageUrl, {
-        responseType: 'arraybuffer',
-        headers: {
-          referer,
-        },
-      });
-      const PNGBase64 = Buffer.from(response.data, 'binary').toString('base64');
-      const path = `${albumPath}/${imageId}.webp`;
-      await fs.writeFile(path, PNGBase64, 'base64', (err) => {
-        if (err) throw err;
-        this.logService.saveLog(
-          `File ${currentCount}. Original URL: ${originalUrl}, current URL: http://localhost:3000/${path}`,
-        );
-      });
-      return path;
-    } catch (e) {
-      this.logService.saveLog(
-        `ERROR HAPPENED, ${imageUrl}, ${referer}`,
-        'warn',
-      );
-    }
-  }
-
-  async assignImageToAlbum(
-    images: { imageUrl: string; referer: string; originalUrl: string }[],
-    albumPath: string,
-  ) {
-    let index = 0;
+  async assignImageToAlbum(images: string[]) {
     const albumImages: Image[] = [];
     for (const image of images) {
-      index++;
       const adImage = await this.saveImage({});
-      const imagePath = await this.writeImage(
-        image,
-        adImage.id,
-        albumPath,
-        `${index}/${images.length}`,
-      );
-      if (imagePath) {
+      if (image) {
         const albumImage = await this.saveImage({
           ...adImage,
-          url: imagePath,
+          url: image,
           name: adImage.id,
         });
         albumImages.push(albumImage);

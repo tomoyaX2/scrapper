@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from './config/config.service';
-import { ScrapperModule } from './modules/scrapper/scrapper.module';
 import { ImageModule } from './modules/image/image.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { AlbumModule } from './modules/album/album.module';
@@ -14,7 +13,6 @@ import { UsersModule } from './modules/users/users.module';
 import { TypeModule } from './modules/type/type.module';
 import { GroupModule } from './modules/group/group.module';
 import { LogModule } from './modules/log/log.module';
-import { FileModule } from './modules/file/file.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { MailModule } from './modules/mail/mail.module';
@@ -34,7 +32,6 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
       },
     }),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
-    ScrapperModule,
     ImageModule,
     TagsModule,
     AlbumModule,
@@ -45,7 +42,6 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
     TypeModule,
     GroupModule,
     LogModule,
-    FileModule,
     AuthModule,
     CommentsModule,
     MailModule,

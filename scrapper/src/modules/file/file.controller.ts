@@ -1,9 +1,9 @@
 import {
   Controller,
-  Get,
-  Query,
   StreamableFile,
   Response,
+  Post,
+  Body,
 } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { FileService } from './file.service';
@@ -17,14 +17,17 @@ export class FileController {
     type: String,
     required: true,
   })
-  @Get()
+  @Post()
   async requestAlbumToDownload(
     @Response({ passthrough: true }) res,
-    @Query('albumId') albumId: string,
+    @Body()
+    album: {
+      images: { url: string }[];
+      id: string;
+      path: string;
+    },
   ): Promise<StreamableFile> {
-    const { file, name } = await this.fileService.requestAlbumToDownload(
-      albumId,
-    );
+    const { file, name } = await this.fileService.requestAlbumToDownload(album);
     res.set({
       'Content-Disposition': `attachment; filename="${name}"`,
     });

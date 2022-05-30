@@ -5,8 +5,13 @@ import { ScrapperService } from './scrapper.service';
 export class ScrapperController {
   constructor(private readonly scrapperService: ScrapperService) {}
 
-  @Get()
+  @Get('start')
   init(): void {
     this.scrapperService.init();
+  }
+
+  @Get('stop')
+  stop(): void {
+    this.scrapperService.stopScrapper();
   }
 }

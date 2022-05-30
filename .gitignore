@@ -5,3 +5,7 @@ server/.env
 server/images
 server/public
 server/log
+scrapper/node_modules
+scrapper/log
+scrapper/.env
+scrapper/dist
