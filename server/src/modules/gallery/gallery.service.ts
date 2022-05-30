@@ -11,8 +11,8 @@ export class GalleryService {
     private galleryRepository: Repository<Gallery>,
   ) {}
 
-  getGallery(): Promise<Gallery[]> {
-    return this.galleryRepository.find();
+  getGallery(userId: string): Promise<Gallery[]> {
+    return this.galleryRepository.find({ where: { user: { id: userId } } });
   }
 
   async createGallery(gallery: GalleryDto): Promise<Gallery> {
