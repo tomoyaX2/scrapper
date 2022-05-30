@@ -1,26 +1,44 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "preserve",
+    "newLine": "lf",
+    "incremental": true,
+    "keyofStringsOnly": true,
+    "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "useUnknownInCatchVariables": true,
+
+    "paths": {
+      "@app/*": ["./src/app/*"],
+      "@processes/*": ["./src/processes/*"],
+      "@layouts/*": ["./src/widgets/layouts/*"],
+      "@widgets/*": ["./src/widgets/*"],
+      "@features/*": ["./src/features/*"],
+      "@entities/*": ["./src/entities/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@config/*": ["./src/shared/config/*"],
+      "@lib/*": ["./src/shared/lib/*"],
+      "@ui/*": ["./src/shared/ui/*"],
+      "@api/*": ["./src/shared/api/*"]
+    }
   },
-  "include": [
-    "src"
-  ]
+
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
