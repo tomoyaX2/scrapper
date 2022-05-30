@@ -14,6 +14,7 @@ import { TypeService } from '../type/type.service';
 import { LogService } from '../log/log.service';
 import { AlbumPaginationQuery, DefaultPaginationQuery } from 'src/shared/types';
 import { buildAlbumPagination } from './utils';
+import { AlbumModule } from './album.module';
 
 @Injectable()
 export class AlbumService {
@@ -88,7 +89,7 @@ export class AlbumService {
     currentPageIndex: number;
     albumIndex: number;
     albumPath: string;
-  }) {
+  }): Promise<string> {
     const { title, authors, group, languages, series, tags, images, type } =
       albumData;
     this.logService.saveLog(
@@ -127,10 +128,24 @@ export class AlbumService {
 
     album.type = albumType;
     const finalAlbum = await this.albumRepository.save(album);
-    console.log(finalAlbum, 'final album');
     tags.length && (await this.tagsService.assignAlbumToTag(finalAlbum));
     images.length && (await this.imageService.assignAlbumToImage(finalAlbum));
     authors.length &&
       (await this.authorsService.assignAlbumToAuthor(finalAlbum));
+    return finalAlbum.id;
+  }
+
+  async updateAlbumImagesById({
+    images,
+    albumId,
+  }: {
+    images: string[];
+    albumId: string;
+  }): Promise<void> {
+    const album = await this.getAlbumById(albumId);
+    const albumImages = await this.imageService.assignImageToAlbum(images);
+    album.images = [...album.images, ...albumImages];
+    const finalAlbum = await this.albumRepository.save(album);
+    await this.imageService.assignAlbumToImage(finalAlbum);
   }
 }

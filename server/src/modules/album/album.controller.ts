@@ -91,7 +91,18 @@ export class AlbumController {
       albumIndex: number;
       albumPath: string;
     },
-  ): void {
-    this.albumService.generateAlbum(data);
+  ): Promise<string> {
+    return this.albumService.generateAlbum(data);
+  }
+
+  @Post('scrapper-album-images')
+  saveScrapperImagesData(
+    @Body()
+    data: {
+      albumId: string;
+      images: string[];
+    },
+  ): Promise<void> {
+    return this.albumService.updateAlbumImagesById(data);
   }
 }

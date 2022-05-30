@@ -8,6 +8,7 @@ import { LogService } from '../log/log.service';
 import axios from 'axios';
 import { FileService } from '../file/file.service';
 import { v4 as uuidv4 } from 'uuid';
+import { chunkArray } from 'src/shared/utils';
 
 const expectedClassNames = [
   ExpectedTypes.ArtistCG,
@@ -105,13 +106,39 @@ export class ScrapperService {
         );
         imagesPaths.push(path);
       }
-      detailsData.images = imagesPaths;
-      axios.post(`${process.env.CLIENT_SERVER_URL}/album/scrapper-album`, {
-        albumData: detailsData,
-        currentPageIndex,
-        albumPath,
-        albumIndex,
-      });
+      const isRequestOversized = imagesPaths.length > 300;
+      if (!isRequestOversized) {
+        detailsData.images = imagesPaths;
+        await axios.post(
+          `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
+          {
+            albumData: detailsData,
+            currentPageIndex,
+            albumPath,
+            albumIndex,
+          },
+        );
+      } else {
+        const albumId = await axios.post(
+          `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
+          {
+            albumData: detailsData,
+            currentPageIndex,
+            albumPath,
+            albumIndex,
+          },
+        );
+        for (const chunk of chunkArray(imagesPaths)) {
+          detailsData.images = chunk;
+          axios.post(
+            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
+            {
+              images: chunk,
+              albumId,
+            },
+          );
+        }
+      }
     }
   };
 
