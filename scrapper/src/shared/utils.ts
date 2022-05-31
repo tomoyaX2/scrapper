@@ -1,6 +1,5 @@
-export const chunkArray = (array) => {
+export const chunkArray = (array, chunkSize = 10) => {
   const chunks = [];
-  const chunkSize = 10;
   for (let i = 0; i < array.length; i += chunkSize) {
     const chunk = array.slice(i, i + chunkSize);
     chunks.push(chunk);

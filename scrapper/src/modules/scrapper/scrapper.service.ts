@@ -9,7 +9,7 @@ import axios from 'axios';
 import { FileService } from '../file/file.service';
 import { v4 as uuidv4 } from 'uuid';
 import { chunkArray } from 'src/shared/utils';
-import { XmlService } from '../xml/xms.service';
+import { XmlService } from '../xml/xml.service';
 
 const expectedClassNames = [
   ExpectedTypes.ArtistCG,

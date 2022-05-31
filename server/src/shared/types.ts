@@ -15,6 +15,7 @@ export interface SelectorArgs {
 export interface DefaultPaginationQuery {
   page?: number;
   perPage?: number;
+  withAlbums?: boolean;
   [AlbumFilters.Name]?: string;
 }
 export interface AlbumPaginationQuery extends DefaultPaginationQuery {

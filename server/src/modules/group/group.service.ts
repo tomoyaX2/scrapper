@@ -20,10 +20,11 @@ export class GroupService {
     page,
     perPage,
     name,
+    withAlbums,
   }: DefaultPaginationQuery): Promise<PaginatedGroupDto> {
     const [data, total] = await this.groupRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
-      relations: albumRelations,
+      relations: withAlbums ? albumRelations : [],
       take: perPage,
       skip: page * perPage,
     });

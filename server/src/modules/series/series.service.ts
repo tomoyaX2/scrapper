@@ -20,10 +20,11 @@ export class SeriesService {
     page,
     perPage,
     name,
+    withAlbums,
   }: DefaultPaginationQuery): Promise<PaginatedSeriesDto> {
     const [data, total] = await this.seriesRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
-      relations: albumRelations,
+      relations: withAlbums ? albumRelations : [],
       take: perPage,
       skip: page * perPage,
     });

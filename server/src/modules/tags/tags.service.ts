@@ -20,10 +20,11 @@ export class TagsService {
     page,
     perPage,
     name,
+    withAlbums,
   }: DefaultPaginationQuery): Promise<PaginatedTagsDto> {
     const [data, total] = await this.tagsRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
-      relations: albumRelations,
+      relations: withAlbums ? albumRelations : [],
       take: perPage,
       skip: page * perPage,
     });

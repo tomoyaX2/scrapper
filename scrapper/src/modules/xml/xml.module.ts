@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LogModule } from '../log/log.module';
-import { XmlService } from './xms.service';
+import { XmlService } from './xml.service';
 
 @Module({
   imports: [LogModule],

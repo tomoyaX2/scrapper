@@ -20,10 +20,11 @@ export class TypeService {
     page,
     perPage,
     name,
+    withAlbums,
   }: DefaultPaginationQuery): Promise<PaginatedTypeDto> {
     const [data, total] = await this.typesRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
-      relations: albumRelations,
+      relations: withAlbums ? albumRelations : [],
       take: perPage,
       skip: page * perPage,
     });

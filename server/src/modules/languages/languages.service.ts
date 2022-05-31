@@ -20,10 +20,11 @@ export class LanguagesService {
     page,
     perPage,
     name,
+    withAlbums,
   }: DefaultPaginationQuery): Promise<PaginatedLanguageDto> {
     const [data, total] = await this.languagesRepository.findAndCount({
       where: name ? { name: Like('%' + name + '%') } : {},
-      relations: albumRelations,
+      relations: withAlbums ? albumRelations : [],
       take: perPage,
       skip: page * perPage,
     });

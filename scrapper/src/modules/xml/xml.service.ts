@@ -3,6 +3,16 @@ import * as xmlBuilder from 'xmlbuilder';
 import * as moment from 'moment';
 import * as fs from 'fs';
 import { LogService } from '../log/log.service';
+import axios from 'axios';
+
+const requestedItems = [
+  'tags',
+  'series',
+  'languages',
+  'group',
+  'author',
+  'type',
+];
 
 @Injectable()
 export class XmlService {
@@ -17,19 +27,38 @@ export class XmlService {
       .att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
   }
 
-  appendUrl(albumUrl: string) {
+  appendUrl(url: string) {
+    console.log(url, 'url');
     this.builder = this.builder
       .ele('url')
-      .ele('loc', albumUrl)
+      .ele('loc', url)
       .up()
       .ele('lastmod', moment(new Date()).format('YYYY-MM-DD'))
       .up()
       .up();
   }
 
-  finishXml() {
+  async writeRequestedItemsToXml(page: number, link: string) {
+    const perPage = 200;
+    const {
+      data: { total: totalTags, data },
+    } = await axios.get(
+      `${process.env.CLIENT_SERVER_URL}/${link}?page=${page}&perPage=${perPage}&withAlbums=false`,
+    );
+    const names = data.map((el) => el.name.split(' ').join('_'));
+    for (const name of names) {
+      this.appendUrl(`${process.env.CLIENT_URL}/${link}/${name}`);
+    }
+    if (page * perPage < totalTags) {
+      await this.writeRequestedItemsToXml(page + 1, link);
+    }
+  }
+
+  async finishXml() {
+    for (const link of requestedItems) {
+      await this.writeRequestedItemsToXml(0, link);
+    }
     const xml = this.builder.end({ pretty: true });
-    console.log(xml, 'xml');
     fs.writeFile('public/test.xml', xml, (err) => {
       if (err) {
         this.logService.saveLog(`${err}, err write xml file`);
