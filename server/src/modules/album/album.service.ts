@@ -144,7 +144,7 @@ export class AlbumService {
   }): Promise<void> {
     const album = await this.getAlbumById(albumId);
     const albumImages = await this.imageService.assignImageToAlbum(images);
-    album.images = [...album.images, ...albumImages];
+    album.images = [...(album?.images || []), ...albumImages];
     const finalAlbum = await this.albumRepository.save(album);
     await this.imageService.assignAlbumToImage(finalAlbum);
   }

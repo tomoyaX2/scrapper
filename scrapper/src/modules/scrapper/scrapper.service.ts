@@ -89,53 +89,55 @@ export class ScrapperService {
       albumIndex++;
       this.logService.saveLog(`${albumIndex}/${urls.length} urls`);
       const detailsData = await this.collectDetailsData(page, url);
-      const imagesPaths = [];
-      let imageIndex = 0;
-      const albumId = uuidv4();
-      const albumPath = `public/images/${albumId}`;
-      for (const image of detailsData.images) {
-        if (this.isStopped) {
-          return;
+      if (detailsData) {
+        const imagesPaths = [];
+        let imageIndex = 0;
+        const albumId = uuidv4();
+        const albumPath = `public/images/${albumId}`;
+        for (const image of detailsData.images) {
+          if (this.isStopped) {
+            return;
+          }
+          imageIndex++;
+          const path = await this.fileService.writeImage(
+            image,
+            albumPath,
+            imageIndex,
+            detailsData.images.length,
+          );
+          imagesPaths.push(path);
         }
-        imageIndex++;
-        const path = await this.fileService.writeImage(
-          image,
-          albumPath,
-          imageIndex,
-          detailsData.images.length,
-        );
-        imagesPaths.push(path);
-      }
-      const isRequestOversized = imagesPaths.length > 100;
-      if (!isRequestOversized) {
-        detailsData.images = imagesPaths;
-        await axios.post(
-          `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
-          {
-            albumData: detailsData,
-            currentPageIndex,
-            albumPath,
-            albumIndex,
-          },
-        );
-      } else {
-        const album = await axios.post<{ id: string }>(
-          `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
-          {
-            albumData: detailsData,
-            currentPageIndex,
-            albumPath,
-            albumIndex,
-          },
-        );
-        for (const chunk of chunkArray(imagesPaths)) {
+        const isRequestOversized = imagesPaths.length > 100;
+        if (!isRequestOversized) {
+          detailsData.images = imagesPaths;
           await axios.post(
-            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
+            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
             {
-              images: chunk,
-              albumId: album.data,
+              albumData: detailsData,
+              currentPageIndex,
+              albumPath,
+              albumIndex,
             },
           );
+        } else {
+          const album = await axios.post<{ id: string }>(
+            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
+            {
+              albumData: { ...detailsData, images: [] },
+              currentPageIndex,
+              albumPath,
+              albumIndex,
+            },
+          );
+          for (const chunk of chunkArray(imagesPaths)) {
+            await axios.post(
+              `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
+              {
+                images: chunk,
+                albumId: album.data,
+              },
+            );
+          }
         }
       }
     }
@@ -205,6 +207,11 @@ export class ScrapperService {
       });
       const $ = cheerio.load(htmlData);
       const fieldData = {} as Record<HitomiFields, any>;
+      const bannedTags = process.env.BANNED_TAGS.split(',');
+      const bannedTagsMap = new Map();
+      for (const bannedTag of bannedTags) {
+        bannedTagsMap.set(bannedTag, true);
+      }
       for (const key of expectedFields) {
         const data = await groupBySelector(
           getSelectors[key],
@@ -212,8 +219,18 @@ export class ScrapperService {
           page,
           this.hostUrl,
         );
+        if (key === HitomiFields.Tags) {
+          const hasBannedTag = data.some((el) =>
+            bannedTagsMap.has(el.toLowerCase()),
+          );
+          if (hasBannedTag) {
+            this.logService.saveLog(`${fieldData.title[0]} has banned tag`);
+            return null;
+          }
+        }
         fieldData[key] = data;
       }
+
       return fieldData;
     } catch (e) {}
   };
