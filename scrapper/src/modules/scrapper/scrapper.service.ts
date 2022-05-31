@@ -9,6 +9,7 @@ import axios from 'axios';
 import { FileService } from '../file/file.service';
 import { v4 as uuidv4 } from 'uuid';
 import { chunkArray } from 'src/shared/utils';
+import { XmlService } from '../xml/xms.service';
 
 const expectedClassNames = [
   ExpectedTypes.ArtistCG,
@@ -33,11 +34,13 @@ export class ScrapperService {
   hostUrl = process.env.SCRAPPER_HOST;
   isStopped = false;
   constructor(
-    private logService: LogService,
+    private readonly logService: LogService,
     private readonly fileService: FileService,
+    private readonly xmlService: XmlService,
   ) {}
   init = async (): Promise<void> => {
     this.isStopped = false;
+    this.xmlService.init();
     const browser = await puppeteer.launch();
     this.browser = browser;
     const page = await browser.newPage();
@@ -66,6 +69,7 @@ export class ScrapperService {
         pageIndex + 1,
       );
       if (pageIndex + 1 === lastPageIndex) {
+        this.xmlService.finishXml();
         await browser.close();
       }
     }
@@ -108,27 +112,21 @@ export class ScrapperService {
           imagesPaths.push(path);
         }
         const isRequestOversized = imagesPaths.length > 100;
-        if (!isRequestOversized) {
-          detailsData.images = imagesPaths;
-          await axios.post(
-            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
-            {
-              albumData: detailsData,
-              currentPageIndex,
-              albumPath,
-              albumIndex,
-            },
-          );
-        } else {
-          const album = await axios.post<{ id: string }>(
-            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
-            {
-              albumData: { ...detailsData, images: [] },
-              currentPageIndex,
-              albumPath,
-              albumIndex,
-            },
-          );
+        const album = await axios.post(
+          `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
+          {
+            albumData: isRequestOversized
+              ? { ...detailsData, images: [] }
+              : { ...detailsData, images: imagesPaths },
+            currentPageIndex,
+            albumPath,
+            albumIndex,
+          },
+        );
+        this.xmlService.appendUrl(
+          `${process.env.CLIENT_URL}/albums/${album.data}`,
+        );
+        if (isRequestOversized) {
           for (const chunk of chunkArray(imagesPaths)) {
             await axios.post(
               `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
@@ -237,6 +235,8 @@ export class ScrapperService {
 
   stopScrapper = async () => {
     this.isStopped = true;
+    this.xmlService.finishXml();
+
     this.browser.close();
   };
 }

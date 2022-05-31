@@ -34,9 +34,11 @@
     "ejs": "^3.1.8",
     "fastify-swagger": "^5.2.0",
     "gm": "^1.23.1",
+    "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.3",
     "mysql2": "^2.3.3",
+    "npm": "^8.11.0",
     "puppeteer": "^14.1.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -44,7 +46,8 @@
     "sharp": "^0.30.5",
     "swagger-ui-express": "^4.4.0",
     "typeorm": "^0.2.45",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "xmlbuilder": "^15.1.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
