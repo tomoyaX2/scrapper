@@ -19,6 +19,9 @@ export class XmlService {
   constructor(private readonly logService: LogService) {}
   builder;
   init() {
+    if (process.env.ACTIVE_XML_BUILD !== 'true') {
+      return;
+    }
     this.builder = xmlBuilder
       .create('urlset', {
         encoding: 'UTF-8',
@@ -28,6 +31,9 @@ export class XmlService {
   }
 
   appendUrl(url: string) {
+    if (process.env.ACTIVE_XML_BUILD !== 'true') {
+      return;
+    }
     console.log(url, 'url');
     this.builder = this.builder
       .ele('url')
@@ -39,6 +45,9 @@ export class XmlService {
   }
 
   async writeRequestedItemsToXml(page: number, link: string) {
+    if (process.env.ACTIVE_XML_BUILD !== 'true') {
+      return;
+    }
     const perPage = 200;
     const {
       data: { total: totalTags, data },
@@ -55,6 +64,9 @@ export class XmlService {
   }
 
   async finishXml() {
+    if (process.env.ACTIVE_XML_BUILD !== 'true') {
+      return;
+    }
     for (const link of requestedItems) {
       await this.writeRequestedItemsToXml(0, link);
     }

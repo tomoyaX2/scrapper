@@ -82,6 +82,11 @@ export class AlbumController {
     });
   }
 
+  @Post('find-duplicate')
+  findDuplicate(@Body() data: Record<string, string>): Promise<boolean> {
+    return this.albumService.getAlbumForScrapperFilter(data);
+  }
+
   @Post('scrapper-album')
   saveScrapperData(
     @Body()

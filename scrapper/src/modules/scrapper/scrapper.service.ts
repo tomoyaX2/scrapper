@@ -28,6 +28,7 @@ const expectedFields = [
   HitomiFields.Images,
   HitomiFields.Type,
 ];
+
 @Injectable()
 export class ScrapperService {
   browser: puppeteer.Browser;
@@ -93,7 +94,8 @@ export class ScrapperService {
       albumIndex++;
       this.logService.saveLog(`${albumIndex}/${urls.length} urls`);
       const detailsData = await this.collectDetailsData(page, url);
-      if (detailsData) {
+      const isDuplicate = await this.findDuplicate(detailsData);
+      if (detailsData && !isDuplicate) {
         const imagesPaths = [];
         let imageIndex = 0;
         const albumId = uuidv4();
@@ -111,34 +113,54 @@ export class ScrapperService {
           );
           imagesPaths.push(path);
         }
-        const isRequestOversized = imagesPaths.length > 100;
-        const album = await axios.post(
-          `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
-          {
-            albumData: isRequestOversized
-              ? { ...detailsData, images: [] }
-              : { ...detailsData, images: imagesPaths },
-            currentPageIndex,
-            albumPath,
-            albumIndex,
-          },
-        );
-        this.xmlService.appendUrl(
-          `${process.env.CLIENT_URL}/albums/${album.data}`,
-        );
-        if (isRequestOversized) {
-          for (const chunk of chunkArray(imagesPaths)) {
-            await axios.post(
-              `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
-              {
-                images: chunk,
-                albumId: album.data,
-              },
-            );
+        if (process.env.ENABLE_POST_ALBUMS !== 'true') {
+          const isRequestOversized = imagesPaths.length > 100;
+          const album = await axios.post(
+            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
+            {
+              albumData: isRequestOversized
+                ? { ...detailsData, images: [] }
+                : { ...detailsData, images: imagesPaths },
+              currentPageIndex,
+              albumPath,
+              albumIndex,
+            },
+          );
+          this.xmlService.appendUrl(
+            `${process.env.CLIENT_URL}/albums/${album.data}`,
+          );
+          if (isRequestOversized) {
+            for (const chunk of chunkArray(imagesPaths)) {
+              await axios.post(
+                `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
+                {
+                  images: chunk,
+                  albumId: album.data,
+                },
+              );
+            }
           }
         }
       }
     }
+  };
+
+  findDuplicate = async (
+    detailsData: Record<HitomiFields, any>,
+  ): Promise<boolean> => {
+    if (detailsData) {
+      const dataToCheck = {} as Record<string, { name: string } | string>;
+      if (detailsData.languages?.length && detailsData.title[0]) {
+        dataToCheck.language = { name: detailsData.languages[0] };
+        dataToCheck.name = detailsData.title[0];
+        const { data: isDuplicate } = await axios.post(
+          `${process.env.CLIENT_SERVER_URL}/album/find-duplicate`,
+          dataToCheck,
+        );
+        return isDuplicate;
+      }
+    }
+    return false;
   };
 
   generateUrlsToParse = async (htmlData: string) => {

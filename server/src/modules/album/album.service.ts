@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AuthorService } from '../authors/authors.service';
 import { GroupService } from '../group/group.service';
 import { ImageService } from '../image/image.service';
@@ -14,7 +14,6 @@ import { TypeService } from '../type/type.service';
 import { LogService } from '../log/log.service';
 import { AlbumPaginationQuery, DefaultPaginationQuery } from 'src/shared/types';
 import { buildAlbumPagination } from './utils';
-import { AlbumModule } from './album.module';
 
 @Injectable()
 export class AlbumService {
@@ -57,6 +56,16 @@ export class AlbumService {
       where: { id },
     });
     return album;
+  }
+
+  async getAlbumForScrapperFilter(
+    where: Record<string, string>,
+  ): Promise<boolean> {
+    const album = await this.albumRepository.findOne({
+      relations: ['language'],
+      where,
+    });
+    return !!album;
   }
 
   async searchAlbums(
