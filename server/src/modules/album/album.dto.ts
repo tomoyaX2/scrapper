@@ -27,4 +27,5 @@ export class AlbumDto {
   path?: string;
   type?: TypeDto;
   comments?: CommentDto[];
+  preview?: string;
 }

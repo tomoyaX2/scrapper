@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImageDto, PaginatedImageDto } from './image.dto';
 import { Image } from './image.entity';
-import axios from 'axios';
-import * as fs from 'fs';
 import { LogService } from '../log/log.service';
 import { DefaultPaginationQuery } from 'src/shared/types';
 import { albumRelations } from 'src/shared/constants';

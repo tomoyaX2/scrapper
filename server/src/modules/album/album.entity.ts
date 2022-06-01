@@ -36,6 +36,9 @@ export class Album {
   @OneToMany(() => Image, (image) => image.album)
   images?: Image[];
 
+  @Column({ nullable: true })
+  preview: string;
+
   @OneToMany(() => Comment, (comment) => comment.album, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
