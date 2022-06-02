@@ -64,6 +64,7 @@ module.exports = {
     'no-extra-boolean-cast': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'no-redeclare': 'off',
+    'no-undef': 'off',
 
     'dot-notation': 'warn',
     'valid-typeof': 'warn',

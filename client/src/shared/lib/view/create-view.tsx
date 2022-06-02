@@ -155,7 +155,9 @@ class ViewBuilder<P extends {}, MP = {}> {
 
   public view(
     render: (props: P & MP) => RenderReturnType
-  ): ComponentType<Omit<P, keyof MP>> & { Original: typeof render } {
+  ): (() => JSX.Element) & {
+    Original: typeof render;
+  } {
     const { _propMap, _memo, _exit, _enter } = this;
 
     const View: View<P, MP> = props => {

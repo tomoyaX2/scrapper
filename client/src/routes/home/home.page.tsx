@@ -1,18 +1,14 @@
-import { useStore } from 'effector-react';
-import { useEvent } from 'effector-react/scope';
-import type { FC } from 'react';
-import { useEffect } from 'react';
-import { $profile, mounted } from './home.model';
+import { createView } from '@shared/lib/view';
+import styles from './home.module.scss';
 
-const Home: FC<{ id: string }> = () => {
-  const { user } = useStore($profile);
-  const onMount = useEvent(mounted);
+const props = {};
 
-  useEffect(() => {
-    onMount();
-  }, []);
-
-  return <div>Profile / {user?.name}</div>;
-};
+const Home = createView()
+  .props(props)
+  .view(() => (
+    <div className={styles.container}>
+      <div>KEK</div>
+    </div>
+  ));
 
 export { Home };

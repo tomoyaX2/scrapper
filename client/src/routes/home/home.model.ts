@@ -1,17 +1,6 @@
-import { combine, createEvent, sample } from 'effector';
-import { $user } from '@entities/user';
-import { getUserFx } from '@entities/user/model';
+import type { GetServerSidePropsContext } from 'next';
+import { createPage } from '@shared/lib/effector';
 
-const mounted = createEvent();
+const homePage = createPage<GetServerSidePropsContext<{}, {}>>();
 
-const $profile = combine({
-  user: $user
-});
-
-sample({
-  clock: mounted,
-
-  target: getUserFx
-});
-
-export { mounted, $profile };
+export { homePage };
