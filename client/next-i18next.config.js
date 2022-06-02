@@ -1,9 +1,12 @@
+const path = require('path');
+const BASED_LOCALE = 'en';
+
 module.exports = {
   i18n: {
-    locales: ['default', 'en', 'uk'],
-    defaultLocale: 'default',
-    localeDetection: true
+    defaultLocale: BASED_LOCALE,
+    defaultNS: 'common',
+    locales: ['en', 'ru', 'uk']
   },
 
-  reloadOnPrerender: process.env.NODE_ENV !== 'production'
+  localePath: path.resolve('./src/shared/locales')
 };

@@ -63,12 +63,7 @@ module.exports = {
     'no-useless-escape': 'off',
     'no-extra-boolean-cast': 'off',
     'react-hooks/exhaustive-deps': 'off',
-
-    // didnt work well
-    // '@typescript-eslint/strict-boolean-expressions': 'error',
-    // 'require-await': 'error',
-    // '@typescript-eslint/no-floating-promises': 'error',
-    // 'react/button-has-type': 'error',
+    'no-redeclare': 'off',
 
     'dot-notation': 'warn',
     'valid-typeof': 'warn',
@@ -242,11 +237,11 @@ module.exports = {
     '@typescript-eslint/no-unnecessary-type-arguments': 'error',
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/no-unnecessary-type-constraint': 'error',
-    // '@typescript-eslint/no-unsafe-argument': 'error',
-    // '@typescript-eslint/no-unsafe-assignment': 'error',
-    // '@typescript-eslint/no-unsafe-call': 'error',
-    // '@typescript-eslint/no-unsafe-member-access': 'error',
-    // '@typescript-eslint/no-unsafe-return': 'error',
+    '@typescript-eslint/no-unsafe-argument': 'error',
+    '@typescript-eslint/no-unsafe-assignment': 'error',
+    '@typescript-eslint/no-unsafe-call': 'error',
+    '@typescript-eslint/no-unsafe-member-access': 'error',
+    '@typescript-eslint/no-unsafe-return': 'error',
     '@typescript-eslint/await-thenable': 'error',
     '@typescript-eslint/no-useless-empty-export': 'error',
     '@typescript-eslint/no-var-requires': 'error',
@@ -258,7 +253,6 @@ module.exports = {
     '@typescript-eslint/prefer-optional-chain': 'error',
     '@typescript-eslint/prefer-readonly': 'error',
     '@typescript-eslint/prefer-reduce-type-parameter': 'error',
-    '@typescript-eslint/prefer-return-this-type': 'error',
     '@typescript-eslint/prefer-string-starts-ends-with': 'error',
     '@typescript-eslint/prefer-ts-expect-error': 'error',
     '@typescript-eslint/promise-function-async': 'error',
@@ -268,6 +262,7 @@ module.exports = {
     '@typescript-eslint/unified-signatures': 'error',
     '@typescript-eslint/return-await': 'error',
     '@typescript-eslint/consistent-type-exports': 'error',
+    '@typescript-eslint/no-redeclare': 'error',
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/no-base-to-string': 'error',
     '@typescript-eslint/no-confusing-non-null-assertion': 'error',
@@ -276,15 +271,9 @@ module.exports = {
     '@typescript-eslint/lines-between-class-members': ['error', 'always'],
     '@typescript-eslint/method-signature-style': ['error', 'property'],
     '@typescript-eslint/class-literal-property-style': ['error', 'fields'],
-    // '@typescript-eslint/consistent-indexed-object-style': ['error', 'record'],
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 
     '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
-
-    '@typescript-eslint/no-unnecessary-condition': [
-      'error',
-      { allowConstantLoopConditions: true }
-    ],
 
     '@typescript-eslint/prefer-literal-enum-member': [
       'error',
@@ -413,7 +402,6 @@ module.exports = {
     ],
 
     'react/display-name': 'off',
-    'react/button-has-type': 'error',
     'react/no-array-index-key': 'error',
     'react/no-danger-with-children': 'error',
     'react/no-deprecated': 'error',
@@ -435,7 +423,6 @@ module.exports = {
     'react/jsx-closing-tag-location': 'error',
     'react/jsx-pascal-case': 'error',
     'react/jsx-key': 'error',
-    'react/jsx-newline': 'error',
     'react/jsx-no-constructed-context-values': 'error',
     'react/jsx-no-duplicate-props': 'error',
     'react/jsx-no-script-url': 'error',
