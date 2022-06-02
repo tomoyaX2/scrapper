@@ -5,10 +5,6 @@ const props = {};
 
 const Home = createView()
   .props(props)
-  .view(() => (
-    <div className={styles.container}>
-      <div>KEK</div>
-    </div>
-  ));
+  .view(() => <h1 className='text-3xl font-bold underline'>Hello world!</h1>);
 
 export { Home };

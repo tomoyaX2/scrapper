@@ -8,7 +8,7 @@ import type { ButtonProps } from './button.props';
 
 const Button: FC<ButtonProps> = ({ className, variant, ...props }) => (
   <button
-    className={cn(styles.button, className, styles[variant as string])}
+    className={cn(className, styles[variant as string])}
     type='button'
     {...props}
   />

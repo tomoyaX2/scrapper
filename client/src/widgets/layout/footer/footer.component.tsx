@@ -1,13 +1,6 @@
-import type { FC } from 'react';
-import styles from './footer.module.scss';
-
-const Footer: FC = () => (
-  <footer className={styles.container}>
-    <section>1</section>
-
-    <section>2</section>
-
-    <section>3</section>
+const Footer = (): JSX.Element => (
+  <footer className='flex px-4 py-8'>
+    <span className='text-sm'>Support E-mail: support@gmail.com</span>
   </footer>
 );
 
