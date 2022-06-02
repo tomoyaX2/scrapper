@@ -6,7 +6,6 @@ type Album = {
 };
 
 const getAlbumFx = createEffect<Album['id'], Album>();
-
 const $album = createStore<Album | null>(null);
 
 getAlbumFx.use(id => ({
