@@ -4,7 +4,7 @@ import { HitomiFields } from 'src/shared/enums/HitomiFields';
 import { AlbumDto, PaginatedAlbumDto } from './album.dto';
 import { AlbumService } from './album.service';
 
-@Controller('album')
+@Controller('albums')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 

@@ -14,7 +14,6 @@ import { TypeService } from '../type/type.service';
 import { LogService } from '../log/log.service';
 import { AlbumPaginationQuery, DefaultPaginationQuery } from 'src/shared/types';
 import { buildAlbumPagination } from './utils';
-import { Image } from '../image/image.entity';
 
 @Injectable()
 export class AlbumService {
@@ -36,7 +35,7 @@ export class AlbumService {
     perPage,
   }: DefaultPaginationQuery): Promise<PaginatedAlbumDto> {
     const [data, total] = await this.albumRepository.findAndCount({
-      relations: ['authors', 'series', 'language', 'group', 'tags'],
+      relations: ['authors', 'series', 'images', 'language', 'group', 'tags'],
       take: perPage,
       skip: page * perPage,
     });
@@ -53,6 +52,7 @@ export class AlbumService {
         'group',
         'tags',
         'comments',
+        'type',
       ],
       where: { id },
     });
