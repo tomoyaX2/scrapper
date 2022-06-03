@@ -1,7 +1,7 @@
 import { appWithTranslation } from 'next-i18next';
 import { withScope } from '@shared/lib/next';
-import '../src/app/app.scss';
 import { App } from '../src/app/index';
-import '../styles/global.css';
+import 'rsuite/dist/rsuite.min.css';
+import '../src/app/app.scss';
 
 export default appWithTranslation(withScope(App));

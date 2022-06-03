@@ -17,9 +17,17 @@ module.exports = {
           400: '#171717',
           700: '#000000'
         },
+        header: 'rgba(23, 23, 23,.95)',
+        footer: 'rgba(23, 23, 23,.95)',
         white: {
           300: '#f2f2f2'
         }
+      },
+      minWidth: {
+        searchInput: '16rem'
+      },
+      maxWidth: {
+        tagPicker: '30rem'
       }
     }
   },

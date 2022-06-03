@@ -1,5 +1,4 @@
 import { createView } from '@shared/lib/view';
-import styles from './home.module.scss';
 
 const props = {};
 
