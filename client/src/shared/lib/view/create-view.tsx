@@ -48,13 +48,22 @@ class ViewBuilder<P extends {}, MP = {}> {
     return typeof payload == 'function';
   }
 
+  // TODO: consider missing mounted
   private static useLifeCycle(mounted: Event<void>, unmounted: Event<void>) {
-    const [onMount, onUnmount] = useEvent([mounted, unmounted]);
+    let onMount: () => void, onUnmount: () => void;
+
+    if (mounted) {
+      onMount = useEvent(mounted);
+    }
+
+    if (unmounted) {
+      onUnmount = useEvent(unmounted);
+    }
 
     if (!mounted && !unmounted) return;
 
     useEffect(() => {
-      onMount();
+      onMount?.();
 
       return onUnmount;
     }, []);
