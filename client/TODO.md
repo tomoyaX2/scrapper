@@ -3,10 +3,12 @@
 Сегодня
 
 - Localization
+
 - SSG - написать гайд
 - Next pages - написать гайд
 - Структура файлов - написать гайд
 - Model structure - написать гайд
+
 - Template generation
 - Список плагинов для шторма/кода
 

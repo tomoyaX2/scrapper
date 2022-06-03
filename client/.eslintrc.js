@@ -424,6 +424,7 @@ module.exports = {
     'react/jsx-closing-tag-location': 'error',
     'react/jsx-pascal-case': 'error',
     'react/jsx-key': 'error',
+    'react/jsx-newline': 'error',
     'react/jsx-no-constructed-context-values': 'error',
     'react/jsx-no-duplicate-props': 'error',
     'react/jsx-no-script-url': 'error',
