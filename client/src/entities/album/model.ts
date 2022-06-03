@@ -1,18 +1,33 @@
+import axios from 'axios';
 import { createEffect, createStore } from 'effector';
 
 type Album = {
-  id: number | string;
-  name: string;
+  title: string;
+  id: string;
+  type: string;
+  language: string;
+  images: {
+    id: string;
+    url: string;
+  }[];
+  // preview: string[] will be done later
 };
 
-const getAlbumFx = createEffect<Album['id'], Album>();
-const $album = createStore<Album | null>(null);
+const $albums = createStore<{ data: Album[] }>({ data: [] });
 
-getAlbumFx.use(id => ({
-  id,
-  name: 'Album Name'
-}));
+const fetchAlbumsFx = createEffect<void, { data: Album[] }>(async () => {
+  const res = await axios.get<{ data: Album[] }>(
+    `http://localhost:8000/albums`
+  );
 
-$album.on(getAlbumFx.doneData, (_, album) => album);
+  return res.data;
+});
 
-export { $album, getAlbumFx };
+$albums.on(fetchAlbumsFx.doneData, (_, albums) => {
+  console.log('test', albums);
+
+  return albums;
+});
+
+export { fetchAlbumsFx, $albums };
+export type { Album };

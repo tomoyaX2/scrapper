@@ -1,25 +1,17 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
 import { PageList } from '@features/pagination/ui';
-import { $albums, fetchAlbumsFx } from '@entities/gallery-album';
+import { $albums, fetchAlbumsFx } from '@entities/album';
 import { createView } from '@shared/lib/view';
+import { homePage } from './home.model';
 
 const props = {
   albums: $albums,
   fetchAlbums: fetchAlbumsFx
 };
 
-const useEffects = props => {
-  useEffect(() => {
-    props.fetchAlbums();
-  }, [props]);
-};
-
 const Home = createView()
   .props(props)
-  // .enter(homePage.enter)
-  .effect(useEffects)
-
+  .enter(homePage.enter)
   .view(({ albums: { data } }) => (
     <div className='flex flex-col items-center justify-center w-full'>
       <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
@@ -31,7 +23,7 @@ const Home = createView()
             key={album.id}
           >
             <Image
-              src={album.images[0]}
+              src={album.images[0].url}
               loader={({ src, width }) => `${src}?w=${width}`}
               alt='preview'
               width={300}

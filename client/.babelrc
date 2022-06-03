@@ -4,12 +4,7 @@
     [
       "effector/babel-plugin",
       {
-        "reactSsr": true,
-        "factories": [
-          "src/shared/lib/effector/toggle",
-          "src/shared/lib/effector/re-state",
-          "src/shared/lib/effector/page"
-        ]
+        "reactSsr": true
       }
     ]
   ]

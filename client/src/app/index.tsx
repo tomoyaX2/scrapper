@@ -8,6 +8,7 @@ import { Provider } from './provider';
 const App = ({ Component, pageProps }: AppProps) => (
   <Provider>
     <Seo {...DEFAULT_SEO} />
+
     <CustomProvider theme='dark'>
       <Layout>
         {/* @ts-expect-error JSX typings */}

@@ -1,6 +1,6 @@
 // import type { GetServerSidePropsContext } from 'next';
 import { sample } from 'effector';
-import { fetchAlbumsFx } from '@entities/gallery-album';
+import { fetchAlbumsFx } from '@entities/album';
 import { createPage } from '@shared/lib/effector';
 
 const homePage = createPage();
