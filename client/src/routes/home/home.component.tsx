@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { createView } from '@shared/lib/view';
+import { PageList } from '@features/pagination/ui';
 
 const props = {};
 
@@ -119,25 +120,29 @@ const albums = [
 const Home = createView()
   .props(props)
   .view(() => (
-    <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
-      {albums.map(album => (
-        <div
-          className='m-4 flex flex-col items-center bg-primary cursor-pointer w-80'
-          key={album.id}
-        >
-          <Image
-            src={album.preview}
-            loader={({ src, width }) => `${src}?w=${width}`}
-            alt='preview'
-            width={300}
-            height={300}
-          />
+    <div className='flex flex-col items-center justify-center w-full'>
+      <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
+        {albums.map(album => (
+          <div
+            className='m-4 flex flex-col items-center bg-primary cursor-pointer w-80'
+            key={album.id}
+          >
+            <Image
+              src={album.preview}
+              loader={({ src, width }) => `${src}?w=${width}`}
+              alt='preview'
+              width={300}
+              height={300}
+            />
 
-          <span className='text-base text-title text-center'>
-            {`[${album.language}] ${album.title}`}
-          </span>
-        </div>
-      ))}
+            <span className='text-sm text-title text-center py-1 px-1'>
+              {`[${album.language}] ${album.title}`}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <PageList />
     </div>
   ));
 
