@@ -1,14 +1,20 @@
 import React from 'react';
 import { Pagination } from 'rsuite';
+import { $albumsState, changePageOptionsFx } from '@entities/album';
+import { createView } from '@shared/lib/view';
 
-const limitOptions = [30, 50, 100];
+const props = {
+  albumState: $albumsState,
+  onChangePageOptions: changePageOptionsFx
+};
+const limitOptions = [20, 30, 50, 100];
 
-export const PageList = (): JSX.Element => {
-  const [activePage, setActivePage] = React.useState(1);
-  const [limit, setLimit] = React.useState(50);
-
-  return (
+const PageList = createView()
+  .props(props)
+  .view(({ albumState: { perPage, page, total }, onChangePageOptions }) => (
     <div className='w-full flex items-center justify-center pb-4'>
+      {console.log(page, perPage, total)}
+
       <Pagination
         layout={['-', 'limit', '|', 'pager']}
         size='sm'
@@ -17,14 +23,17 @@ export const PageList = (): JSX.Element => {
         first
         last
         ellipsis
-        total={100}
-        limit={limit}
+        total={total}
+        limit={perPage}
         limitOptions={limitOptions}
         maxButtons={10}
-        activePage={activePage}
-        onChangePage={setActivePage}
-        onChangeLimit={setLimit}
+        activePage={page}
+        onChangePage={(page: number) => onChangePageOptions({ page, perPage })}
+        onChangeLimit={(perPage: number) =>
+          onChangePageOptions({ page, perPage })
+        }
       />
     </div>
-  );
-};
+  ));
+
+export { PageList };

@@ -1,38 +1,24 @@
-import Image from 'next/image';
 import { PageList } from '@features/pagination/ui';
-import { $albums, fetchAlbumsFx } from '@entities/album';
+import { $albumsState, fetchAlbumsFx } from '@entities/album';
+import { Album } from '@entities/album/ui';
 import { createView } from '@shared/lib/view';
 import { homePage } from './home.model';
 
 const props = {
-  albums: $albums,
+  albumsState: $albumsState,
   fetchAlbums: fetchAlbumsFx
 };
 
 const Home = createView()
   .props(props)
   .enter(homePage.enter)
-  .view(({ albums: { data } }) => (
+  .view(({ albumsState: { data, page } }) => (
     <div className='flex flex-col items-center justify-center w-full'>
+      {console.log(page, 'ppppp')}
       <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
-        {data.map(album => (
-          <div
-            className='m-4 flex flex-col items-center bg-primary cursor-pointer w-80'
-            key={album.id}
-          >
-            <Image
-              src={album.images[0].url}
-              loader={({ src, width }) => `${src}?w=${width}`}
-              alt='preview'
-              width={300}
-              height={300}
-            />
-
-            <span className='text-sm text-title text-center py-1 px-1'>
-              {`[${album.language}] ${album.title}`}
-            </span>
-          </div>
-        ))}
+        {data.map(
+          album => album?.images[0] && <Album album={album} key={album.id} />
+        )}
       </div>
 
       <PageList />

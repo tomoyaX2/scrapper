@@ -1,2 +1,2 @@
-export { $albums, fetchAlbumsFx } from './model';
-export type { Album } from './model';
+export { $albumsState, fetchAlbumsFx, changePageOptionsFx } from './model';
+export type { Album, AlbumResponse } from './model';

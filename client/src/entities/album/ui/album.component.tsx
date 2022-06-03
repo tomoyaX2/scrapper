@@ -3,7 +3,7 @@ import React from 'react';
 import type { AlbumProps } from './album.props';
 
 const Album = ({
-  album: { id, language, title, type, images }
+  album: { id, language, name, type, images }
 }: AlbumProps): JSX.Element => (
   <div
     className='m-4 flex flex-col items-center bg-primary cursor-pointer w-80'
@@ -18,7 +18,7 @@ const Album = ({
     />
 
     <span className='text-sm text-title text-center py-1 px-1'>
-      {`[${language}] ${title} [${type}]`}
+      {`${language?.name ? `[${language.name}]` : ''} ${name} [${type.name}]`}
     </span>
   </div>
 );
