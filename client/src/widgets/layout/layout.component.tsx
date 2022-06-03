@@ -1,8 +1,8 @@
 import type { FC, PropsWithChildren } from 'react';
+import { SearchBar } from '../../features/searchBar';
 import { Footer } from './footer';
 import { Header } from './header';
 import styles from './layout.module.scss';
-import { SearchBar } from './searchBar';
 
 const Layout: FC<PropsWithChildren<{}>> = ({ children }) => (
   <main className={styles.layout}>

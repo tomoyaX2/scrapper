@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { createView } from '@shared/lib/view';
 import { PageList } from '@features/pagination/ui';
+import { createView } from '@shared/lib/view';
 
 const props = {};
 
