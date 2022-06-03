@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from 'react';
-import { SearchBar } from '../../features/searchBar';
+import { SearchBar } from '../../features/search-bar';
 import { Footer } from './footer';
 import { Header } from './header';
 import styles from './layout.module.scss';
