@@ -24,16 +24,16 @@ const Header = (): JSX.Element => (
 
         <span className='text-white px-4 cursor-default'>|</span>
 
-        <Button className='bg-black-300 text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
+        <Button className='bg-header text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
           Sign Up
         </Button>
       </div>
 
       <Menu className='md:hidden sm:block xsm:block cursor-pointer' />
 
-      <div className='h-screen w-screen fixed md:hidden sm:flex xsm:flex flex-col bg-black-400 opacity-40 top-0 right-0' />
+      <div className='h-screen w-screen fixed md:hidden sm:flex xsm:flex flex-col bg-black-400 opacity-40 top-0 right-0 z-50' />
 
-      <div className='h-screen absolute md:hidden sm:flex xsm:flex flex-col w-64 bg-black-400 top-0 right-0'>
+      <div className='h-screen absolute md:hidden sm:flex xsm:flex flex-col w-64 bg-black-400 top-0 right-0 z-50'>
         <div className='flex flex-row items-center pt-4 px-2 justify-center'>
           <Button className='bg-black-400 text-white hover:bg-black-100 px-4 py-2 rounded-md'>
             Sign In

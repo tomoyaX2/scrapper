@@ -7,7 +7,9 @@ import { SearchBar } from './searchBar';
 const Layout: FC<PropsWithChildren<{}>> = ({ children }) => (
   <main className={styles.layout}>
     <Header />
+
     <SearchBar />
+
     <div className='flex flex-col bg-black-300'>{children}</div>
 
     <Footer />
