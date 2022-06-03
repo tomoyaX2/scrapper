@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { createEffect, createStore } from 'effector';
 
-type AlbumType = {
+type Album = {
   title: string;
   id: string;
   type: string;
@@ -9,16 +9,21 @@ type AlbumType = {
   images: string;
   // preview: string[] will be done later
 };
+const $albums = createStore<{ data: Album[] }>({ data: [] });
 
-const fetchAlbumsFx = createEffect(async () => {
-  const res = await axios.get<AlbumType[]>(`http://localhost:8000/albums`);
+const fetchAlbumsFx = createEffect<void, { data: Album[] }>(async () => {
+  const res = await axios.get<{ data: Album[] }>(
+    `http://localhost:8000/albums`
+  );
 
   return res.data;
 });
 
-const $albums = createStore<AlbumType[]>([]).on(
-  fetchAlbumsFx.doneData,
-  (albums, album) => [...albums, album]
-);
+$albums.on(fetchAlbumsFx.doneData, (_, albums) => {
+  console.log('test', albums);
+
+  return albums;
+});
+
 export { fetchAlbumsFx, $albums };
-export type { AlbumType };
+export type { Album };

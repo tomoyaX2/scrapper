@@ -1,14 +1,10 @@
 import Image from 'next/image';
 import React from 'react';
-import type { AlbumType } from './index';
+import type { AlbumProps } from './album.props';
 
 const Album = ({
-  id,
-  language,
-  title,
-  type,
-  images
-}: AlbumType): JSX.Element => (
+  album: { id, language, title, type, images }
+}: AlbumProps): JSX.Element => (
   <div
     className='m-4 flex flex-col items-center bg-primary cursor-pointer w-80'
     key={id}

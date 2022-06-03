@@ -66,7 +66,7 @@ const Counter = createView<Props>()
     );
   });
 
-// you will get ready to use componetn after calling .view
+// you will get ready to use component after calling .view
 <Counter />
 // if you need to prevent extra renders you can use in-built memo version
 <Counter.Memo />
