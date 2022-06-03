@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import type { Event, Store } from 'effector';
+import type { Effect, Event, Store } from 'effector';
 import { combine, is } from 'effector';
 import { useEvent, useStore } from 'effector-react';
 import type { ComponentType, ReactElement } from 'react';
@@ -31,7 +31,7 @@ type View<P, MP> = ComponentType<Omit<P, keyof MP>> & {
 
 type MappedStaticProps = {
   store: Store<Record<string, unknown>>;
-  events: Record<string, Event<unknown>>;
+  events: Record<string, Event<unknown> | Effect<unknown, unknown>>;
   rest: Record<string, unknown>;
 };
 
@@ -84,7 +84,7 @@ class ViewBuilder<P extends {}, MP = {}> {
   private readonly _propMap: PropsMap[] = [];
 
   private splitPropsByType(props: Record<string, unknown>): MappedStaticProps {
-    const events: Record<string, Event<unknown>> = {};
+    const events: Record<string, Effect<any, any> | Event<unknown>> = {};
     const stores: Record<string, Store<unknown>> = {};
     const rest: Record<string, unknown> = {};
 
@@ -95,7 +95,7 @@ class ViewBuilder<P extends {}, MP = {}> {
         continue;
       }
 
-      if (is.event(value)) {
+      if (is.event(value) || is.effect(value)) {
         events[key] = value;
 
         continue;
