@@ -17,8 +17,8 @@ module.exports = {
           400: '#171717',
           700: '#000000'
         },
-        header: 'rgba(23, 23, 23,.95)',
-        footer: 'rgba(23, 23, 23,.95)',
+        primary: 'rgba(23, 23, 23,.95)',
+        title: '#d9d9d9',
         white: {
           300: '#f2f2f2'
         }

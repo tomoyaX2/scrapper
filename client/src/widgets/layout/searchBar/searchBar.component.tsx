@@ -21,79 +21,86 @@ const isAdvancedOpenned = false;
 
 export const SearchBar = (): JSX.Element => (
   <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
-    <div className='flex flex-row items-center w-full justify-start flex-wrap'>
-      <Input placeholder='Title name...' className='!w-64 mr-2' />
+    <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col items-center w-full lg:justify-start md:justify-center sm:justify-center xsm:justify-center flex-wrap'>
+      <div className='flex flex-row flex-wrap lg:justify-start md:justify-center sm:justify-center xsm:justify-center'>
+        <TagPicker
+          data={testData}
+          className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+          placeholder='Tags...'
+          searchable
+          preventOverflow
+          renderMenuItem={label => (
+            <span className='font-normal text-base'>{label}</span>
+          )}
+        />
 
-      <TagPicker
-        data={testData}
-        className='min-w-searchInput mr-2 max-w-tagPicker'
-        placeholder='Tags...'
-        searchable
-        preventOverflow
-        renderMenuItem={label => (
-          <span className='font-normal text-base'>{label}</span>
-        )}
-      />
+        <TagPicker
+          data={testData}
+          className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+          placeholder='Types...'
+          searchable
+          renderMenuItem={label => (
+            <span className='font-normal text-base'>{label}</span>
+          )}
+        />
 
-      <TagPicker
-        data={testData}
-        className='min-w-searchInput mr-2 max-w-tagPicker'
-        placeholder='Types...'
-        searchable
-        renderMenuItem={label => (
-          <span className='font-normal text-base'>{label}</span>
-        )}
-      />
+        <TagPicker
+          data={testData}
+          className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+          placeholder='Languages...'
+          searchable
+          renderMenuItem={label => (
+            <span className='font-normal text-base'>{label}</span>
+          )}
+        />
+      </div>
 
-      <TagPicker
-        data={testData}
-        className='min-w-searchInput mr-2 max-w-tagPicker'
-        placeholder='Languages...'
-        searchable
-        renderMenuItem={label => (
-          <span className='font-normal text-base'>{label}</span>
-        )}
-      />
+      {isAdvancedOpenned && (
+        <div className='flex w-full mt-4 justify-start items-center'>
+          <Input placeholder='Title name...' className='!w-64 mr-4 my-2' />
 
-      <div className='flex flex-row items-center cursor-pointer mt-4'>
-        <span className='text-xs mr-2 underline'>Advanced Search</span>
+          <TagPicker
+            data={testData}
+            className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+            placeholder='Series...'
+            searchable
+            renderMenuItem={label => (
+              <span className='font-normal text-base'>{label}</span>
+            )}
+          />
 
-        <Arrow className='rotate-90' fill='white' width='12px' height='12px' />
+          <TagPicker
+            data={testData}
+            className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+            placeholder='Authors...'
+            searchable
+            renderMenuItem={label => (
+              <span className='font-normal text-base'>{label}</span>
+            )}
+          />
+
+          <TagPicker
+            data={testData}
+            className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+            placeholder='Groups...'
+            searchable
+            renderMenuItem={label => (
+              <span className='font-normal text-base'>{label}</span>
+            )}
+          />
+        </div>
+      )}
+
+      <div className='flex flex-row items-center lg:justify-end md:justify-center sm:justify-center xsm:justify-center w-full cursor-pointer mt-4'>
+        <span className='text-xs mr-4 underline'>Advanced Search</span>
+
+        <Arrow
+          className={`${isAdvancedOpenned ? '-rotate-90' : 'rotate-90'}`}
+          fill='white'
+          width='12px'
+          height='12px'
+        />
       </div>
     </div>
-
-    {isAdvancedOpenned && (
-      <div className='flex w-full mt-4 justify-start items-center'>
-        <TagPicker
-          data={testData}
-          className='min-w-searchInput mr-2 max-w-tagPicker'
-          placeholder='Series...'
-          searchable
-          renderMenuItem={label => (
-            <span className='font-normal text-base'>{label}</span>
-          )}
-        />
-
-        <TagPicker
-          data={testData}
-          className='min-w-searchInput mr-2 max-w-tagPicker'
-          placeholder='Authors...'
-          searchable
-          renderMenuItem={label => (
-            <span className='font-normal text-base'>{label}</span>
-          )}
-        />
-
-        <TagPicker
-          data={testData}
-          className='min-w-searchInput mr-2 max-w-tagPicker'
-          placeholder='Groups...'
-          searchable
-          renderMenuItem={label => (
-            <span className='font-normal text-base'>{label}</span>
-          )}
-        />
-      </div>
-    )}
   </div>
 );

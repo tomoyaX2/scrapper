@@ -5,7 +5,7 @@ import { Search } from '@shared/ui/atoms/icons/search';
 import { Input } from '@shared/ui/atoms/input/input';
 
 const Header = (): JSX.Element => (
-  <header className='bg-header flex items-center justify-between px-10 py-4'>
+  <header className='bg-primary flex items-center justify-between px-10 py-4'>
     <Logo fill='white' className='cursor-pointer' />
 
     <div className='flex flex-row items-center'>
@@ -18,13 +18,13 @@ const Header = (): JSX.Element => (
       />
 
       <div className='md:flex flex-row items-center sm:hidden xsm:hidden'>
-        <Button className='bg-header text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
+        <Button className='bg-primary text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
           Sign In
         </Button>
 
         <span className='text-white px-4 cursor-default'>|</span>
 
-        <Button className='bg-header text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
+        <Button className='bg-primary text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
           Sign Up
         </Button>
       </div>

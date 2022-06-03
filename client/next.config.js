@@ -14,6 +14,9 @@ module.exports = {
   },
 
   i18n,
+  // images: {
+  //   domains: ['http://localhost:8080']
+  // },
 
   webpack: (config, { isServer }) => {
     [
