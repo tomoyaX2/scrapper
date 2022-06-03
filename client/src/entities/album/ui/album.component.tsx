@@ -10,7 +10,7 @@ const Album = ({
     key={id}
   >
     <Image
-      src={images[0]}
+      src={images[0].url}
       loader={({ src, width }) => `${src}?w=${width}`}
       alt='preview'
       width={300}

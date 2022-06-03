@@ -15,8 +15,6 @@ const Home = createView()
   .view(({ albums: { data } }) => (
     <div className='flex flex-col items-center justify-center w-full'>
       <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
-        {console.log(data, 'data')}
-
         {data.map(album => (
           <div
             className='m-4 flex flex-col items-center bg-primary cursor-pointer w-80'
