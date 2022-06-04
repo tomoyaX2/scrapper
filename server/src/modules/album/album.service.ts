@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AuthorService } from '../authors/authors.service';
 import { GroupService } from '../group/group.service';
 import { ImageService } from '../image/image.service';
@@ -35,14 +35,23 @@ export class AlbumService {
     perPage,
   }: DefaultPaginationQuery): Promise<PaginatedAlbumDto> {
     const [data, total] = await this.albumRepository.findAndCount({
-      relations: ['authors', 'series', 'images', 'language', 'group', 'tags'],
+      relations: [
+        'authors',
+        'series',
+        'images',
+        'type',
+        'language',
+        'group',
+        'tags',
+      ],
       take: perPage,
-      skip: page * perPage,
+      skip: (page - 1) * perPage,
     });
     return { data, total, currentPage: page };
   }
 
   async getAlbumById(id: string): Promise<AlbumDto> {
+    console.log(id, 'id');
     const album = await this.albumRepository.findOne({
       relations: [
         'authors',
@@ -95,13 +104,22 @@ export class AlbumService {
     albumIndex,
     albumPath,
   }: {
-    albumData: Record<HitomiFields, any[]>;
+    albumData: Record<HitomiFields | 'downloadPath', any>;
     currentPageIndex: number;
     albumIndex: number;
     albumPath: string;
   }): Promise<string> {
-    const { title, authors, group, languages, series, tags, images, type } =
-      albumData;
+    const {
+      title,
+      authors,
+      group,
+      languages,
+      series,
+      tags,
+      images,
+      type,
+      downloadPath,
+    } = albumData;
     this.logService.saveLog(
       `current album: ${albumIndex}, current page index: ${currentPageIndex}`,
     );
@@ -138,6 +156,7 @@ export class AlbumService {
     const albumType = await this.typeService.assignType(type[0]);
 
     album.type = albumType;
+    album.downloadPath = downloadPath;
     const finalAlbum = await this.albumRepository.save(album);
     tags.length && (await this.tagsService.assignAlbumToTag(finalAlbum));
     images.length && (await this.imageService.assignAlbumToImage(finalAlbum));

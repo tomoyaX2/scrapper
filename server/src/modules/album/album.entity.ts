@@ -33,6 +33,9 @@ export class Album {
   @Column({ nullable: true })
   path?: string;
 
+  @Column({ nullable: true })
+  downloadPath?: string;
+
   @OneToMany(() => Image, (image) => image.album)
   images?: Image[];
 

@@ -113,10 +113,16 @@ export class ScrapperService {
           );
           imagesPaths.push(path);
         }
+        const downloadPath = await this.fileService.buildAlbumArchive({
+          albumId,
+          albumPath,
+          imagesPaths,
+        });
+        detailsData.downloadPath = downloadPath;
         if (process.env.ENABLE_POST_ALBUMS !== 'true') {
           const isRequestOversized = imagesPaths.length > 100;
           const album = await axios.post(
-            `${process.env.CLIENT_SERVER_URL}/album/scrapper-album`,
+            `${process.env.CLIENT_SERVER_URL}/albums/scrapper-album`,
             {
               albumData: isRequestOversized
                 ? { ...detailsData, images: [] }
@@ -129,10 +135,11 @@ export class ScrapperService {
           this.xmlService.appendUrl(
             `${process.env.CLIENT_URL}/albums/${album.data}`,
           );
+
           if (isRequestOversized) {
             for (const chunk of chunkArray(imagesPaths)) {
               await axios.post(
-                `${process.env.CLIENT_SERVER_URL}/album/scrapper-album-images`,
+                `${process.env.CLIENT_SERVER_URL}/albums/scrapper-album-images`,
                 {
                   images: chunk,
                   albumId: album.data,
@@ -154,7 +161,7 @@ export class ScrapperService {
         dataToCheck.language = { name: detailsData.languages[0] };
         dataToCheck.name = detailsData.title[0];
         const { data: isDuplicate } = await axios.post(
-          `${process.env.CLIENT_SERVER_URL}/album/find-duplicate`,
+          `${process.env.CLIENT_SERVER_URL}/albums/find-duplicate`,
           dataToCheck,
         );
         return isDuplicate;
@@ -215,7 +222,7 @@ export class ScrapperService {
   collectDetailsData = async (
     page: puppeteer.Page,
     url: string,
-  ): Promise<Record<HitomiFields, any>> => {
+  ): Promise<Record<string, any>> => {
     try {
       if (this.isStopped) {
         return;

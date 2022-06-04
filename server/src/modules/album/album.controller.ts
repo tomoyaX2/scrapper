@@ -8,14 +8,24 @@ import { AlbumService } from './album.service';
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'perPage',
+    type: Number,
+    required: false,
+  })
   @Get()
   getAlbums(
-    @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
   ): Promise<PaginatedAlbumDto> {
     return this.albumService.getAlbums({
-      page,
-      perPage,
+      page: parseInt(page),
+      perPage: parseInt(perPage),
     });
   }
 
@@ -91,7 +101,7 @@ export class AlbumController {
   saveScrapperData(
     @Body()
     data: {
-      albumData: Record<HitomiFields, any[]>;
+      albumData: Record<HitomiFields | 'downloadPath', any>;
       currentPageIndex: number;
       albumIndex: number;
       albumPath: string;

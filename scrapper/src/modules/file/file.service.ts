@@ -4,39 +4,49 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as sharp from 'sharp';
 import { LogService } from '../log/log.service';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class FileService {
   constructor(private logService: LogService) {}
 
-  async requestAlbumToDownload(album: {
-    images: { url: string }[];
-    id: string;
-    path: string;
-  }): Promise<{ file: fs.ReadStream; name: string }> {
-    const tempAlbumPath = `public/temp/${album.id}`;
-    const zipPath = tempAlbumPath + `/${album.id}.zip`;
+  async requestAlbumToDownload(
+    albumId: string,
+  ): Promise<{ file: fs.ReadStream; name: string }> {
+    const { data } = await axios.get(
+      `${process.env.CLIENT_SERVER_URL}/albums/${albumId}`,
+    );
+    console.log(data.downloadPath);
+    const file = await fs.createReadStream(`${data.downloadPath}`);
+    return { file, name: data.name };
+  }
+
+  async buildAlbumArchive({
+    albumId,
+    imagesPaths,
+    albumPath,
+  }: {
+    albumId: string;
+    imagesPaths: string[];
+    albumPath: string;
+  }): Promise<string> {
+    const zipPath = albumPath + `/${albumId}.zip`;
     let imageIndex = 0;
-    if (!fs.existsSync('public/temp')) {
-      fs.mkdirSync('public/temp');
-    }
-    if (!fs.existsSync(tempAlbumPath)) {
-      fs.mkdirSync(tempAlbumPath);
+    if (!fs.existsSync(albumPath)) {
+      fs.mkdirSync(albumPath);
     }
     const output = fs.createWriteStream(zipPath);
     const archive = archiver('zip');
 
     output.on('end', function () {
-      this.logService.saveLog('Data has been drained for ' + album.path);
+      this.logService.saveLog('Data has been drained for ' + albumPath);
     });
 
     archive.pipe(output);
 
-    for (const image of album.images) {
+    for (const image of imagesPaths) {
       const fileName = `/${100000 + imageIndex}.png`;
       //   const filePath = tempAlbumImagesPath + fileName;
-      const webpBuffer = await sharp(image.url).toBuffer();
+      const webpBuffer = await sharp(image).toBuffer();
       //   await sharp(webpBuffer).toFile(filePath, (err) => {
       //     if (err) {
       //       this.logService.saveLog(`${JSON.stringify(err)}`);
@@ -46,8 +56,7 @@ export class FileService {
       imageIndex++;
     }
     archive.finalize();
-    const file = await fs.createReadStream(zipPath);
-    return { file, name: `${album.id}.zip` };
+    return zipPath;
   }
 
   async writeImage(
@@ -70,8 +79,6 @@ export class FileService {
     if (!fs.existsSync(albumPath)) {
       fs.mkdirSync(albumPath);
     }
-    const imageId = uuidv4();
-
     try {
       const response = await axios.get<string>(imageUrl, {
         responseType: 'arraybuffer',
@@ -80,8 +87,8 @@ export class FileService {
         },
       });
       const PNGBase64 = Buffer.from(response.data, 'binary').toString('base64');
-      const path = `${albumPath}/${imageId}.webp`;
-      const returnPath = `${process.env.SERVER_URL}/${path}`;
+      const path = `${albumPath}/${10000 + currentCount}.webp`;
+      const returnPath = path;
       await fs.writeFile(path, PNGBase64, 'base64', (err) => {
         if (err) throw err;
         this.logService.saveLog(

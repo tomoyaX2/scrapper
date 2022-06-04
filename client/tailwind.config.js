@@ -18,6 +18,9 @@ module.exports = {
           700: '#000000'
         },
         primary: 'rgba(23, 23, 23,.95)',
+        secondary: '#1f1f1f',
+        third: '#4d4d4d',
+        ['third-hover']: '#666',
         title: '#d9d9d9',
         white: {
           300: '#f2f2f2'
