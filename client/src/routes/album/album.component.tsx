@@ -29,7 +29,7 @@ const Album = createView()
         <div className='flex flex-col items-center justify-center w-full'>
           <div className='flex flex-row px-12 py-4 bg-secondary'>
             <Image
-              src={`http://localhost:8080/${album.images[0].url}`}
+              src={`http://localhost:8080/${album.images[0]?.url}`}
               loader={({ src, width }) => `${src}?w=${width}`}
               alt='preview'
               width={400}
@@ -57,14 +57,14 @@ const Album = createView()
                 </div>
               )}
 
-              {!album.tags?.length && (
-                <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+              {album.tags?.length && (
+                <div className='flex flex-row items-center justify-start w-full mt-4'>
                   <span className='text-sm mr-4 w-20'>Tags:</span>
 
-                  <div className='flex items-center'>
+                  <div className='flex items-center flex-wrap'>
                     {album.tags.map(el => (
                       <Link href={`/?tagIds=${el.id}`} passHref key={el.id}>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize'>
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1'>
                           {el.name}
                         </Tag>
                       </Link>
@@ -74,10 +74,10 @@ const Album = createView()
               )}
 
               {album.authors?.length && (
-                <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                <div className='flex flex-row items-center justify-start w-full mt-4'>
                   <span className='text-sm mr-4 w-20'>Authors:</span>
 
-                  <div className='flex items-center'>
+                  <div className='flex items-center flex-wrap'>
                     {album.authors.map(el => (
                       <Link href={`/?tagIds=${el.id}`} passHref key={el.id}>
                         <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize'>
@@ -90,10 +90,10 @@ const Album = createView()
               )}
 
               {album.series?.length && (
-                <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                <div className='flex flex-row items-center justify-start w-full mt-4'>
                   <span className='text-sm mr-4 w-20'>Series:</span>
 
-                  <div className='flex items-center'>
+                  <div className='flex items-center flex-wrap'>
                     {album.series.map(el => (
                       <Link href={`/?tagIds=${el.id}`} passHref key={el.id}>
                         <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover'>

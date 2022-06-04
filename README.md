@@ -2,9 +2,6 @@
 
 TODO:
 ### Scrapper enhancements:
-    - [ ] Save original album URl to avoid duplicates
-    - [ ] Don't save album if DB contains already the same: name, author, language, name, series, 
-
 
 ### Common User:
     - [ ] Private and public albums

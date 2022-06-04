@@ -10,6 +10,8 @@ type Album = {
   tags: { name: string; id: string }[];
   authors: { name: string; id: string }[];
   group: { name: string; id: string };
+  preview?: string;
+  totalImages?: number;
   images: {
     id: string;
     name: string;
