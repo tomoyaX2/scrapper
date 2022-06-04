@@ -14,6 +14,7 @@ import { TypeService } from '../type/type.service';
 import { LogService } from '../log/log.service';
 import { AlbumPaginationQuery, DefaultPaginationQuery } from 'src/shared/types';
 import { buildAlbumPagination } from './utils';
+import * as _ from 'lodash';
 
 @Injectable()
 export class AlbumService {
@@ -38,8 +39,8 @@ export class AlbumService {
       relations: [
         'authors',
         'series',
-        'images',
         'type',
+        'images',
         'language',
         'group',
         'tags',
@@ -47,11 +48,11 @@ export class AlbumService {
       take: perPage,
       skip: (page - 1) * perPage,
     });
-    return { data, total, currentPage: page };
+    const result = data.map((el) => ({ ...el, totalImages: el.images.length }));
+    return { data: result, total, currentPage: page };
   }
 
   async getAlbumById(id: string): Promise<AlbumDto> {
-    console.log(id, 'id');
     const album = await this.albumRepository.findOne({
       relations: [
         'authors',
@@ -65,7 +66,7 @@ export class AlbumService {
       ],
       where: { id },
     });
-    return album;
+    return { ...album, images: _.orderBy(album.images, ['url']) };
   }
 
   async getAlbumForScrapperFilter(

@@ -29,4 +29,5 @@ export class AlbumDto {
   comments?: CommentDto[];
   preview?: string;
   downloadPath?: string;
+  totalImages?: number;
 }
