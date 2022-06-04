@@ -52,17 +52,13 @@ $albumsState.on(fetchAlbumsFx.doneData, (albumsState, albums) => ({
   total: parseInt(albums.total)
 }));
 
-$albumsState.on(changePageOptionsFx.doneData, (albumsState, albums) => {
-  console.log(albumsState, albums, '1111');
-
-  return {
-    ...albumsState,
-    page: albums.page,
-    perPage: albums.perPage,
-    data: albums.data,
-    total: parseInt(albums.total)
-  };
-});
+$albumsState.on(changePageOptionsFx.doneData, (albumsState, albums) => ({
+  ...albumsState,
+  page: albums.page,
+  perPage: albums.perPage,
+  data: albums.data,
+  total: parseInt(albums.total)
+}));
 
 export { fetchAlbumsFx, $albumsState, changePageOptionsFx };
 export type { Album };

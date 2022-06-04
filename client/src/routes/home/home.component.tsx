@@ -12,9 +12,8 @@ const props = {
 const Home = createView()
   .props(props)
   .enter(homePage.enter)
-  .view(({ albumsState: { data, page } }) => (
+  .view(({ albumsState: { data } }) => (
     <div className='flex flex-col items-center justify-center w-full'>
-      {console.log(page, 'ppppp')}
       <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
         {data.map(
           album => album?.images[0] && <Album album={album} key={album.id} />

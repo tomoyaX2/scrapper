@@ -28,6 +28,11 @@ module.exports = {
       },
       maxWidth: {
         tagPicker: '30rem'
+      },
+      spacing: {
+        72: '18rem',
+        76: '19rem',
+        80: '20rem'
       }
     }
   },
