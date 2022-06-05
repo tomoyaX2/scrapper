@@ -30,12 +30,16 @@ module.exports = {
         searchInput: '16rem'
       },
       maxWidth: {
-        tagPicker: '30rem'
+        tagPicker: '30rem',
+        gallery: '75rem'
       },
       spacing: {
+        unset: 'unset',
         72: '18rem',
         76: '19rem',
-        80: '20rem'
+        80: '20rem',
+        84: '21rem',
+        100: ' 25rem'
       }
     }
   },

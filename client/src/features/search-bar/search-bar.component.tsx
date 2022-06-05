@@ -25,7 +25,8 @@ export const SearchBar = (): JSX.Element => (
       <div className='flex flex-row flex-wrap lg:justify-start md:justify-center sm:justify-center xsm:justify-center'>
         <TagPicker
           data={testData}
-          className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+          className='min-w-searchInput mr-4 my-2 max-w-tagPicker rs-theme-dark'
+          menuClassName='rs-theme-dark'
           placeholder='Tags...'
           searchable
           preventOverflow
@@ -36,7 +37,8 @@ export const SearchBar = (): JSX.Element => (
 
         <TagPicker
           data={testData}
-          className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+          className='min-w-searchInput mr-4 my-2 max-w-tagPicker rs-theme-dark'
+          menuClassName='rs-theme-dark'
           placeholder='Types...'
           searchable
           renderMenuItem={label => (
@@ -46,7 +48,8 @@ export const SearchBar = (): JSX.Element => (
 
         <TagPicker
           data={testData}
-          className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+          className='min-w-searchInput mr-4 my-2 max-w-tagPicker rs-theme-dark'
+          menuClassName='rs-theme-dark'
           placeholder='Languages...'
           searchable
           renderMenuItem={label => (
@@ -61,7 +64,8 @@ export const SearchBar = (): JSX.Element => (
 
           <TagPicker
             data={testData}
-            className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+            className='min-w-searchInput mr-4 my-2 max-w-tagPicker rs-theme-dark'
+            menuClassName='rs-theme-dark'
             placeholder='Series...'
             searchable
             renderMenuItem={label => (
@@ -71,7 +75,8 @@ export const SearchBar = (): JSX.Element => (
 
           <TagPicker
             data={testData}
-            className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+            className='min-w-searchInput mr-4 my-2 max-w-tagPicker rs-theme-dark'
+            menuClassName='rs-theme-dark'
             placeholder='Authors...'
             searchable
             renderMenuItem={label => (
@@ -81,7 +86,8 @@ export const SearchBar = (): JSX.Element => (
 
           <TagPicker
             data={testData}
-            className='min-w-searchInput mr-4 my-2 max-w-tagPicker'
+            className='min-w-searchInput mr-4 my-2 max-w-tagPicker rs-theme-dark'
+            menuClassName='rs-theme-dark'
             placeholder='Groups...'
             searchable
             renderMenuItem={label => (

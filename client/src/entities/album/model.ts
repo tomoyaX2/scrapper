@@ -1,6 +1,11 @@
 import axios from 'axios';
-import { createEffect, createStore } from 'effector';
+import { createEffect, createStore, createEvent } from 'effector';
 
+type Image = {
+  id: string;
+  name: string;
+  url: string;
+};
 type Album = {
   name: string;
   id: string;
@@ -12,15 +17,18 @@ type Album = {
   group: { name: string; id: string };
   preview?: string;
   totalImages?: number;
-  images: {
-    id: string;
-    name: string;
-    url: string;
-  }[];
+  images: Image[];
   // preview: string[] will be done later
 };
 
 type AlbumResponse = { data: Album[]; total: string };
+
+type ReaderPageOption = { label: number; value: number };
+type ReaderPage = {
+  currentPage: number;
+  images: Image[];
+  pagesList: ReaderPageOption[];
+};
 
 const $albumsState = createStore<{
   data: Album[];
@@ -36,6 +44,12 @@ const $albumsState = createStore<{
 
 const $albumPage = createStore<Album | null>(null);
 
+const $readerPage = createStore<ReaderPage>({
+  currentPage: 1,
+  images: [],
+  pagesList: []
+});
+
 const fetchAlbumsFx = createEffect<void, AlbumResponse>();
 
 const downloadAlbumFx = createEffect<Album, void>();
@@ -47,10 +61,26 @@ const changePageOptionsFx = createEffect<
 
 const fetchAlbumFx = createEffect<string, Album>();
 
+const changeReaderPageFx = createEvent<number>();
+
 $albumsState.on(fetchAlbumsFx.doneData, (albumsState, albums) => ({
   ...albumsState,
   data: albums.data,
   total: parseInt(albums.total)
+}));
+
+$readerPage.on(fetchAlbumFx.doneData, (_, album) => ({
+  images: album.images,
+  currentPage: 1,
+  pagesList: Array.from(Array(album.images.length).keys()).map(key => ({
+    label: key + 1,
+    value: key + 1
+  }))
+}));
+
+$readerPage.on(changeReaderPageFx, (readerState, readerPage) => ({
+  ...readerState,
+  currentPage: readerPage
 }));
 
 $albumsState.on(changePageOptionsFx.doneData, (albumsState, albums) => ({
@@ -104,6 +134,8 @@ export {
   changePageOptionsFx,
   $albumPage,
   fetchAlbumFx,
-  downloadAlbumFx
+  downloadAlbumFx,
+  $readerPage,
+  changeReaderPageFx
 };
 export type { Album, AlbumResponse };

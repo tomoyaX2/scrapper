@@ -3,4 +3,5 @@ export type IconProps = {
   fill?: string;
   width?: string;
   height?: string;
+  onClick?: () => void;
 };

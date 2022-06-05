@@ -14,7 +14,7 @@ const PageList = createView()
   .view(({ albumState: { perPage, page, total }, onChangePageOptions }) => (
     <div className='w-full flex items-center justify-center pb-4 mt-8'>
       <Pagination
-        layout={['-', 'limit', '|', 'pager']}
+        layout={['pager']}
         size='sm'
         prev
         next

@@ -4,6 +4,8 @@ export {
   changePageOptionsFx,
   fetchAlbumFx,
   $albumPage,
-  downloadAlbumFx
+  downloadAlbumFx,
+  $readerPage,
+  changeReaderPageFx
 } from './model';
 export type { Album, AlbumResponse } from './model';

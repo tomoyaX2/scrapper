@@ -31,7 +31,7 @@ const Header = (): JSX.Element => (
 
       <Menu className='md:hidden sm:block xsm:block cursor-pointer' />
 
-      <div className='h-screen w-screen fixed md:hidden sm:flex xsm:flex flex-col bg-black-400 opacity-40 top-0 right-0 z-50' />
+      {/* <div className='h-screen w-screen fixed md:hidden sm:flex xsm:flex flex-col bg-black-400 opacity-40 top-0 right-0 z-50' />
 
       <div className='h-screen fixed md:hidden sm:flex xsm:flex flex-col w-64 bg-black-400 top-0 right-0 z-50'>
         <div className='flex flex-row items-center pt-4 px-2 justify-center'>
@@ -43,7 +43,7 @@ const Header = (): JSX.Element => (
             Sign Up
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   </header>
 );
