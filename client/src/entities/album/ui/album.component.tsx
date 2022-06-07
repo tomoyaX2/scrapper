@@ -4,7 +4,7 @@ import React from 'react';
 import type { AlbumProps } from './album.props';
 
 const Album = ({
-  album: { id, language, name, type, preview, totalImages }
+  album: { id, language, name, type, preview, totalImages, images }
 }: AlbumProps): JSX.Element => {
   const [isHovered, setHovered] = React.useState<boolean>(false);
 
@@ -21,7 +21,7 @@ const Album = ({
         onMouseLeave={onHover(false)}
       >
         <Image
-          src={`http://localhost:8080/${preview}`}
+          src={`http://localhost:8080/${preview ?? images[0]?.url}`}
           loader={({ src, width }) => `${src}?w=${width}`}
           alt='preview'
           width={300}
@@ -35,7 +35,9 @@ const Album = ({
             }`}
           >
             <span className='text-sm text-title text-left py-2 px-4'>
-              {`${language?.name ? `[${language.name}]` : ''}  [${type.name}]`}
+              {`${language?.name ? `[${language.name}]` : ''}  ${
+                type?.name ? `[${type.name}]` : ''
+              }`}
 
               {`  ${isHovered ? name : name.substring(0, 50)} `}
             </span>

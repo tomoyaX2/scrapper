@@ -31,3 +31,15 @@ export class AlbumDto {
   downloadPath?: string;
   totalImages?: number;
 }
+
+export class SearchDto {
+  page: string;
+  perPage: string;
+  name: string;
+  tags: string[];
+  authors: string[];
+  series: string[];
+  languages: string[];
+  groups: string[];
+  types: string;
+}

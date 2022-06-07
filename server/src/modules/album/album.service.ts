@@ -48,7 +48,11 @@ export class AlbumService {
       take: perPage,
       skip: (page - 1) * perPage,
     });
-    const result = data.map((el) => ({ ...el, totalImages: el.images.length }));
+    const result = data.map((el) => ({
+      ...el,
+      totalImages: el.images.length,
+      images: _.orderBy(el.images, ['url']),
+    }));
     return { data: result, total, currentPage: page };
   }
 

@@ -30,7 +30,7 @@ export class FileService {
     albumPath: string;
   }): Promise<string> {
     const zipPath = albumPath + `/${albumId}.zip`;
-    let imageIndex = 0;
+    let imageIndex = 1;
     if (!fs.existsSync(albumPath)) {
       fs.mkdirSync(albumPath);
     }
@@ -44,16 +44,18 @@ export class FileService {
     archive.pipe(output);
 
     for (const image of imagesPaths) {
-      const fileName = `/${100000 + imageIndex}.png`;
-      //   const filePath = tempAlbumImagesPath + fileName;
-      const webpBuffer = await sharp(image).toBuffer();
-      //   await sharp(webpBuffer).toFile(filePath, (err) => {
-      //     if (err) {
-      //       this.logService.saveLog(`${JSON.stringify(err)}`);
-      //     }
-      //   });
-      archive.append(webpBuffer, { name: fileName });
-      imageIndex++;
+      if (image) {
+        const fileName = `/${100000 + imageIndex}.png`;
+        //   const filePath = tempAlbumImagesPath + fileName;
+        const webpBuffer = await sharp(image).toBuffer();
+        //   await sharp(webpBuffer).toFile(filePath, (err) => {
+        //     if (err) {
+        //       this.logService.saveLog(`${JSON.stringify(err)}`);
+        //     }
+        //   });
+        archive.append(webpBuffer, { name: fileName });
+        imageIndex++;
+      }
     }
     archive.finalize();
     return zipPath;

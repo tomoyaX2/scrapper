@@ -6,6 +6,7 @@ export {
   $albumPage,
   downloadAlbumFx,
   $readerPage,
-  changeReaderPageFx
+  changeReaderPageFx,
+  searchAlbumsFx
 } from './model';
 export type { Album, AlbumResponse } from './model';

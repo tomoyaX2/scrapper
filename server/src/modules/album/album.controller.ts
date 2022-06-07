@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { HitomiFields } from 'src/shared/enums/HitomiFields';
-import { AlbumDto, PaginatedAlbumDto } from './album.dto';
+import { AlbumDto, PaginatedAlbumDto, SearchDto } from './album.dto';
 import { AlbumService } from './album.service';
 
 @Controller('albums')
@@ -34,61 +34,17 @@ export class AlbumController {
     return this.albumService.getAlbumById(albumId);
   }
 
-  @ApiQuery({
-    name: 'name',
-    type: Array,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'author',
-    type: Array,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'series',
-    type: Array,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'name',
-    type: Array,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'languages',
-    type: Array,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'groups',
-    type: Array,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'tags',
-    type: Array,
-    required: false,
-  })
   @Post('search')
-  searchAlbums(
-    @Query('page') page: string,
-    @Query('perPage') perPage: string,
-    @Query('name') name?: string,
-    @Query('author') authors?: string[],
-    @Query('series') series?: string[],
-    @Query('languages') language?: string[],
-    @Query('groups') group?: string[],
-    @Query('tags') tags?: string[],
-  ): Promise<PaginatedAlbumDto> {
+  searchAlbums(@Body() data: SearchDto): Promise<PaginatedAlbumDto> {
     return this.albumService.searchAlbums({
-      page: parseInt(page),
-      perPage: parseInt(perPage),
-      name,
-      authors,
-      series,
-      language,
-      group,
-      tags,
+      page: parseInt(data.page),
+      perPage: parseInt(data.perPage),
+      name: data.name,
+      authors: data.authors,
+      series: data.series,
+      language: data.languages,
+      group: data.groups,
+      tags: data.tags,
     });
   }
 

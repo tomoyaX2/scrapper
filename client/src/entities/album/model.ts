@@ -54,6 +54,11 @@ const fetchAlbumsFx = createEffect<void, AlbumResponse>();
 
 const downloadAlbumFx = createEffect<Album, void>();
 
+const searchAlbumsFx = createEffect<
+  Record<string, string[] | string | number>,
+  AlbumResponse & { page: number; perPage: number }
+>();
+
 const changePageOptionsFx = createEffect<
   { page: number; perPage: number },
   AlbumResponse & { page: number; perPage: number }
@@ -91,6 +96,13 @@ $albumsState.on(changePageOptionsFx.doneData, (albumsState, albums) => ({
   total: parseInt(albums.total)
 }));
 
+$albumsState.on(searchAlbumsFx.doneData, (albumsState, albums) => ({
+  ...albumsState,
+  page: albums.page,
+  data: albums.data,
+  total: parseInt(albums.total)
+}));
+
 $albumPage.on(fetchAlbumFx.doneData, (_, album) => album);
 
 changePageOptionsFx.use(async ({ page, perPage }) => {
@@ -112,6 +124,16 @@ downloadAlbumFx.use(async album => {
   link.setAttribute('download', `${album.name}.zip`); //or any other extension
   document.body.appendChild(link);
   link.click();
+});
+
+searchAlbumsFx.use(async body => {
+  const response = await axios.post<AlbumResponse>(
+    `http://localhost:8000/albums/search`,
+    body
+  );
+  console.log(response, 'response');
+
+  return response.data;
 });
 
 fetchAlbumsFx.use(async () => {
@@ -136,6 +158,7 @@ export {
   fetchAlbumFx,
   downloadAlbumFx,
   $readerPage,
-  changeReaderPageFx
+  changeReaderPageFx,
+  searchAlbumsFx
 };
 export type { Album, AlbumResponse };
