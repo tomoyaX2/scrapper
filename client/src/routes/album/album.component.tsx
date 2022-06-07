@@ -27,7 +27,7 @@ const Album = createView()
     ({ album }) =>
       album && (
         <div className='flex flex-col items-center justify-start w-full'>
-          <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary md:w-unset sm:w-full xsm:w-full'>
+          <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
             <div className='flex items-center justify-center lg:w-84 md:w-full sm:w-full xsm:w-full h-100'>
               <Image
                 src={`http://localhost:8080/${album.images[0]?.url}`}

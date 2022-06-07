@@ -3,7 +3,7 @@ import { AuthorService } from './authors.service';
 import { AuthorDto, PaginatedAuthorDto } from './authors.dto';
 import { ApiQuery } from '@nestjs/swagger';
 
-@Controller('author')
+@Controller('authors')
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 

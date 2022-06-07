@@ -26,7 +26,7 @@ export class TagsService {
       where: name ? { name: Like('%' + name + '%') } : {},
       relations: withAlbums ? albumRelations : [],
       take: perPage,
-      skip: page * perPage,
+      skip: (page - 1) * perPage,
     });
     return { data, total, currentPage: page };
   }

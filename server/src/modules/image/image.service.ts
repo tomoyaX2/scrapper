@@ -23,7 +23,7 @@ export class ImageService {
     const [data, total] = await this.imagesRepository.findAndCount({
       relations: albumRelations,
       take: perPage,
-      skip: page * perPage,
+      skip: (page - 1) * perPage,
     });
     return { data, total, currentPage: page };
   }

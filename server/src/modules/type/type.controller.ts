@@ -3,7 +3,7 @@ import { ApiQuery } from '@nestjs/swagger';
 import { PaginatedTypeDto, TypeDto } from './type.dto';
 import { TypeService } from './type.service';
 
-@Controller('type')
+@Controller('types')
 export class TypeController {
   constructor(private readonly typeService: TypeService) {}
 

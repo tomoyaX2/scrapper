@@ -16,9 +16,8 @@ const props = {
 let clickTimeout = setTimeout(() => {});
 let switchPageIndexTimeout = setTimeout(() => {});
 
-const onHandleTouch = (callback: (event) => void) => event => {
+const onHandleTouch = (callback: (event: TouchEvent) => void) => event => {
   clearTimeout(clickTimeout);
-  console.log(event, 'event');
   clickTimeout = setTimeout(() => callback(event), 100);
 };
 
@@ -56,22 +55,32 @@ const switchPageTimeoutHandler = ({
   clearTimeout(switchPageIndexTimeout);
 };
 
-const useEffects = props => {
-  const router = useRouter();
-  useEffect(() => {
-    router.query.id && props.fetchAlbum(router.query.id);
-  }, [router.query.id]);
-};
-
 const Reader = createView()
   .props(props)
-  .effect(useEffects)
   .view(
-    ({ reader: { currentPage, images, pagesList }, onChangeReaderPage }) => {
+    ({
+      reader: { currentPage, images, pagesList },
+      onChangeReaderPage,
+      fetchAlbum
+    }) => {
+      const router = useRouter();
+
       const [switchTimer, setSwitchTimer] = useState({
         isActive: false,
         value: 3
       });
+
+      useEffect(() => {
+        router.query.id && fetchAlbum(router.query.id);
+      }, [router.query.id]);
+
+      useEffect(() => {
+        if (images?.length) {
+          onChangeReaderPage(
+            images?.findIndex(el => el.id === router.query.readerId) + 1
+          );
+        }
+      }, [router.query.readerId, images]);
 
       if (!images.length) {
         return null;
@@ -79,10 +88,14 @@ const Reader = createView()
       const prevPage = currentPage > 1 ? currentPage - 1 : 1;
       const nextPage =
         currentPage < images.length - 1 ? currentPage + 1 : currentPage;
-      const onTouchEvent = onHandleTouch(e =>
-        onChangeReaderPage(
-          e.target.offsetWidth / 2 < e.touches[0].clientX ? nextPage : prevPage
-        )
+      const onTouchEvent = onHandleTouch(
+        e =>
+          e &&
+          onChangeReaderPage(
+            e.target.offsetWidth / 2 < e.touches[0].clientX
+              ? nextPage
+              : prevPage
+          )
       );
       const onClickEvent = onHandleTouch(e =>
         onChangeReaderPage(

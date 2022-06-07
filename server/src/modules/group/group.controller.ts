@@ -3,7 +3,7 @@ import { ApiQuery } from '@nestjs/swagger';
 import { GroupDto, PaginatedGroupDto } from './group.dto';
 import { GroupService } from './group.service';
 
-@Controller('group')
+@Controller('groups')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
