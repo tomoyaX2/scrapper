@@ -3,14 +3,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { Tag, Button } from 'rsuite';
-import { $albumPage, fetchAlbumFx, downloadAlbumFx } from '@entities/album';
+import {
+  $albumPage,
+  fetchAlbumFx,
+  downloadAlbumFx,
+  changeSearchStateFx
+} from '@entities/album';
+import type { Search } from '@entities/album';
 import { createView } from '@shared/lib/view';
 import { Download } from '@shared/ui/atoms/icons/download-icon';
 
 const props = {
   album: $albumPage,
   fetchAlbum: fetchAlbumFx,
-  downloadAlbum: downloadAlbumFx
+  downloadAlbum: downloadAlbumFx,
+  setSearch: changeSearchStateFx
 };
 
 const useEffects = props => {
@@ -23,8 +30,16 @@ const useEffects = props => {
 const Album = createView()
   .props(props)
   .effect(useEffects)
-  .view(
-    ({ album }) =>
+  .view(({ album, setSearch }) => {
+    const router = useRouter();
+
+    const onRedirect = (ids: string | string[], key: keyof Search) => () => {
+      const targetString = Array.isArray(ids) ? ids.join(',') : ids;
+      setSearch({ [key]: [ids] });
+      router.replace(`/?page=1&${key}=${targetString}`);
+    };
+
+    return (
       album && (
         <div className='flex flex-col items-center justify-start w-full'>
           <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
@@ -38,7 +53,7 @@ const Album = createView()
               />
             </div>
 
-            <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:px-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
+            <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
               <div>
                 <span className='text-lg'>{album.name}</span>
 
@@ -46,9 +61,12 @@ const Album = createView()
                   <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Language:</span>
 
-                    <span className='text-sm capitalize'>
+                    <Tag
+                      className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'
+                      onClick={onRedirect(album.language.id, 'languages')}
+                    >
                       {album.language.name}
-                    </span>
+                    </Tag>
                   </div>
                 ) : null}
 
@@ -56,9 +74,12 @@ const Album = createView()
                   <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Type:</span>
 
-                    <span className='text-sm capitalize'>
+                    <Tag
+                      className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'
+                      onClick={onRedirect(album.type.id, 'types')}
+                    >
                       {album.type.name}
-                    </span>
+                    </Tag>
                   </div>
                 ) : null}
 
@@ -66,13 +87,15 @@ const Album = createView()
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Tags:</span>
 
-                    <div className='flex items-center flex-wrap'>
+                    <div className='flex items-center flex-wrap max-w-tags'>
                       {album.tags.map(el => (
-                        <Link href={`/?tagIds=${el.id}`} passHref key={el.id}>
-                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
-                            {el.name}
-                          </Tag>
-                        </Link>
+                        <Tag
+                          className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'
+                          onClick={onRedirect(el.id, 'tags')}
+                          key={el.id}
+                        >
+                          {el.name}
+                        </Tag>
                       ))}
                     </div>
                   </div>
@@ -84,11 +107,13 @@ const Album = createView()
 
                     <div className='flex items-center flex-wrap'>
                       {album.authors.map(el => (
-                        <Link href={`/?tagIds=${el.id}`} passHref key={el.id}>
-                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize rs-theme-dark'>
-                            {el.name}
-                          </Tag>
-                        </Link>
+                        <Tag
+                          className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize rs-theme-dark'
+                          key={el.id}
+                          onClick={onRedirect(el.id, 'authors')}
+                        >
+                          {el.name}
+                        </Tag>
                       ))}
                     </div>
                   </div>
@@ -100,11 +125,13 @@ const Album = createView()
 
                     <div className='flex items-center flex-wrap'>
                       {album.series.map(el => (
-                        <Link href={`/?tagIds=${el.id}`} passHref key={el.id}>
-                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover rs-theme-dark'>
-                            {el.name}
-                          </Tag>
-                        </Link>
+                        <Tag
+                          className='cursor-pointer mr-1 bg-third hover:bg-third-hover rs-theme-dark'
+                          onClick={onRedirect(el.id, 'series')}
+                          key={el.id}
+                        >
+                          {el.name}
+                        </Tag>
                       ))}
                     </div>
                   </div>
@@ -114,9 +141,12 @@ const Album = createView()
                   <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 rs-theme-dark'>
                     <span className='text-sm mr-4 w-20'>Group:</span>
 
-                    <span className='text-sm capitalize'>
+                    <Tag
+                      className='cursor-pointer mr-1 bg-third hover:bg-third-hover rs-theme-dark'
+                      onClick={onRedirect(album.group.id, 'groups')}
+                    >
                       {album.group?.name}
-                    </span>
+                    </Tag>
                   </div>
                 ) : null}
 
@@ -164,6 +194,7 @@ const Album = createView()
           </div>
         </div>
       )
-  );
+    );
+  });
 
 export { Album };

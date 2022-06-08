@@ -1,3 +1,3 @@
-import { $authors, getAuthorsFx, changeActiveAuthorFx } from './model';
+import { $authors, getAuthorsFx } from './model';
 
-export { $authors, getAuthorsFx, changeActiveAuthorFx };
+export { $authors, getAuthorsFx };

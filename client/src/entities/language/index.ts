@@ -1,3 +1,3 @@
-import { $languages, getLanguagesFx, changeActiveLanguageFx } from './model';
+import { $languages, getLanguagesFx } from './model';
 
-export { $languages, getLanguagesFx, changeActiveLanguageFx };
+export { $languages, getLanguagesFx };

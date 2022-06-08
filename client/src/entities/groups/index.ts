@@ -1,3 +1,3 @@
-import { $groups, getGroupsFx, changeActiveGroupFx } from './model';
+import { $groups, getGroupsFx } from './model';
 
-export { $groups, getGroupsFx, changeActiveGroupFx };
+export { $groups, getGroupsFx };

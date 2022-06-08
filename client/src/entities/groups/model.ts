@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createEffect, createEvent, createStore } from 'effector';
+import { createEffect, createStore } from 'effector';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Group = {
@@ -13,14 +13,12 @@ type GroupModel = {
 };
 
 type GroupsState = {
-  activeGroups: string[];
-  groups: Group[];
+  groupsList: Group[];
 };
 
 const getGroupsFx = createEffect<void, Group[]>();
-const changeActiveGroupFx = createEvent<string[]>();
 
-const $groups = createStore<GroupsState>({ groups: [], activeGroups: [] });
+const $groups = createStore<GroupsState>({ groupsList: [] });
 
 getGroupsFx.use(async () => {
   const Groups = await axios.get<PaginatedResponse<GroupModel>>(
@@ -30,15 +28,6 @@ getGroupsFx.use(async () => {
   return Groups.data.data.map(el => ({ label: el.name, value: el.id }));
 });
 
-$groups.on(getGroupsFx.doneData, (_, groups) => ({ activeGroups: [], groups }));
+$groups.on(getGroupsFx.doneData, (_, groupsList) => ({ groupsList }));
 
-$groups.on(
-  changeActiveGroupFx,
-  (state, activeGroups) =>
-    state && {
-      ...state,
-      activeGroups
-    }
-);
-
-export { $groups, getGroupsFx, changeActiveGroupFx };
+export { $groups, getGroupsFx };

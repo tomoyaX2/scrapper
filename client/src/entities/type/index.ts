@@ -1,3 +1,3 @@
-import { $types, getTypesFx, changeActiveTypeFx } from './model';
+import { $types, getTypesFx } from './model';
 
-export { $types, getTypesFx, changeActiveTypeFx };
+export { $types, getTypesFx };

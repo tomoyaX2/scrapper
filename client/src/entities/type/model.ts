@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createEffect, createEvent, createStore } from 'effector';
+import { createEffect, createStore } from 'effector';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Type = {
@@ -13,14 +13,12 @@ type TypeModel = {
 };
 
 type TypeState = {
-  activeTypes: string[];
-  types: Type[];
+  typesList: Type[];
 };
 
 const getTypesFx = createEffect<void, Type[]>();
-const changeActiveTypeFx = createEvent<string[]>();
 
-const $types = createStore<TypeState>({ types: [], activeTypes: [] });
+const $types = createStore<TypeState>({ typesList: [] });
 
 getTypesFx.use(async () => {
   const types = await axios.get<PaginatedResponse<TypeModel>>(
@@ -30,15 +28,6 @@ getTypesFx.use(async () => {
   return types.data.data.map(el => ({ label: el.name, value: el.id }));
 });
 
-$types.on(getTypesFx.doneData, (_, types) => ({ activeTypes: [], types }));
+$types.on(getTypesFx.doneData, (_, typesList) => ({ typesList }));
 
-$types.on(
-  changeActiveTypeFx,
-  (state, activeTypes) =>
-    state && {
-      ...state,
-      activeTypes
-    }
-);
-
-export { $types, getTypesFx, changeActiveTypeFx };
+export { $types, getTypesFx };

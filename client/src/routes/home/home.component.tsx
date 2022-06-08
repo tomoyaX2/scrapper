@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+import { Loader } from 'rsuite';
 import { PageList } from '@features/pagination/ui';
 import { SearchBar } from '@features/search-bar';
 import { $albumsState, fetchAlbumsFx } from '@entities/album';
@@ -13,23 +15,39 @@ const props = {
 const Home = createView()
   .props(props)
   .enter(homePage.enter)
-  .view(({ albumsState: { data } }) => (
-    <div className='flex flex-col'>
-      <SearchBar />
+  .view(({ albumsState: { data, isLoading } }) => {
+    const router = useRouter();
 
-      <div className='flex flex-col items-center justify-center w-full'>
-        <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
-          {data.map(
-            album =>
-              (album?.preview || album.images?.length) && (
-                <Album album={album} key={album.id} />
-              )
-          )}
+    if (isLoading) {
+      return (
+        <div className='fixed top-loader left-2/4'>
+          <Loader size='md' />
         </div>
+      );
+    }
 
-        <PageList />
-      </div>
-    </div>
-  ));
+    if (router.isReady) {
+      return (
+        <div className='flex flex-col'>
+          <SearchBar />
+
+          <div className='flex flex-col items-center justify-center w-full'>
+            <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
+              {data.map(
+                album =>
+                  (album?.preview || album.images?.length) && (
+                    <Album album={album} key={album.id} />
+                  )
+              )}
+            </div>
+
+            <PageList />
+          </div>
+        </div>
+      );
+    }
+
+    return <div />;
+  });
 
 export { Home };

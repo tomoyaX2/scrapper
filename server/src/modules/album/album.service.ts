@@ -86,8 +86,11 @@ export class AlbumService {
   async searchAlbums(
     albumParams: AlbumPaginationQuery,
   ): Promise<PaginatedAlbumDto> {
-    const data = await buildStrictPagination(albumParams, this.albumRepository);
-    return { data, total: data.length, currentPage: albumParams.page };
+    const [data, total] = await buildStrictPagination(
+      albumParams,
+      this.albumRepository,
+    );
+    return { data: data ?? [], total, currentPage: albumParams.page };
   }
 
   async createAlbum(album: AlbumDto): Promise<AlbumDto> {

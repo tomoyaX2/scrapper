@@ -7,6 +7,8 @@ export {
   downloadAlbumFx,
   $readerPage,
   changeReaderPageFx,
-  searchAlbumsFx
+  searchAlbumsFx,
+  changeSearchStateFx,
+  $search
 } from './model';
-export type { Album, AlbumResponse } from './model';
+export type { Album, AlbumResponse, Search } from './model';

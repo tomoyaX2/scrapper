@@ -1,3 +1,3 @@
-import { $series, getSeriesFx, changeActiveSeriesFx } from './model';
+import { $series, getSeriesFx } from './model';
 
-export { $series, getSeriesFx, changeActiveSeriesFx };
+export { $series, getSeriesFx };

@@ -7,6 +7,16 @@ type Image = {
   url: string;
 };
 
+type Search = {
+  tags?: string[];
+  types?: string[];
+  languages?: string[];
+  series?: string[];
+  authors?: string[];
+  groups?: string[];
+  name?: string;
+};
+
 type Album = {
   name: string;
   id: string;
@@ -36,12 +46,16 @@ const $albumsState = createStore<{
   page: number;
   perPage: number;
   total: number;
+  isLoading: boolean;
 }>({
   data: [],
   page: 1,
   perPage: 20,
-  total: 0
+  total: 0,
+  isLoading: true
 });
+
+const $search = createStore<Search>({});
 
 const $albumPage = createStore<Album | null>(null);
 
@@ -51,7 +65,7 @@ const $readerPage = createStore<ReaderPage>({
   pagesList: []
 });
 
-const fetchAlbumsFx = createEffect<void, AlbumResponse>();
+const fetchAlbumsFx = createEffect<{ page: string }, AlbumResponse>();
 
 const downloadAlbumFx = createEffect<Album, void>();
 
@@ -60,14 +74,12 @@ const searchAlbumsFx = createEffect<
   AlbumResponse & { page: number; perPage: number }
 >();
 
-const changePageOptionsFx = createEffect<
-  { page: number; perPage: number },
-  AlbumResponse & { page: number; perPage: number }
->();
+const changePageOptionsFx = createEvent<{ page: number; perPage: number }>();
 
 const fetchAlbumFx = createEffect<string, Album>();
 
 const changeReaderPageFx = createEvent<number>();
+const changeSearchStateFx = createEvent<Search>();
 
 $albumsState.on(fetchAlbumsFx.doneData, (albumsState, albums) => ({
   ...albumsState,
@@ -89,29 +101,27 @@ $readerPage.on(changeReaderPageFx, (readerState, readerPage) => ({
   currentPage: readerPage
 }));
 
-$albumsState.on(changePageOptionsFx.doneData, (albumsState, albums) => ({
+$albumsState.on(changePageOptionsFx, (albumsState, { page, perPage }) => ({
   ...albumsState,
-  page: albums.page,
-  perPage: albums.perPage,
-  data: albums.data,
-  total: parseInt(albums.total)
+  page,
+  perPage
 }));
+
+$search.on(changeSearchStateFx, (_, search) => search);
 
 $albumsState.on(searchAlbumsFx.doneData, (albumsState, albums) => ({
   ...albumsState,
   data: albums.data,
-  total: parseInt(albums.total)
+  total: parseInt(albums.total),
+  isLoading: false
+}));
+
+$albumsState.on(searchAlbumsFx.pending, albumsState => ({
+  ...albumsState,
+  isLoading: true
 }));
 
 $albumPage.on(fetchAlbumFx.doneData, (_, album) => album);
-
-changePageOptionsFx.use(async ({ page, perPage }) => {
-  const res = await axios.get<AlbumResponse>(
-    `http://localhost:8000/albums?page=${page}&perPage=${perPage}`
-  );
-
-  return { data: res.data.data, total: res.data.total, page, perPage };
-});
 
 downloadAlbumFx.use(async album => {
   const response = await axios.get<AlbumResponse>(
@@ -131,14 +141,13 @@ searchAlbumsFx.use(async body => {
     `http://localhost:8000/albums/search`,
     body
   );
-  console.log(response, 'response');
 
   return response.data;
 });
 
-fetchAlbumsFx.use(async () => {
+fetchAlbumsFx.use(async ({ page }) => {
   const res = await axios.get<AlbumResponse>(
-    `http://localhost:8000/albums?page=1&perPage=20`
+    `http://localhost:8000/albums?page=${page}&perPage=20`
   );
 
   return { data: res.data.data, total: res.data.total };
@@ -159,6 +168,8 @@ export {
   downloadAlbumFx,
   $readerPage,
   changeReaderPageFx,
-  searchAlbumsFx
+  searchAlbumsFx,
+  changeSearchStateFx,
+  $search
 };
-export type { Album, AlbumResponse };
+export type { Album, AlbumResponse, Search };

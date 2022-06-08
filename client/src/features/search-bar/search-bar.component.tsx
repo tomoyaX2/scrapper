@@ -1,15 +1,27 @@
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { TagPicker, Button } from 'rsuite';
 import { Input } from 'rsuite';
-import { $albumsState, searchAlbumsFx } from '@entities/album';
-import { $authors, changeActiveAuthorFx } from '@entities/author';
-import { $groups, changeActiveGroupFx } from '@entities/groups';
-import { $languages, changeActiveLanguageFx } from '@entities/language';
-import { $series, changeActiveSeriesFx } from '@entities/series';
-import { $tags, changeActiveTagFx } from '@entities/tag';
-import { $types, changeActiveTypeFx } from '@entities/type';
+import {
+  $albumsState,
+  $search,
+  changePageOptionsFx,
+  changeSearchStateFx,
+  searchAlbumsFx
+} from '@entities/album';
+import { $authors } from '@entities/author';
+import { $groups } from '@entities/groups';
+import { $languages } from '@entities/language';
+import { $series } from '@entities/series';
+import { $tags } from '@entities/tag';
+import { $types } from '@entities/type';
 import { createView } from '@shared/lib/view';
 import { Arrow } from '@shared/ui/atoms/icons/arrow';
+import {
+  buildPaginationString,
+  buildSearchState,
+  paginationChangeFactory
+} from '@shared/utils/pagination';
 import { searchBar } from './search-bar.model';
 
 const props = {
@@ -20,73 +32,78 @@ const props = {
   authors: $authors,
   groups: $groups,
   albums: $albumsState,
-  onChangeActiveTag: changeActiveTagFx,
-  onChangeActiveType: changeActiveTypeFx,
-  onChangeActiveSeries: changeActiveSeriesFx,
-  onChangeActiveLanguage: changeActiveLanguageFx,
-  onChangeActiveGroups: changeActiveGroupFx,
-  onChangeActiveAuthors: changeActiveAuthorFx,
-  handleSearch: searchAlbumsFx
+  handleSearch: searchAlbumsFx,
+  setSearch: changeSearchStateFx,
+  changePage: changePageOptionsFx,
+  search: $search
 };
+
+let searchTimeout = setTimeout(() => {}, 0);
 
 export const SearchBar = createView()
   .props(props)
   .enter(searchBar.enter)
   .view(
     ({
-      tags: { tags, activeTags },
-      types: { types, activeTypes },
-      languages: { languages, activeLanguages },
-      series: { series, activeSeries },
-      authors: { authors, activeAuthors },
-      groups: { groups, activeGroups },
+      tags: { tagsList },
+      types: { typesList },
+      languages: { languagesList },
+      series: { seriesList },
+      authors: { authorsList },
+      groups: { groupsList },
       albums: { page, perPage },
-      onChangeActiveTag,
-      onChangeActiveType,
-      onChangeActiveSeries,
-      onChangeActiveLanguage,
-      onChangeActiveGroups,
-      onChangeActiveAuthors,
-      handleSearch
+      handleSearch,
+      changePage,
+      setSearch,
+      search
     }) => {
+      const router = useRouter();
       const [isExpanded, setExpanded] = useState(false);
-      const [name, onSetName] = useState('');
       const onSetExpanded = () => setExpanded(!isExpanded);
+      const { tags, types, languages, series, authors, groups, name } = search;
 
-      const onSearch = () => {
-        const search = {
-          page,
-          perPage,
-          name
-        };
-        const optionalSearch = {
-          tags: activeTags,
-          types: activeTypes,
-          languages: activeLanguages,
-          series: activeSeries,
-          authors: activeAuthors,
-          groups: activeGroups
-        };
-
-        for (const key of Object.keys(optionalSearch)) {
-          if (optionalSearch[key]?.length) {
-            search[key] = optionalSearch[key];
-          }
+      useEffect(() => {
+        if (router.query) {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            handleSearch({
+              ...search,
+              page: parseInt(router.query.page),
+              perPage
+            });
+          }, 1000);
         }
-        handleSearch(search);
+      }, [router.query]);
+
+      useEffect(() => {
+        if (!router.query?.page) {
+          router.replace(`/${buildPaginationString({ ...search, page: 1 })}`);
+        }
+
+        const initialSearch = buildSearchState(router, perPage, changePage);
+        setSearch(initialSearch);
+      }, [router.query]);
+
+      const onSetName = (name: string) => {
+        setSearch({ ...search, name });
       };
+
+      const onPaginationChangeFactory = paginationChangeFactory(router, {
+        ...search,
+        page
+      });
 
       return (
         <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
           <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col items-center w-full flex-wrap'>
             <div className='flex flex-row flex-wrap w-full justify-center items-center'>
               <TagPicker
-                data={tags ?? []}
+                data={tagsList}
                 className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                 menuClassName='rs-theme-dark'
                 placeholder='Tags...'
-                value={activeTags}
-                onChange={onChangeActiveTag}
+                value={tags ?? []}
+                onChange={onPaginationChangeFactory('tags')}
                 searchable
                 renderMenuItem={label => (
                   <span className='font-normal text-base'>{label}</span>
@@ -94,12 +111,12 @@ export const SearchBar = createView()
               />
 
               <TagPicker
-                data={types}
+                data={typesList}
                 className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                 menuClassName='rs-theme-dark'
                 placeholder='Types...'
-                value={activeTypes}
-                onChange={onChangeActiveType}
+                value={types ?? []}
+                onChange={onPaginationChangeFactory('types')}
                 searchable
                 renderMenuItem={label => (
                   <span className='font-normal text-base'>{label}</span>
@@ -107,24 +124,17 @@ export const SearchBar = createView()
               />
 
               <TagPicker
-                data={languages}
+                data={languagesList}
                 className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                 menuClassName='rs-theme-dark'
                 placeholder='Languages...'
-                onChange={onChangeActiveLanguage}
-                value={activeLanguages}
+                onChange={onPaginationChangeFactory('languages')}
+                value={languages ?? []}
                 searchable
                 renderMenuItem={label => (
                   <span className='font-normal text-base'>{label}</span>
                 )}
               />
-
-              <Button
-                className='bg-black-500 text-white hover:bg-black-100 px-4 py-2 rounded-md w-28 h-9 rs-theme-dark'
-                onClick={onSearch}
-              >
-                Search
-              </Button>
             </div>
 
             {isExpanded && (
@@ -132,16 +142,17 @@ export const SearchBar = createView()
                 <Input
                   placeholder='Title name...'
                   className='!w-40 mr-4 my-2 rs-theme-dark'
+                  value={name ?? ''}
                   onChange={onSetName}
                 />
 
                 <TagPicker
-                  data={series}
+                  data={seriesList}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                   menuClassName='rs-theme-dark'
                   placeholder='Series...'
-                  value={activeSeries}
-                  onChange={onChangeActiveSeries}
+                  value={series ?? []}
+                  onChange={onPaginationChangeFactory('series')}
                   searchable
                   renderMenuItem={label => (
                     <span className='font-normal text-base'>{label}</span>
@@ -149,12 +160,12 @@ export const SearchBar = createView()
                 />
 
                 <TagPicker
-                  data={authors}
+                  data={authorsList}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                   menuClassName='rs-theme-dark'
                   placeholder='Authors...'
-                  value={activeAuthors}
-                  onChange={onChangeActiveAuthors}
+                  value={authors ?? []}
+                  onChange={onPaginationChangeFactory('authors')}
                   searchable
                   renderMenuItem={label => (
                     <span className='font-normal text-base'>{label}</span>
@@ -162,12 +173,12 @@ export const SearchBar = createView()
                 />
 
                 <TagPicker
-                  data={groups}
+                  data={groupsList}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                   menuClassName='rs-theme-dark'
                   placeholder='Groups...'
-                  onChange={onChangeActiveGroups}
-                  value={activeGroups}
+                  onChange={onPaginationChangeFactory('groups')}
+                  value={groups ?? []}
                   searchable
                   renderMenuItem={label => (
                     <span className='font-normal text-base'>{label}</span>

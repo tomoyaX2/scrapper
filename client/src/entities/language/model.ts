@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createEffect, createEvent, createStore } from 'effector';
+import { createEffect, createStore } from 'effector';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Language = {
@@ -13,16 +13,13 @@ type LanguageModel = {
 };
 
 type LanguagesState = {
-  activeLanguages: string[];
-  languages: Language[];
+  languagesList: Language[];
 };
 
 const getLanguagesFx = createEffect<void, Language[]>();
-const changeActiveLanguageFx = createEvent<string[]>();
 
 const $languages = createStore<LanguagesState>({
-  languages: [],
-  activeLanguages: []
+  languagesList: []
 });
 
 getLanguagesFx.use(async () => {
@@ -33,18 +30,8 @@ getLanguagesFx.use(async () => {
   return Languages.data.data.map(el => ({ label: el.name, value: el.id }));
 });
 
-$languages.on(getLanguagesFx.doneData, (_, languages) => ({
-  activeLanguages: [],
-  languages
+$languages.on(getLanguagesFx.doneData, (_, languagesList) => ({
+  languagesList
 }));
 
-$languages.on(
-  changeActiveLanguageFx,
-  (state, activeLanguages) =>
-    state && {
-      ...state,
-      activeLanguages
-    }
-);
-
-export { $languages, getLanguagesFx, changeActiveLanguageFx };
+export { $languages, getLanguagesFx };

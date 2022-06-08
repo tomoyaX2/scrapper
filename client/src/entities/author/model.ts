@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createEffect, createEvent, createStore } from 'effector';
+import { createEffect, createStore } from 'effector';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Author = {
@@ -13,14 +13,12 @@ type AuthorModel = {
 };
 
 type AuthorsState = {
-  activeAuthors: string[];
-  authors: Author[];
+  authorsList: Author[];
 };
 
 const getAuthorsFx = createEffect<void, Author[]>();
-const changeActiveAuthorFx = createEvent<string[]>();
 
-const $authors = createStore<AuthorsState>({ authors: [], activeAuthors: [] });
+const $authors = createStore<AuthorsState>({ authorsList: [] });
 
 getAuthorsFx.use(async () => {
   const authors = await axios.get<PaginatedResponse<AuthorModel>>(
@@ -30,18 +28,8 @@ getAuthorsFx.use(async () => {
   return authors.data.data.map(el => ({ label: el.name, value: el.id }));
 });
 
-$authors.on(getAuthorsFx.doneData, (_, authors) => ({
-  activeAuthors: [],
-  authors
+$authors.on(getAuthorsFx.doneData, (_, authorsList) => ({
+  authorsList
 }));
 
-$authors.on(
-  changeActiveAuthorFx,
-  (state, activeAuthors) =>
-    state && {
-      ...state,
-      activeAuthors
-    }
-);
-
-export { $authors, getAuthorsFx, changeActiveAuthorFx };
+export { $authors, getAuthorsFx };

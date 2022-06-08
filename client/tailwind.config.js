@@ -27,12 +27,16 @@ module.exports = {
           300: '#f2f2f2'
         }
       },
+      inset: {
+        loader: '45%'
+      },
       minWidth: {
         searchInput: '16rem'
       },
       maxWidth: {
         tagPicker: '20rem',
-        gallery: '75rem'
+        gallery: '75rem',
+        tags: '28rem'
       },
       spacing: {
         unset: 'unset',

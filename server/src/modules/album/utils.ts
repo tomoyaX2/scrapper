@@ -2,6 +2,7 @@ import { AlbumPaginationQuery } from 'src/shared/types';
 import { Repository } from 'typeorm';
 import { AlbumDto } from './album.dto';
 import * as _ from 'lodash';
+import { chunkArray } from 'src/shared/utils';
 
 export const buildStrictPagination = async (
   filterData: AlbumPaginationQuery,
@@ -57,9 +58,15 @@ export const buildStrictPagination = async (
     }
     return isValid;
   });
-  return result.map((el) => ({
-    ...el,
-    totalImages: el.images.length,
-    images: _.orderBy(el.images, ['url']).slice(0, 10),
-  }));
+  return [
+    chunkArray(
+      result.map((el) => ({
+        ...el,
+        totalImages: el.images.length,
+        images: _.orderBy(el.images, ['url']).slice(0, 10),
+      })),
+      filterData.perPage,
+    )[filterData.page - 1],
+    result.length,
+  ];
 };

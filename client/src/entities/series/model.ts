@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createEffect, createEvent, createStore } from 'effector';
+import { createEffect, createStore } from 'effector';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Series = {
@@ -13,16 +13,13 @@ type SeriesModel = {
 };
 
 type SeriesState = {
-  activeSeries: string[];
-  series: Series[];
+  seriesList: Series[];
 };
 
 const getSeriesFx = createEffect<void, Series[]>();
-const changeActiveSeriesFx = createEvent<string[]>();
 
 const $series = createStore<SeriesState>({
-  series: [],
-  activeSeries: []
+  seriesList: []
 });
 
 getSeriesFx.use(async () => {
@@ -33,18 +30,8 @@ getSeriesFx.use(async () => {
   return series.data.data.map(el => ({ label: el.name, value: el.id }));
 });
 
-$series.on(getSeriesFx.doneData, (_, series) => ({
-  activeSeries: [],
-  series
+$series.on(getSeriesFx.doneData, (_, seriesList) => ({
+  seriesList
 }));
 
-$series.on(
-  changeActiveSeriesFx,
-  (state, activeSeries) =>
-    state && {
-      ...state,
-      activeSeries
-    }
-);
-
-export { $series, getSeriesFx, changeActiveSeriesFx };
+export { $series, getSeriesFx };

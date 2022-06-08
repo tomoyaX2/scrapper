@@ -1,23 +1,57 @@
-import { Button } from '@shared/ui/atoms/button';
+import { useRouter } from 'next/router';
+import type { ChangeEventHandler } from 'react';
+import {
+  changePageOptionsFx,
+  changeSearchStateFx,
+  searchAlbumsFx
+} from '@entities/album';
+import { createView } from '@shared/lib/view';
 import { Logo } from '@shared/ui/atoms/icons/logo';
-import { Menu } from '@shared/ui/atoms/icons/menu';
 import { Search } from '@shared/ui/atoms/icons/search';
 import { Input } from '@shared/ui/atoms/input/input';
 
-const Header = (): JSX.Element => (
-  <header className='bg-primary flex items-center justify-between px-10 py-4'>
-    <Logo fill='white' className='cursor-pointer' />
+const props = {
+  handleSearch: searchAlbumsFx,
+  changePage: changePageOptionsFx,
+  setSearch: changeSearchStateFx
+};
 
-    <div className='flex flex-row items-center'>
-      <Input
-        name='search'
-        label='Quick search by name'
-        containerClassName='w-64 mb-3'
-        placeholder=' '
-        icon={<Search className='mt-2' />}
-      />
+let inputTimeout = setTimeout(() => {}, 0);
 
-      <div className='md:flex flex-row items-center sm:hidden xsm:hidden'>
+const Header = createView()
+  .props(props)
+  .view(({ handleSearch, changePage, setSearch }) => {
+    const router = useRouter();
+
+    const onSearchChange = (e: ChangeEventHandler<HTMLInputElement>) => {
+      clearTimeout(inputTimeout);
+      inputTimeout = setTimeout(() => {
+        if (e.target.value) {
+          handleSearch({ name: e.target.value, page: 1, perPage: 50 });
+        } else {
+          handleSearch({ page: 1, perPage: 20 });
+        }
+        setSearch({});
+        changePage({ page: 1, perPage: 20 });
+        router.replace(`/?page=1`);
+      }, 800);
+    };
+
+    return (
+      <header className='bg-primary flex items-center justify-between px-10 py-4'>
+        <Logo fill='white' className='cursor-pointer' />
+
+        <div className='flex flex-row items-center'>
+          <Input
+            name='search'
+            label='Quick search by name'
+            containerClassName='w-64 mb-3'
+            onChange={onSearchChange}
+            placeholder=' '
+            icon={<Search className='mt-2' />}
+          />
+
+          {/* <div className='md:flex flex-row items-center sm:hidden xsm:hidden'>
         <Button className='bg-primary text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
           Sign In
         </Button>
@@ -27,11 +61,11 @@ const Header = (): JSX.Element => (
         <Button className='bg-primary text-white hover:bg-black-100 px-4 py-2 rounded-md w-28'>
           Sign Up
         </Button>
-      </div>
+      </div> */}
 
-      <Menu className='md:hidden sm:block xsm:block cursor-pointer' />
+          {/* <Menu className='md:hidden sm:block xsm:block cursor-pointer' /> */}
 
-      {/* <div className='h-screen w-screen fixed md:hidden sm:flex xsm:flex flex-col bg-black-400 opacity-40 top-0 right-0 z-50' />
+          {/* <div className='h-screen w-screen fixed md:hidden sm:flex xsm:flex flex-col bg-black-400 opacity-40 top-0 right-0 z-50' />
 
       <div className='h-screen fixed md:hidden sm:flex xsm:flex flex-col w-64 bg-black-400 top-0 right-0 z-50'>
         <div className='flex flex-row items-center pt-4 px-2 justify-center'>
@@ -44,8 +78,9 @@ const Header = (): JSX.Element => (
           </Button>
         </div>
       </div> */}
-    </div>
-  </header>
-);
+        </div>
+      </header>
+    );
+  });
 
 export { Header };

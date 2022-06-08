@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createEffect, createEvent, createStore } from 'effector';
+import { createEffect, createStore } from 'effector';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Tag = {
@@ -13,14 +13,12 @@ type TagModel = {
 };
 
 type TagsState = {
-  activeTags: string[];
-  tags: Tag[];
+  tagsList: Tag[];
 };
 
 const getTagsFx = createEffect<void, Tag[]>();
-const changeActiveTagFx = createEvent<string[]>();
 
-const $tags = createStore<TagsState>({ tags: [], activeTags: [] });
+const $tags = createStore<TagsState>({ tagsList: [] });
 
 getTagsFx.use(async () => {
   const tags = await axios.get<PaginatedResponse<TagModel>>(
@@ -30,15 +28,6 @@ getTagsFx.use(async () => {
   return tags.data.data.map(el => ({ label: el.name, value: el.id }));
 });
 
-$tags.on(getTagsFx.doneData, (_, tags) => ({ activeTags: [], tags }));
+$tags.on(getTagsFx.doneData, (_, tagsList) => ({ tagsList }));
 
-$tags.on(
-  changeActiveTagFx,
-  (state, activeTags) =>
-    state && {
-      ...state,
-      activeTags
-    }
-);
-
-export { $tags, getTagsFx, changeActiveTagFx };
+export { $tags, getTagsFx };
