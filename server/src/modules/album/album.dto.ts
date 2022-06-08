@@ -41,5 +41,5 @@ export class SearchDto {
   series: string[];
   languages: string[];
   groups: string[];
-  types: string;
+  types: string[];
 }

@@ -6,6 +6,7 @@ type Image = {
   name: string;
   url: string;
 };
+
 type Album = {
   name: string;
   id: string;
@@ -55,7 +56,7 @@ const fetchAlbumsFx = createEffect<void, AlbumResponse>();
 const downloadAlbumFx = createEffect<Album, void>();
 
 const searchAlbumsFx = createEffect<
-  Record<string, string[] | string | number>,
+  Record<string, string[] | string | number | boolean>,
   AlbumResponse & { page: number; perPage: number }
 >();
 
@@ -98,7 +99,6 @@ $albumsState.on(changePageOptionsFx.doneData, (albumsState, albums) => ({
 
 $albumsState.on(searchAlbumsFx.doneData, (albumsState, albums) => ({
   ...albumsState,
-  page: albums.page,
   data: albums.data,
   total: parseInt(albums.total)
 }));

@@ -45,6 +45,7 @@ export class AlbumController {
       language: data.languages,
       group: data.groups,
       tags: data.tags,
+      type: data.types,
     });
   }
 

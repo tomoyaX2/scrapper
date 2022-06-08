@@ -13,7 +13,7 @@ import { Album } from './album.entity';
 import { TypeService } from '../type/type.service';
 import { LogService } from '../log/log.service';
 import { AlbumPaginationQuery, DefaultPaginationQuery } from 'src/shared/types';
-import { buildAlbumPagination } from './utils';
+import { buildStrictPagination } from './utils';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class AlbumService {
     const result = data.map((el) => ({
       ...el,
       totalImages: el.images.length,
-      images: _.orderBy(el.images, ['url']),
+      images: _.orderBy(el.images, ['url']).slice(0, 10),
     }));
     return { data: result, total, currentPage: page };
   }
@@ -86,11 +86,8 @@ export class AlbumService {
   async searchAlbums(
     albumParams: AlbumPaginationQuery,
   ): Promise<PaginatedAlbumDto> {
-    const [data, total] = await buildAlbumPagination(
-      albumParams,
-      this.albumRepository,
-    );
-    return { data, total, currentPage: albumParams.page };
+    const data = await buildStrictPagination(albumParams, this.albumRepository);
+    return { data, total: data.length, currentPage: albumParams.page };
   }
 
   async createAlbum(album: AlbumDto): Promise<AlbumDto> {

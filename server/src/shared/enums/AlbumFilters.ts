@@ -5,4 +5,5 @@ export enum AlbumFilters {
   Language = 'language',
   Group = 'group',
   Tag = 'tags',
+  Type = 'type',
 }

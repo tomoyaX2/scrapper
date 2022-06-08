@@ -52,21 +52,27 @@ export const SearchBar = createView()
       const [isExpanded, setExpanded] = useState(false);
       const [name, onSetName] = useState('');
       const onSetExpanded = () => setExpanded(!isExpanded);
-      console.log(name, 'name');
 
       const onSearch = () => {
         const search = {
+          page,
+          perPage,
+          name
+        };
+        const optionalSearch = {
           tags: activeTags,
           types: activeTypes,
           languages: activeLanguages,
           series: activeSeries,
           authors: activeAuthors,
-          groups: activeGroups,
-          page,
-          perPage,
-          name
+          groups: activeGroups
         };
-        console.log(search, 'search');
+
+        for (const key of Object.keys(optionalSearch)) {
+          if (optionalSearch[key]?.length) {
+            search[key] = optionalSearch[key];
+          }
+        }
         handleSearch(search);
       };
 
@@ -114,7 +120,7 @@ export const SearchBar = createView()
               />
 
               <Button
-                className='bg-black-500 text-white hover:bg-black-100 px-4 py-2 rounded-md w-28 h-9'
+                className='bg-black-500 text-white hover:bg-black-100 px-4 py-2 rounded-md w-28 h-9 rs-theme-dark'
                 onClick={onSearch}
               >
                 Search

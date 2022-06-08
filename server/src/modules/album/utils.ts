@@ -1,27 +1,25 @@
-import { AlbumFilters } from 'src/shared/enums/AlbumFilters';
 import { AlbumPaginationQuery } from 'src/shared/types';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AlbumDto } from './album.dto';
+import * as _ from 'lodash';
 
-const joinFields = [
-  AlbumFilters.Author,
-  AlbumFilters.Series,
-  AlbumFilters.Language,
-  AlbumFilters.Group,
-  AlbumFilters.Tag,
-];
-
-export const buildAlbumPagination = async (
+export const buildStrictPagination = async (
   filterData: AlbumPaginationQuery,
   albumRepository: Repository<AlbumDto>,
 ) => {
   const whereData = {};
-  const query = await albumRepository.createQueryBuilder('album');
 
-  for (const field of joinFields) {
-    query.leftJoinAndSelect(`album.${field}`, field);
-  }
-
+  const data = await albumRepository.find({
+    relations: [
+      'authors',
+      'series',
+      'type',
+      'images',
+      'language',
+      'group',
+      'tags',
+    ],
+  });
   const activeFilters = Object.keys(filterData).filter((key) => {
     const isActive = !!filterData[key]?.length;
     if (isActive)
@@ -31,25 +29,37 @@ export const buildAlbumPagination = async (
     return isActive;
   });
 
-  const whereString = activeFilters
-    .map((key) => `${key}.id IN (:...${key})`)
-    .join(' AND ');
+  const result = data.filter((item) => {
+    const isValid = true;
+    //TODO: REWORK TO SQL
+    for (const key of activeFilters) {
+      if (Array.isArray(filterData[key])) {
+        const hasToBeFiltered = Array.isArray(item[key]) // if item has many to many relation the search should be applied as an array type
+          ? item[key].filter((el) => {
+              //get item data by active filter key
+              return filterData[key].includes(el.id); //if tag of item is included into filter - leave it as as, otherwise - remove from array
+            })?.length < filterData[key].length // if array length is bigger than filters - it's our needed result. That means, target album contains every tag from user's exectatons
+          : item[key] // if relation is ane to many, array of filter items should include an album prop
+          ? !filterData[key].includes(item[key].id)
+          : true;
 
-  const initialResult = await query
-    .where(whereString, whereData)
-    .skip((filterData.page - 1) * filterData.perPage)
-    .take(filterData.perPage)
-    .getManyAndCount();
-
-  const idsToSelect = initialResult[0].map((el) => el.id);
-
-  const albumsWithPagination = await albumRepository.findAndCount({
-    relations: ['authors', 'images', 'series', 'language', 'group', 'tags'],
-    where: {
-      id: In(idsToSelect),
-    },
-    skip: (filterData.page - 1) * filterData.perPage,
-    take: filterData.perPage,
+        if (hasToBeFiltered) {
+          return false;
+        }
+      } else {
+        const isInvalidName = !item[key]
+          .toLowerCase()
+          .includes(filterData[key].toLowerCase());
+        if (isInvalidName) {
+          return false;
+        }
+      }
+    }
+    return isValid;
   });
-  return albumsWithPagination;
+  return result.map((el) => ({
+    ...el,
+    totalImages: el.images.length,
+    images: _.orderBy(el.images, ['url']).slice(0, 10),
+  }));
 };
