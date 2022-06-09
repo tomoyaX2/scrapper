@@ -16,10 +16,11 @@ const props = {
 let clickTimeout = setTimeout(() => {});
 let switchPageIndexTimeout = setTimeout(() => {});
 
-const onHandleTouch = (callback: (event: TouchEvent) => void) => event => {
-  clearTimeout(clickTimeout);
-  clickTimeout = setTimeout(() => callback(event), 100);
-};
+const onHandleTouch =
+  (callback: (event: TouchEvent) => void) => (event: TouchEvent) => {
+    clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => callback(event), 100);
+  };
 
 const switchPageTimeoutHandler = ({
   isActive,
@@ -71,7 +72,7 @@ const Reader = createView()
       });
 
       useEffect(() => {
-        router.query.id && fetchAlbum(router.query.id);
+        router.query.id && fetchAlbum(router.query.id as string);
       }, [router.query.id]);
 
       useEffect(() => {
@@ -85,21 +86,26 @@ const Reader = createView()
       if (!images.length) {
         return null;
       }
+
       const prevPage = currentPage > 1 ? currentPage - 1 : 1;
       const nextPage =
         currentPage < images.length - 1 ? currentPage + 1 : currentPage;
+
       const onTouchEvent = onHandleTouch(
         e =>
           e &&
           onChangeReaderPage(
-            e.target.offsetWidth / 2 < e.touches[0].clientX
+            //@ts-expect-error cause of i want
+            e.target?.offsetWidth / 2 < e.touches[0].clientX
               ? nextPage
               : prevPage
           )
       );
+
       const onClickEvent = onHandleTouch(e =>
         onChangeReaderPage(
-          e.target.offsetWidth / 2 < e.pageX ? nextPage : prevPage
+          //@ts-expect-error cause of i want
+          e.target?.offsetWidth / 2 < e.pageX ? nextPage : prevPage
         )
       );
 
@@ -173,7 +179,9 @@ const Reader = createView()
 
           <div
             className='flex items-center justify-center cursor-pointer'
+            //@ts-expect-error cause of i want
             onTouchStart={onTouchEvent}
+            //@ts-expect-error cause of i want
             onClick={onClickEvent}
           >
             <Image

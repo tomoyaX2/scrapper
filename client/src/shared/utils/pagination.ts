@@ -15,8 +15,11 @@ const buildPaginationString = (search: Search) => {
   let result = '?';
 
   for (const key of Object.keys(search)) {
-    const searchData = search[key];
-    if (searchData?.length && Array.isArray(searchData)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const searchData = search[key as keyof Search];
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (Array.isArray(searchData) && searchData?.length) {
       result += `${key}=${searchData.join(',')}&`;
     }
   }
@@ -28,6 +31,7 @@ const buildPaginationString = (search: Search) => {
   if (search.page) {
     result += `page=${search.page}`;
   }
+
   return result;
 };
 
@@ -44,7 +48,7 @@ const buildSearchState = (
   const initialSearch: Search = {};
 
   for (const routerKey of Object.keys(router.query)) {
-    const key = routerKey as unknown as keyof Search & 'page' & 'name';
+    const key = routerKey as keyof Search & 'page' & 'name';
     const routerData = router.query[key] as unknown as keyof Search;
 
     switch (key) {
@@ -63,6 +67,7 @@ const buildSearchState = (
       }
 
       default: {
+        //@ts-expect-error cause i want
         initialSearch[key] = routerData.split(',');
       }
     }

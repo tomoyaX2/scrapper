@@ -1,10 +1,9 @@
 import type { FC, PropsWithChildren } from 'react';
 import { Footer } from './footer';
 import { Header } from './header';
-import styles from './layout.module.scss';
 
 const Layout: FC<PropsWithChildren<{}>> = ({ children }) => (
-  <main className={styles.layout}>
+  <main className='flex flex-col items-stretch min-h-screen justify-between'>
     <div className='flex flex-col'>
       <Header />
 

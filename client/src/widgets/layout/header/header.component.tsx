@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import type { ChangeEventHandler } from 'react';
 import {
   changePageOptionsFx,
   changeSearchStateFx,
@@ -23,9 +22,10 @@ const Header = createView()
   .view(({ handleSearch, changePage, setSearch }) => {
     const router = useRouter();
 
-    const onSearchChange = (e: ChangeEventHandler<HTMLInputElement>) => {
+    const onSearchChange = (e: { target: { value: string } }) => {
       clearTimeout(inputTimeout);
       inputTimeout = setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (e.target.value) {
           handleSearch({ name: e.target.value, page: 1, perPage: 50 });
         } else {

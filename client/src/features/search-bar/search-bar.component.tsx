@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { TagPicker, Button } from 'rsuite';
+import { TagPicker } from 'rsuite';
 import { Input } from 'rsuite';
 import {
   $albumsState,
@@ -68,7 +68,7 @@ export const SearchBar = createView()
           searchTimeout = setTimeout(() => {
             handleSearch({
               ...search,
-              page: parseInt(router.query.page),
+              page: parseInt(router.query.page as string),
               perPage
             });
           }, 1000);

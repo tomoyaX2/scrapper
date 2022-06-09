@@ -1,3 +1,4 @@
+import type { Effect } from 'effector';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,7 +10,7 @@ import {
   downloadAlbumFx,
   changeSearchStateFx
 } from '@entities/album';
-import type { Search } from '@entities/album';
+import type { Search, Album as AlbumEntity } from '@entities/album';
 import { createView } from '@shared/lib/view';
 import { Download } from '@shared/ui/atoms/icons/download-icon';
 
@@ -20,10 +21,10 @@ const props = {
   setSearch: changeSearchStateFx
 };
 
-const useEffects = props => {
+const useEffects = (props: { fetchAlbum: Effect<string, AlbumEntity> }) => {
   const router = useRouter();
   useEffect(() => {
-    router.query.id && props.fetchAlbum(router.query.id);
+    router.query.id && props.fetchAlbum(router.query.id as string);
   }, [router.query.id]);
 };
 
@@ -37,6 +38,10 @@ const Album = createView()
       const targetString = Array.isArray(ids) ? ids.join(',') : ids;
       setSearch({ [key]: [ids] });
       router.replace(`/?page=1&${key}=${targetString}`);
+    };
+
+    const onDownloadAlbum = () => {
+      album && props.downloadAlbum(album);
     };
 
     return (
@@ -160,7 +165,7 @@ const Album = createView()
               <div className='w-full flex items-center justify-start mt-4 mb-2'>
                 <Button
                   className='flex items-center px-2 -ml-2 rs-theme-dark'
-                  onClick={() => props.downloadAlbum(album)}
+                  onClick={onDownloadAlbum}
                 >
                   <Download fill='white' className='mr-2' />
                   Download

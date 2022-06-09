@@ -211,6 +211,7 @@ class ViewBuilder<P extends {}, MP = {}> {
 
     View.Original = Output.Original = render;
 
+    //@ts-expect-error cause of i want
     return Output;
   }
 }

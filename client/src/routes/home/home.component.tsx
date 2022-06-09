@@ -2,14 +2,13 @@ import { useRouter } from 'next/router';
 import { Loader } from 'rsuite';
 import { PageList } from '@features/pagination/ui';
 import { SearchBar } from '@features/search-bar';
-import { $albumsState, fetchAlbumsFx } from '@entities/album';
+import { $albumsState } from '@entities/album';
 import { Album } from '@entities/album/ui';
 import { createView } from '@shared/lib/view';
 import { homePage } from './home.model';
 
 const props = {
-  albumsState: $albumsState,
-  fetchAlbums: fetchAlbumsFx
+  albumsState: $albumsState
 };
 
 const Home = createView()

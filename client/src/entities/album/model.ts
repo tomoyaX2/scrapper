@@ -65,13 +65,13 @@ const $readerPage = createStore<ReaderPage>({
   pagesList: []
 });
 
-const fetchAlbumsFx = createEffect<{ page: string }, AlbumResponse>();
+const fetchAlbumsFx = createEffect<void, AlbumResponse>();
 
 const downloadAlbumFx = createEffect<Album, void>();
 
 const searchAlbumsFx = createEffect<
   Record<string, string[] | string | number | boolean>,
-  AlbumResponse & { page: number; perPage: number }
+  AlbumResponse
 >();
 
 const changePageOptionsFx = createEvent<{ page: number; perPage: number }>();
@@ -124,7 +124,7 @@ $albumsState.on(searchAlbumsFx.pending, albumsState => ({
 $albumPage.on(fetchAlbumFx.doneData, (_, album) => album);
 
 downloadAlbumFx.use(async album => {
-  const response = await axios.get<AlbumResponse>(
+  const response = await axios.get(
     `http://localhost:8080/file?albumId=${album.id}`,
     { responseType: 'arraybuffer' }
   );
@@ -145,9 +145,9 @@ searchAlbumsFx.use(async body => {
   return response.data;
 });
 
-fetchAlbumsFx.use(async ({ page }) => {
+fetchAlbumsFx.use(async () => {
   const res = await axios.get<AlbumResponse>(
-    `http://localhost:8000/albums?page=${page}&perPage=20`
+    `http://localhost:8000/albums?page=1&perPage=20`
   );
 
   return { data: res.data.data, total: res.data.total };
