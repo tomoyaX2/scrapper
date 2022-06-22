@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createEffect, createStore, createEvent } from 'effector';
+import { backendUrl, scrapperUrl } from '@shared/api';
 
 type Image = {
   id: string;
@@ -124,10 +125,9 @@ $albumsState.on(searchAlbumsFx.pending, albumsState => ({
 $albumPage.on(fetchAlbumFx.doneData, (_, album) => album);
 
 downloadAlbumFx.use(async album => {
-  const response = await axios.get(
-    `http://localhost:8080/file?albumId=${album.id}`,
-    { responseType: 'arraybuffer' }
-  );
+  const response = await axios.get(`${scrapperUrl}/file?albumId=${album.id}`, {
+    responseType: 'arraybuffer'
+  });
   const url = window.URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement('a');
   link.href = url;
@@ -138,7 +138,7 @@ downloadAlbumFx.use(async album => {
 
 searchAlbumsFx.use(async body => {
   const response = await axios.post<AlbumResponse>(
-    `http://localhost:8000/albums/search`,
+    `${backendUrl}/albums/search`,
     body
   );
 
@@ -147,14 +147,14 @@ searchAlbumsFx.use(async body => {
 
 fetchAlbumsFx.use(async () => {
   const res = await axios.get<AlbumResponse>(
-    `http://localhost:8000/albums?page=1&perPage=20`
+    `${backendUrl}/albums?page=1&perPage=20`
   );
 
   return { data: res.data.data, total: res.data.total };
 });
 
 fetchAlbumFx.use(async (albumId: string) => {
-  const res = await axios.get<Album>(`http://localhost:8000/albums/${albumId}`);
+  const res = await axios.get<Album>(`${backendUrl}/albums/${albumId}`);
 
   return res.data;
 });

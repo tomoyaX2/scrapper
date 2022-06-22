@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createEffect, createStore } from 'effector';
+import { backendUrl } from '@shared/api';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Series = {
@@ -24,7 +25,7 @@ const $series = createStore<SeriesState>({
 
 getSeriesFx.use(async () => {
   const series = await axios.get<PaginatedResponse<SeriesModel>>(
-    'http://localhost:8000/series'
+    `${backendUrl}/series`
   );
 
   return series.data.data.map(el => ({ label: el.name, value: el.id }));

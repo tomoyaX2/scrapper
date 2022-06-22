@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createEffect, createStore } from 'effector';
+import { backendUrl } from '@shared/api';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Group = {
@@ -22,7 +23,7 @@ const $groups = createStore<GroupsState>({ groupsList: [] });
 
 getGroupsFx.use(async () => {
   const Groups = await axios.get<PaginatedResponse<GroupModel>>(
-    'http://localhost:8000/groups'
+    `${backendUrl}/groups`
   );
 
   return Groups.data.data.map(el => ({ label: el.name, value: el.id }));

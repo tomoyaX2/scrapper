@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createEffect, createStore } from 'effector';
+import { backendUrl } from '@shared/api';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Author = {
@@ -22,7 +23,7 @@ const $authors = createStore<AuthorsState>({ authorsList: [] });
 
 getAuthorsFx.use(async () => {
   const authors = await axios.get<PaginatedResponse<AuthorModel>>(
-    'http://localhost:8000/authors'
+    `${backendUrl}/authors`
   );
 
   return authors.data.data.map(el => ({ label: el.name, value: el.id }));

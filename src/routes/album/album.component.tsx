@@ -11,6 +11,7 @@ import {
   changeSearchStateFx
 } from '@entities/album';
 import type { Search, Album as AlbumEntity } from '@entities/album';
+import { scrapperUrl } from '@shared/api';
 import { createView } from '@shared/lib/view';
 import { Download } from '@shared/ui/atoms/icons/download-icon';
 
@@ -50,7 +51,7 @@ const Album = createView()
           <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
             <div className='flex items-center justify-center lg:w-84 md:w-full sm:w-full xsm:w-full h-100'>
               <Image
-                src={`http://localhost:8080/${album.images[0]?.url}`}
+                src={`${scrapperUrl}/${album.images[0]?.url}`}
                 loader={({ src, width }) => `${src}?w=${width}`}
                 alt='preview'
                 width={350}
@@ -184,7 +185,7 @@ const Album = createView()
                 >
                   <div className='px-4 py-2 cursor-pointer'>
                     <Image
-                      src={`http://localhost:8080/${el?.url}`}
+                      src={`${scrapperUrl}/${el?.url}`}
                       loader={({ src, width }) => `${src}?w=${width}`}
                       alt={`image-${el.id}`}
                       width={200}

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { SelectPicker, InputNumber, Checkbox } from 'rsuite';
 import { fetchAlbumFx, $readerPage, changeReaderPageFx } from '@entities/album';
+import { scrapperUrl } from '@shared/api';
 import { createView } from '@shared/lib/view';
 import { Arrow } from '@shared/ui/atoms/icons/arrow';
 
@@ -185,7 +186,7 @@ const Reader = createView()
             onClick={onClickEvent}
           >
             <Image
-              src={`http://localhost:8080/${images[currentPage - 1]?.url}`}
+              src={`${scrapperUrl}/${images[currentPage - 1]?.url}`}
               loader={({ src, width }) => `${src}?w=${width}`}
               alt='preview'
               width={700}

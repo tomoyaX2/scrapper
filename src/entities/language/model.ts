@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createEffect, createStore } from 'effector';
+import { backendUrl } from '@shared/api';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Language = {
@@ -24,7 +25,7 @@ const $languages = createStore<LanguagesState>({
 
 getLanguagesFx.use(async () => {
   const Languages = await axios.get<PaginatedResponse<LanguageModel>>(
-    'http://localhost:8000/languages'
+    `${backendUrl}/languages`
   );
 
   return Languages.data.data.map(el => ({ label: el.name, value: el.id }));

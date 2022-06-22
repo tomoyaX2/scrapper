@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createEffect, createStore } from 'effector';
+import { backendUrl } from '@shared/api';
 import type { PaginatedResponse } from '@shared/types/responses';
 
 type Type = {
@@ -22,7 +23,7 @@ const $types = createStore<TypeState>({ typesList: [] });
 
 getTypesFx.use(async () => {
   const types = await axios.get<PaginatedResponse<TypeModel>>(
-    'http://localhost:8000/types'
+    `${backendUrl}/types`
   );
 
   return types.data.data.map(el => ({ label: el.name, value: el.id }));
