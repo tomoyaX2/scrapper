@@ -1,12 +1,38 @@
-client/node_modules
-server/node_modules
-server/dist
-server/.env
-server/images
-server/public
-server/log
-scrapper/node_modules
-scrapper/log
-scrapper/.env
-scrapper/dist
-scrapper/public
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env
+config.json
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+
+.idea

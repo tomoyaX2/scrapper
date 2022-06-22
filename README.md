@@ -1,42 +1,17 @@
-# scrapper
+# Intro
 
-TODO:
-### Scrapper enhancements:
+This repository is a template which's supposed to adapt FSD methodology and to provide some pre-made structure out of the box + some default functionality implmeneted according to aforementioned FSD.
 
-### Common User:
-    - [ ] Private and public albums
-    - [ ] Save copy of public album to private albums
-    - [ ] Merge private only albums
-    - [ ] Allow users to post albums
-    - [ ] Remove comments ( Mark as removed )
-    - [ ] Add comments to image  ??? NOT NECCESSARY, MAY BE REMOVED
-### Admin: 
-    - [ ] Remove albums
-    - [ ] Support form ( hanndling user help and proposal requests )
-    - [ ] Users management ( disable user, remove user, change some user data )
-    - [ ] Add Moderators ?? SO FAR IN FUTURE
-### Albums Views system: 
-    - [ ] Add views count to album
-    - [ ] Add user rating to album
-    - [ ] Remove low rated/viewed public albums every 1?/2?/3? month from DB
-    - [ ] Conunt total view percent of album. Remove it, if percentage is low ( Total views is 1000, 1st page - [ ] 1000, 2nd page 600, 3rd page 100 and so on )
-### Monetization:
-    - [ ] Subscription 
-        - [ ] No Ad
-        - [ ] Read paid albums ??? NOT NECCESSARY, MAY BE REMOVED
-    - [ ] Advertising ?
-        - [ ] Users can publish closed albums with one- [ ]time payment or subscription acccess ?
-            - [ ] User wallet
-            - [ ] New user type: Creator
-            - [ ] Preview system ( a few images are visible, others - [ ] locked)
-            - [ ] Extended album management system for creators
-                - [ ] Amount of available images for preview
-                - [ ] Manage price per album
-                - [ ] Stat data about album 
-                    - [ ] Views per image, album and so on
-                    - [ ] Subscription views ??? NOT NECCESSARY, MAY BE REMOVED
-            - [ ] Take a fee from one- [ ]time payment
-            - [ ] Pay for creator when user reads his paid album with subscription ??? NEEDS DETALIZATION AND A LOT OF MATH
+Repository has NextJS setup to provide SSR features but it can be adopted for SPA.
 
+For the model layers, there's an effector which provides amazing functionality out of the box + bindings to react, there are some quirks in terms of setting up it with SSR but it works perfectly fine overall.
 
+There are some pre-made functionality you can take as an example or use it right away by customizing it for your own needs, this includes pre-made entities/features/processes/widgets/pages/styles and self made component library.
 
+> For the guidlines explaining some what and why you can check guidelines folder to find some answers related to recommended rules/explanations
+
+## Configuration
+
+## Dev Mode
+
+## Build
