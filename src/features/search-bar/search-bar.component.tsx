@@ -61,28 +61,28 @@ export const SearchBar = createView()
       const [isExpanded, setExpanded] = useState(false);
       const onSetExpanded = () => setExpanded(!isExpanded);
       const { tags, types, languages, series, authors, groups, name } = search;
+      // useEffect(() => {
+      //   if (router.query) {
+      console.log(router.query, 'query');
+      //     clearTimeout(searchTimeout);
+      //     searchTimeout = setTimeout(() => {
+      //       handleSearch({
+      //         ...search,
+      //         page: parseInt(router.query.page as string),
+      //         perPage
+      //       });
+      //     }, 1000);
+      //   }
+      // }, [router.query]);
 
-      useEffect(() => {
-        if (router.query) {
-          clearTimeout(searchTimeout);
-          searchTimeout = setTimeout(() => {
-            handleSearch({
-              ...search,
-              page: parseInt(router.query.page as string),
-              perPage
-            });
-          }, 1000);
-        }
-      }, [router.query]);
+      // useEffect(() => {
+      //   if (!router.query?.page) {
+      //     router.replace(`/${buildPaginationString({ ...search, page: 1 })}`);
+      //   }
 
-      useEffect(() => {
-        if (!router.query?.page) {
-          router.replace(`/${buildPaginationString({ ...search, page: 1 })}`);
-        }
-
-        const initialSearch = buildSearchState(router, perPage, changePage);
-        setSearch(initialSearch);
-      }, [router.query]);
+      //   const initialSearch = buildSearchState(router, perPage, changePage);
+      //   setSearch(initialSearch);
+      // }, [router.query]);
 
       const onSetName = (name: string) => {
         setSearch({ ...search, name });

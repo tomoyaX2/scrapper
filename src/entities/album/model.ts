@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createEffect, createStore, createEvent } from 'effector';
-import { backendUrl, scrapperUrl } from '@shared/api';
+import { backendUrl, cdnUrl } from '@shared/api';
 
 type Image = {
   id: string;
@@ -85,7 +85,8 @@ const changeSearchStateFx = createEvent<Search>();
 $albumsState.on(fetchAlbumsFx.doneData, (albumsState, albums) => ({
   ...albumsState,
   data: albums.data,
-  total: parseInt(albums.total)
+  total: parseInt(albums.total),
+  isLoading: false
 }));
 
 $readerPage.on(fetchAlbumFx.doneData, (_, album) => ({
@@ -125,7 +126,7 @@ $albumsState.on(searchAlbumsFx.pending, albumsState => ({
 $albumPage.on(fetchAlbumFx.doneData, (_, album) => album);
 
 downloadAlbumFx.use(async album => {
-  const response = await axios.get(`${scrapperUrl}/file?albumId=${album.id}`, {
+  const response = await axios.get(`${cdnUrl}/file?albumId=${album.id}`, {
     responseType: 'arraybuffer'
   });
   const url = window.URL.createObjectURL(new Blob([response.data]));

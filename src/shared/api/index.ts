@@ -1,4 +1,4 @@
 const backendUrl = 'https://clownfish-app-gk994.ondigitalocean.app';
-const scrapperUrl = 'https://goldfish-app-28eep.ondigitalocean.app';
+const cdnUrl = 'https://scrapper-images-data.fra1.digitaloceanspaces.com';
 
-export { backendUrl, scrapperUrl };
+export { backendUrl, cdnUrl };

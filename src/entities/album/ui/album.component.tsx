@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { scrapperUrl } from '@shared/api';
 import type { AlbumProps } from './album.props';
 
 const Album = ({
@@ -22,7 +21,7 @@ const Album = ({
         onMouseLeave={onHover(false)}
       >
         <Image
-          src={`${scrapperUrl}/${preview ?? images[0]?.url}`}
+          src={preview ?? images[0]?.url}
           loader={({ src, width }) => `${src}?w=${width}`}
           alt='preview'
           width={300}
