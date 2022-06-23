@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { TagPicker } from 'rsuite';
+import { Button, TagPicker } from 'rsuite';
 import { Input } from 'rsuite';
 import {
   $albumsState,
   $search,
-  changePageOptionsFx,
   changeSearchStateFx,
   searchAlbumsFx
 } from '@entities/album';
@@ -18,11 +17,9 @@ import { $types } from '@entities/type';
 import { createView } from '@shared/lib/view';
 import { Arrow } from '@shared/ui/atoms/icons/arrow';
 import {
-  buildPaginationString,
   buildSearchState,
   paginationChangeFactory
 } from '@shared/utils/pagination';
-import { searchBar } from './search-bar.model';
 
 const props = {
   tags: $tags,
@@ -33,16 +30,12 @@ const props = {
   groups: $groups,
   albums: $albumsState,
   handleSearch: searchAlbumsFx,
-  setSearch: changeSearchStateFx,
-  changePage: changePageOptionsFx,
-  search: $search
+  search: $search,
+  setSearch: changeSearchStateFx
 };
-
-let searchTimeout = setTimeout(() => {}, 0);
 
 export const SearchBar = createView()
   .props(props)
-  .enter(searchBar.enter)
   .view(
     ({
       tags: { tagsList },
@@ -51,9 +44,8 @@ export const SearchBar = createView()
       series: { seriesList },
       authors: { authorsList },
       groups: { groupsList },
-      albums: { page, perPage },
+      albums: { page },
       handleSearch,
-      changePage,
       setSearch,
       search
     }) => {
@@ -61,37 +53,29 @@ export const SearchBar = createView()
       const [isExpanded, setExpanded] = useState(false);
       const onSetExpanded = () => setExpanded(!isExpanded);
       const { tags, types, languages, series, authors, groups, name } = search;
-      // useEffect(() => {
-      //   if (router.query) {
-      console.log(router.query, 'query');
-      //     clearTimeout(searchTimeout);
-      //     searchTimeout = setTimeout(() => {
-      //       handleSearch({
-      //         ...search,
-      //         page: parseInt(router.query.page as string),
-      //         perPage
-      //       });
-      //     }, 1000);
-      //   }
-      // }, [router.query]);
 
-      // useEffect(() => {
-      //   if (!router.query?.page) {
-      //     router.replace(`/${buildPaginationString({ ...search, page: 1 })}`);
-      //   }
-
-      //   const initialSearch = buildSearchState(router, perPage, changePage);
-      //   setSearch(initialSearch);
-      // }, [router.query]);
+      useEffect(() => {
+        const initialSearch = buildSearchState(router, search.perPage);
+        setSearch(initialSearch);
+        handleSearch(initialSearch);
+      }, []);
 
       const onSetName = (name: string) => {
         setSearch({ ...search, name });
       };
 
-      const onPaginationChangeFactory = paginationChangeFactory(router, {
-        ...search,
-        page
-      });
+      const onPaginationChangeFactory = paginationChangeFactory(
+        router,
+        setSearch,
+        {
+          ...search,
+          page
+        }
+      );
+
+      const onSearch = () => {
+        handleSearch(search);
+      };
 
       return (
         <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
@@ -135,6 +119,13 @@ export const SearchBar = createView()
                   <span className='font-normal text-base'>{label}</span>
                 )}
               />
+
+              <Button
+                className='bg-secondary rs-theme-dark hover:bg-black-400 px-4 py-2 rounded-md w-28'
+                onClick={onSearch}
+              >
+                Search
+              </Button>
             </div>
 
             {isExpanded && (

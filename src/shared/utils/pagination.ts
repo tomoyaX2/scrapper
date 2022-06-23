@@ -8,7 +8,8 @@ type Search = {
   authors?: string[];
   groups?: string[];
   name?: string;
-  page?: number;
+  page: number;
+  perPage: number;
 };
 
 const buildPaginationString = (search: Search) => {
@@ -36,16 +37,19 @@ const buildPaginationString = (search: Search) => {
 };
 
 const paginationChangeFactory =
-  (router: NextRouter, search: Search) => (key: string) => (data: string[]) => {
+  (
+    router: NextRouter,
+    setSearch: (payload: Search | undefined) => void,
+    search: Search
+  ) =>
+  (key: string) =>
+  (data: string[]) => {
+    setSearch({ ...search, [key]: data });
     router.replace(`/${buildPaginationString({ ...search, [key]: data })}`);
   };
 
-const buildSearchState = (
-  router: NextRouter,
-  perPage: number,
-  changePage: (state: { page: number; perPage: number }) => void
-) => {
-  const initialSearch: Search = {};
+const buildSearchState = (router: NextRouter, perPage: number) => {
+  const initialSearch: Search = { page: 1, perPage: 20 };
 
   for (const routerKey of Object.keys(router.query)) {
     const key = routerKey as keyof Search & 'page' & 'name';
@@ -58,7 +62,8 @@ const buildSearchState = (
       }
 
       case 'page': {
-        changePage({ page: parseInt(routerData), perPage });
+        initialSearch.page = parseInt(routerData);
+        initialSearch.perPage = perPage;
         break;
       }
 

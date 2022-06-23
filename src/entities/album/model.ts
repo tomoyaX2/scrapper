@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import axios from 'axios';
 import { createEffect, createStore, createEvent } from 'effector';
 import { backendUrl, cdnUrl } from '@shared/api';
@@ -16,6 +17,8 @@ type Search = {
   authors?: string[];
   groups?: string[];
   name?: string;
+  page: number;
+  perPage: number;
 };
 
 type Album = {
@@ -53,10 +56,10 @@ const $albumsState = createStore<{
   page: 1,
   perPage: 20,
   total: 0,
-  isLoading: true
+  isLoading: false
 });
 
-const $search = createStore<Search>({});
+const $search = createStore<Search>({ page: 1, perPage: 20 });
 
 const $albumPage = createStore<Album | null>(null);
 
@@ -65,8 +68,6 @@ const $readerPage = createStore<ReaderPage>({
   images: [],
   pagesList: []
 });
-
-const fetchAlbumsFx = createEffect<void, AlbumResponse>();
 
 const downloadAlbumFx = createEffect<Album, void>();
 
@@ -81,13 +82,6 @@ const fetchAlbumFx = createEffect<string, Album>();
 
 const changeReaderPageFx = createEvent<number>();
 const changeSearchStateFx = createEvent<Search>();
-
-$albumsState.on(fetchAlbumsFx.doneData, (albumsState, albums) => ({
-  ...albumsState,
-  data: albums.data,
-  total: parseInt(albums.total),
-  isLoading: false
-}));
 
 $readerPage.on(fetchAlbumFx.doneData, (_, album) => ({
   images: album.images,
@@ -109,7 +103,19 @@ $albumsState.on(changePageOptionsFx, (albumsState, { page, perPage }) => ({
   perPage
 }));
 
-$search.on(changeSearchStateFx, (_, search) => search);
+$search.on(changeSearchStateFx, (_, search) => {
+  const initialSearch: Search = { page: 1, perPage: 20 };
+  const searchKeys = Object.keys(search) as unknown as (keyof Search)[];
+
+  for (const searchKey of searchKeys) {
+    if (search[searchKey]) {
+      //@ts-expect-error
+      initialSearch[searchKey] = search[searchKey];
+    }
+  }
+
+  return initialSearch;
+});
 
 $albumsState.on(searchAlbumsFx.doneData, (albumsState, albums) => ({
   ...albumsState,
@@ -146,14 +152,6 @@ searchAlbumsFx.use(async body => {
   return response.data;
 });
 
-fetchAlbumsFx.use(async () => {
-  const res = await axios.get<AlbumResponse>(
-    `${backendUrl}/albums?page=1&perPage=20`
-  );
-
-  return { data: res.data.data, total: res.data.total };
-});
-
 fetchAlbumFx.use(async (albumId: string) => {
   const res = await axios.get<Album>(`${backendUrl}/albums/${albumId}`);
 
@@ -161,7 +159,6 @@ fetchAlbumFx.use(async (albumId: string) => {
 });
 
 export {
-  fetchAlbumsFx,
   $albumsState,
   changePageOptionsFx,
   $albumPage,
