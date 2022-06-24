@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { cdnUrl } from '@shared/api';
 import type { AlbumProps } from './album.props';
 
 const Album = ({
-  album: { id, language, name, type, preview, totalImages, images }
+  album: { id, language, name, type, preview, totalImages, path }
 }: AlbumProps): JSX.Element => {
   const [isHovered, setHovered] = React.useState<boolean>(false);
 
@@ -21,7 +22,11 @@ const Album = ({
         onMouseLeave={onHover(false)}
       >
         <Image
-          src={preview ?? images[0]?.url}
+          src={
+            preview
+              ? preview
+              : `${cdnUrl}/images/${path.split('/')[1]}/10001.webp`
+          }
           loader={({ src, width }) => `${src}?w=${width}`}
           alt='preview'
           width={300}

@@ -44,7 +44,6 @@ export const SearchBar = createView()
       series: { seriesList },
       authors: { authorsList },
       groups: { groupsList },
-      albums: { page },
       handleSearch,
       setSearch,
       search
@@ -67,10 +66,7 @@ export const SearchBar = createView()
       const onPaginationChangeFactory = paginationChangeFactory(
         router,
         setSearch,
-        {
-          ...search,
-          page
-        }
+        search
       );
 
       const onSearch = () => {

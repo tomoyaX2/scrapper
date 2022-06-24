@@ -1,9 +1,5 @@
 import { useRouter } from 'next/router';
-import {
-  changePageOptionsFx,
-  changeSearchStateFx,
-  searchAlbumsFx
-} from '@entities/album';
+import { changeSearchStateFx, searchAlbumsFx } from '@entities/album';
 import { createView } from '@shared/lib/view';
 import { Logo } from '@shared/ui/atoms/icons/logo';
 import { Search } from '@shared/ui/atoms/icons/search';
@@ -11,7 +7,6 @@ import { Input } from '@shared/ui/atoms/input/input';
 
 const props = {
   handleSearch: searchAlbumsFx,
-  changePage: changePageOptionsFx,
   setSearch: changeSearchStateFx
 };
 
@@ -19,7 +14,7 @@ let inputTimeout = setTimeout(() => {}, 0);
 
 const Header = createView()
   .props(props)
-  .view(({ handleSearch, changePage, setSearch }) => {
+  .view(({ handleSearch, setSearch }) => {
     const router = useRouter();
 
     const onSearchChange = (e: { target: { value: string } }) => {
@@ -31,8 +26,7 @@ const Header = createView()
         } else {
           handleSearch({ page: 1, perPage: 20 });
         }
-        setSearch({});
-        changePage({ page: 1, perPage: 20 });
+        setSearch({ page: 1, perPage: 20 });
         router.replace(`/?page=1`);
       }, 800);
     };

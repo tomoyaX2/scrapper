@@ -33,6 +33,7 @@ type Album = {
   preview?: string;
   totalImages?: number;
   images: Image[];
+  path: string;
   // preview: string[] will be done later
 };
 
@@ -47,14 +48,10 @@ type ReaderPage = {
 
 const $albumsState = createStore<{
   data: Album[];
-  page: number;
-  perPage: number;
   total: number;
   isLoading: boolean;
 }>({
   data: [],
-  page: 1,
-  perPage: 20,
   total: 0,
   isLoading: false
 });
@@ -76,8 +73,6 @@ const searchAlbumsFx = createEffect<
   AlbumResponse
 >();
 
-const changePageOptionsFx = createEvent<{ page: number; perPage: number }>();
-
 const fetchAlbumFx = createEffect<string, Album>();
 
 const changeReaderPageFx = createEvent<number>();
@@ -95,12 +90,6 @@ $readerPage.on(fetchAlbumFx.doneData, (_, album) => ({
 $readerPage.on(changeReaderPageFx, (readerState, readerPage) => ({
   ...readerState,
   currentPage: readerPage
-}));
-
-$albumsState.on(changePageOptionsFx, (albumsState, { page, perPage }) => ({
-  ...albumsState,
-  page,
-  perPage
 }));
 
 $search.on(changeSearchStateFx, (_, search) => {
@@ -160,7 +149,6 @@ fetchAlbumFx.use(async (albumId: string) => {
 
 export {
   $albumsState,
-  changePageOptionsFx,
   $albumPage,
   fetchAlbumFx,
   downloadAlbumFx,

@@ -1,6 +1,5 @@
 export {
   $albumsState,
-  changePageOptionsFx,
   fetchAlbumFx,
   $albumPage,
   downloadAlbumFx,
