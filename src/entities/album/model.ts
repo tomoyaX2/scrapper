@@ -16,13 +16,13 @@ type Search = {
   series?: string[];
   authors?: string[];
   groups?: string[];
-  name?: string;
+  title?: string;
   page: number;
   perPage: number;
 };
 
 type Album = {
-  name: string;
+  title: string;
   id: string;
   series: { name: string; id: string }[];
   type: { name: string; id: string };
@@ -124,7 +124,7 @@ $albumPage.on(fetchAlbumFx.doneData, (_, album) => album);
 downloadAlbumFx.use(async album => {
   const link = document.createElement('a');
   link.href = album.downloadPath;
-  link.setAttribute('download', `${album.name}.zip`); //or any other extension
+  link.setAttribute('download', `${album.title}.zip`); //or any other extension
   document.body.appendChild(link);
   link.click();
 });

@@ -5,7 +5,7 @@ import { cdnUrl } from '@shared/api';
 import type { AlbumProps } from './album.props';
 
 const Album = ({
-  album: { id, language, name, type, preview, totalImages, path }
+  album: { id, language, title, type, preview, totalImages, path }
 }: AlbumProps): JSX.Element => {
   const [isHovered, setHovered] = React.useState<boolean>(false);
 
@@ -44,7 +44,7 @@ const Album = ({
                 type?.name ? `[${type.name}]` : ''
               }`}
 
-              {`  ${isHovered ? name : name.substring(0, 50)} `}
+              {`  ${isHovered ? title : title.substring(0, 50)} `}
             </span>
 
             {isHovered && (

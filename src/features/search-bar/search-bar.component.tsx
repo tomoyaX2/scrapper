@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Button, TagPicker } from 'rsuite';
-import { Input } from 'rsuite';
 import {
   $albumsState,
   $search,
@@ -51,17 +50,13 @@ export const SearchBar = createView()
       const router = useRouter();
       const [isExpanded, setExpanded] = useState(false);
       const onSetExpanded = () => setExpanded(!isExpanded);
-      const { tags, types, languages, series, authors, groups, name } = search;
+      const { tags, types, languages, series, authors, groups } = search;
 
       useEffect(() => {
         const initialSearch = buildSearchState(router, search.perPage);
         setSearch(initialSearch);
         handleSearch(initialSearch);
       }, []);
-
-      const onSetName = (name: string) => {
-        setSearch({ ...search, name });
-      };
 
       const onPaginationChangeFactory = paginationChangeFactory(
         router,
@@ -126,13 +121,6 @@ export const SearchBar = createView()
 
             {isExpanded && (
               <div className='flex w-full mt-4 justify-center items-center'>
-                <Input
-                  placeholder='Title name...'
-                  className='!w-40 mr-4 my-2 rs-theme-dark'
-                  value={name ?? ''}
-                  onChange={onSetName}
-                />
-
                 <TagPicker
                   data={seriesList}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'

@@ -60,7 +60,7 @@ const Album = createView()
 
             <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
               <div>
-                <span className='text-lg'>{album.name}</span>
+                <span className='text-lg'>{album.title}</span>
 
                 {album.language?.name ? (
                   <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>

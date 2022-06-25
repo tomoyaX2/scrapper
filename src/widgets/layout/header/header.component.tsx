@@ -22,7 +22,7 @@ const Header = createView()
       inputTimeout = setTimeout(() => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (e.target.value) {
-          handleSearch({ name: e.target.value, page: 1, perPage: 50 });
+          handleSearch({ title: e.target.value, page: 1, perPage: 50 });
         } else {
           handleSearch({ page: 1, perPage: 20 });
         }

@@ -27,6 +27,7 @@ export const Input = ({
       )}
       {...props}
     />
+
     {label && (
       <label
         htmlFor={name}
@@ -38,6 +39,7 @@ export const Input = ({
         {label}
       </label>
     )}
+
     {icon && icon}
   </div>
 );

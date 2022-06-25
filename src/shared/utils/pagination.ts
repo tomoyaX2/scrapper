@@ -7,7 +7,7 @@ type Search = {
   series?: string[];
   authors?: string[];
   groups?: string[];
-  name?: string;
+  title?: string;
   page: number;
   perPage: number;
 };
@@ -25,8 +25,8 @@ const buildPaginationString = (search: Search) => {
     }
   }
 
-  if (search.name) {
-    result += `name=${search.name}`;
+  if (search.title) {
+    result += `name=${search.title}`;
   }
 
   if (search.page) {
@@ -52,12 +52,12 @@ const buildSearchState = (router: NextRouter, perPage: number) => {
   const initialSearch: Search = { page: 1, perPage: 20 };
 
   for (const routerKey of Object.keys(router.query)) {
-    const key = routerKey as keyof Search & 'page' & 'name';
+    const key = routerKey as keyof Search & 'page' & 'title';
     const routerData = router.query[key] as unknown as keyof Search;
 
     switch (key) {
-      case 'name': {
-        initialSearch.name = routerData;
+      case 'title': {
+        initialSearch.title = routerData;
         break;
       }
 
