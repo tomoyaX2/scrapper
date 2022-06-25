@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import axios from 'axios';
 import { createEffect, createStore, createEvent } from 'effector';
-import { backendUrl, cdnUrl } from '@shared/api';
+import { backendUrl } from '@shared/api';
 
 type Image = {
   id: string;
@@ -34,6 +34,7 @@ type Album = {
   totalImages?: number;
   images: Image[];
   path: string;
+  downloadPath: string;
   // preview: string[] will be done later
 };
 
@@ -121,12 +122,8 @@ $albumsState.on(searchAlbumsFx.pending, albumsState => ({
 $albumPage.on(fetchAlbumFx.doneData, (_, album) => album);
 
 downloadAlbumFx.use(async album => {
-  const response = await axios.get(`${cdnUrl}/file?albumId=${album.id}`, {
-    responseType: 'arraybuffer'
-  });
-  const url = window.URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement('a');
-  link.href = url;
+  link.href = album.downloadPath;
   link.setAttribute('download', `${album.name}.zip`); //or any other extension
   document.body.appendChild(link);
   link.click();
