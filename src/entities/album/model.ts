@@ -78,6 +78,7 @@ const fetchAlbumFx = createEffect<string, Album>();
 
 const changeReaderPageFx = createEvent<number>();
 const changeSearchStateFx = createEvent<Search>();
+const resetAlbumStateFx = createEvent();
 
 $readerPage.on(fetchAlbumFx.doneData, (_, album) => ({
   images: album.images,
@@ -87,6 +88,8 @@ $readerPage.on(fetchAlbumFx.doneData, (_, album) => ({
     value: key + 1
   }))
 }));
+
+$albumPage.on(resetAlbumStateFx, () => null);
 
 $readerPage.on(changeReaderPageFx, (readerState, readerPage) => ({
   ...readerState,
@@ -153,6 +156,7 @@ export {
   changeReaderPageFx,
   searchAlbumsFx,
   changeSearchStateFx,
-  $search
+  $search,
+  resetAlbumStateFx
 };
 export type { Album, AlbumResponse, Search };
