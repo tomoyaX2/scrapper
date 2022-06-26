@@ -24,7 +24,7 @@ const PageList = createView()
     const router = useRouter();
 
     const onChangePageOptions = (page: number) => {
-      setSearch({ page, perPage: 20 });
+      setSearch({ ...search, page, perPage: 20 });
       router.replace(
         `/${buildPaginationString({ ...search, page, perPage: 20 })}`
       );

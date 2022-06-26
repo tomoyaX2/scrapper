@@ -19,6 +19,7 @@ import {
   buildSearchState,
   paginationChangeFactory
 } from '@shared/utils/pagination';
+import { buildPaginationString } from '@shared/utils/pagination';
 
 const props = {
   tags: $tags,
@@ -65,7 +66,11 @@ export const SearchBar = createView()
       );
 
       const onSearch = () => {
-        handleSearch(search);
+        setSearch({ ...search, page: 1, perPage: 20 });
+        router.replace(
+          `/${buildPaginationString({ ...search, page: 1, perPage: 20 })}`
+        );
+        handleSearch({ ...search, page: 1, perPage: 20 });
       };
 
       return (
