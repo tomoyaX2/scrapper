@@ -7,7 +7,7 @@ const Layout: FC<PropsWithChildren<{}>> = ({ children }) => (
     <div className='flex flex-col'>
       <Header />
 
-      <div className='flex flex-col bg-black-300 my-4'>{children}</div>
+      <div className='flex flex-col bg-black-300'>{children}</div>
     </div>
 
     <Footer />

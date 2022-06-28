@@ -14,6 +14,16 @@ body {
   color: #ffffff;
   background: #121212;
 }
+.rs-input-number-touchspin-up {
+  display: none !important;
+}
+.rs-input-number-touchspin-down {
+  display: none !important;
+}
+
+.rs-input-number-btn-group-vertical {
+  display: none;
+}
 
 #__next {
   min-height: 100vh;

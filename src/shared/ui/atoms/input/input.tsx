@@ -13,7 +13,7 @@ export const Input = ({
 }: InputProps): JSX.Element => (
   <div
     className={cn(
-      'relative z-0 group mr-12 flex flex-row items-center border-gray-300 border-b-2',
+      'relative z-0 group flex flex-row items-center border-gray-300 border-b-2',
       containerClassName
     )}
   >

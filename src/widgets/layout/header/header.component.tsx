@@ -32,14 +32,14 @@ const Header = createView()
     };
 
     return (
-      <header className='bg-primary flex items-center justify-between px-10 py-4'>
+      <header className='bg-primary flex items-center justify-between md:px-10 sm:px-2 xsm:px-2 py-4'>
         <Logo fill='white' className='cursor-pointer' />
 
         <div className='flex flex-row items-center'>
           <Input
             name='search'
             label='Quick search by name'
-            containerClassName='w-64 mb-3'
+            containerClassName='w-64 mb-3 md:mr-12 sm:mr-4 xsm:mr-4'
             onChange={onSearchChange}
             placeholder=' '
             icon={<Search className='mt-2' />}
