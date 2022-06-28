@@ -124,8 +124,8 @@ export const SearchBar = createView()
               </Button>
             </div>
 
-            {isExpanded && (
-              <div className='flex w-full mt-4 justify-center items-center'>
+            <div className='flex w-full mt-4 justify-center items-center'>
+              {(isExpanded || !!series?.length) && (
                 <TagPicker
                   data={seriesList}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
@@ -138,7 +138,9 @@ export const SearchBar = createView()
                     <span className='font-normal text-base'>{label}</span>
                   )}
                 />
+              )}
 
+              {(isExpanded || !!authors?.length) && (
                 <TagPicker
                   data={authorsList}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
@@ -151,7 +153,9 @@ export const SearchBar = createView()
                     <span className='font-normal text-base'>{label}</span>
                   )}
                 />
+              )}
 
+              {(isExpanded || !!groups?.length) && (
                 <TagPicker
                   data={groupsList}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
@@ -164,8 +168,8 @@ export const SearchBar = createView()
                     <span className='font-normal text-base'>{label}</span>
                   )}
                 />
-              </div>
-            )}
+              )}
+            </div>
 
             <div className='flex flex-row items-center justify-center w-full mt-4'>
               <div className='flex flex-row items-center justify-center'>
