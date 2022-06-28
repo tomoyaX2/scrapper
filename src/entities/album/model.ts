@@ -35,6 +35,7 @@ type Album = {
   images: Image[];
   path: string;
   downloadPath: string;
+  views?: number;
   // preview: string[] will be done later
 };
 

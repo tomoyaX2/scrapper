@@ -4,11 +4,11 @@ import React from 'react';
 import { cdnUrl } from '@shared/api';
 import { EyeIcon } from '@shared/ui/atoms/icons/eye';
 import { ImageIcon } from '@shared/ui/atoms/icons/image';
-import { StarIcon } from '@shared/ui/atoms/icons/star';
+// import { StarIcon } from '@shared/ui/atoms/icons/star';
 import type { AlbumProps } from './album.props';
 
 const Album = ({
-  album: { id, language, title, type, preview, totalImages, path }
+  album: { id, language, title, type, preview, totalImages, path, views }
 }: AlbumProps): JSX.Element => {
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const [imagePath, setImagePath] = React.useState(
@@ -46,27 +46,31 @@ const Album = ({
             <span>{totalImages}</span>
           </div>
 
-          <div className='flex items-center justify-center ml-3'>
+          {/* <div className='flex items-center justify-center ml-3'>
             <StarIcon className='w-4 h-4 mr-2' fill='#ffb400' />
 
             <span>{0}</span>
-          </div>
+          </div> */}
 
           <div className='flex items-center justify-center ml-3'>
             <EyeIcon className='w-4 h-4 mr-2' fill='white' />
 
-            <span>{0}</span>
+            <span>{views ?? 0}</span>
           </div>
         </div>
 
         <div className={isHovered ? 'z-50' : ''}>
-          <div className='absolute -ml-40 w-80 bg-primary flex flex-col h-14'>
+          <div
+            className={`absolute -ml-40 w-80 bg-primary flex flex-col ${
+              isHovered && title.length > 30 ? 'h-24' : 'h-16'
+            }`}
+          >
             <span className='text-sm text-title text-left py-1 px-4'>
               {`${language?.name ? `[${language.name}]` : ''}  ${
                 type?.name ? `[${type.name}]` : ''
               }`}
 
-              {`  ${isHovered ? title : title.substring(0, 50)} `}
+              {`  ${isHovered ? title : title.substring(0, 30)} `}
             </span>
           </div>
         </div>
