@@ -138,6 +138,7 @@ const Reader = createView()
               data={pagesList}
               value={currentPage}
               className='rs-theme-dark w-32 px-4'
+              menuClassName='rs-theme-dark'
               cleanable={false}
               onChange={onChangeReaderPage}
             />

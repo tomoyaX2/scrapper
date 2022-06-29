@@ -36,7 +36,7 @@ const Album = createView()
 
     const onRedirect = (ids: string | string[], key: keyof Search) => () => {
       const targetString = Array.isArray(ids) ? ids.join(',') : ids;
-      setSearch({ [key]: [ids], page: 1, perPage: 20 });
+      setSearch({ [key]: [ids], page: 1, perPage: 20, shouldResetPage: false });
       router.replace(`/?page=1&${key}=${targetString}`);
     };
 

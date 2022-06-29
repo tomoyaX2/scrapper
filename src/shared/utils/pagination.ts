@@ -10,6 +10,8 @@ type Search = {
   title?: string;
   page: number;
   perPage: number;
+  sortBy?: 'rate' | 'views' | 'totalImages';
+  shouldResetPage: boolean;
 };
 
 const buildPaginationString = (search: Search) => {
@@ -29,8 +31,12 @@ const buildPaginationString = (search: Search) => {
     result += `name=${search.title}`;
   }
 
+  if (search.sortBy) {
+    result += `sortBy=${search.sortBy}&`;
+  }
+
   if (search.page) {
-    result += `page=${search.page}`;
+    result += `page=${search.shouldResetPage ? 1 : search.page}`;
   }
 
   return result;
@@ -43,13 +49,23 @@ const paginationChangeFactory =
     search: Search
   ) =>
   (key: string) =>
-  (data: string[]) => {
-    setSearch({ ...search, [key]: data });
-    router.replace(`/${buildPaginationString({ ...search, [key]: data })}`);
+  (data: string[] | string) => {
+    setSearch({ ...search, [key]: data, shouldResetPage: true });
+    router.replace(
+      `/${buildPaginationString({
+        ...search,
+        shouldResetPage: true,
+        [key]: data
+      })}`
+    );
   };
 
 const buildSearchState = (router: NextRouter, perPage: number) => {
-  const initialSearch: Search = { page: 1, perPage: 20 };
+  const initialSearch: Search = {
+    page: 1,
+    perPage: 20,
+    shouldResetPage: false
+  };
 
   for (const routerKey of Object.keys(router.query)) {
     const key = routerKey as keyof Search & 'page' & 'title';
@@ -64,6 +80,20 @@ const buildSearchState = (router: NextRouter, perPage: number) => {
       case 'page': {
         initialSearch.page = parseInt(routerData);
         initialSearch.perPage = perPage;
+        break;
+      }
+
+      case 'sortBy': {
+        console.log(routerData[0], 'routerData[0]');
+        initialSearch.sortBy = routerData as
+          | 'rate'
+          | 'views'
+          | 'totalImages'
+          | undefined;
+        break;
+      }
+
+      case 'shouldResetPage': {
         break;
       }
 
@@ -82,3 +112,4 @@ const buildSearchState = (router: NextRouter, perPage: number) => {
 };
 
 export { paginationChangeFactory, buildPaginationString, buildSearchState };
+export type { Search };

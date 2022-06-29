@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Button, TagPicker } from 'rsuite';
+import { TagPicker, SelectPicker } from 'rsuite';
 import {
   $albumsState,
   $search,
   changeSearchStateFx,
   searchAlbumsFx
 } from '@entities/album';
+import type { Search } from '@entities/album';
 import { $authors } from '@entities/author';
 import { $groups } from '@entities/groups';
 import { $languages } from '@entities/language';
@@ -19,7 +20,7 @@ import {
   buildSearchState,
   paginationChangeFactory
 } from '@shared/utils/pagination';
-import { buildPaginationString } from '@shared/utils/pagination';
+import { searchTimeoutHandler } from '@shared/utils/timeoutHandler';
 
 const props = {
   tags: $tags,
@@ -54,24 +55,25 @@ export const SearchBar = createView()
       const { tags, types, languages, series, authors, groups } = search;
 
       useEffect(() => {
-        const initialSearch = buildSearchState(router, search.perPage);
-        setSearch(initialSearch);
-        handleSearch(initialSearch);
-      }, []);
+        const searchData = buildSearchState(router, search.perPage);
+        setSearch(
+          search.shouldResetPage
+            ? { ...searchData, page: 1, shouldResetPage: false }
+            : searchData
+        );
+
+        searchTimeoutHandler(handleSearch as (data: Search) => void)(
+          search.shouldResetPage
+            ? { ...searchData, page: 1, shouldResetPage: false }
+            : searchData
+        );
+      }, [router.query]);
 
       const onPaginationChangeFactory = paginationChangeFactory(
         router,
         setSearch,
         search
       );
-
-      const onSearch = () => {
-        setSearch({ ...search, page: 1, perPage: 20 });
-        router.replace(
-          `/${buildPaginationString({ ...search, page: 1, perPage: 20 })}`
-        );
-        handleSearch({ ...search, page: 1, perPage: 20 });
-      };
 
       return (
         <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
@@ -116,15 +118,23 @@ export const SearchBar = createView()
                 )}
               />
 
-              <Button
-                className='bg-secondary rs-theme-dark hover:bg-black-400 px-4 py-2 rounded-md w-28'
-                onClick={onSearch}
-              >
-                Search
-              </Button>
+              <SelectPicker
+                data={[
+                  { label: 'Rate', value: 'rate' },
+                  { label: 'Views', value: 'views' },
+                  { label: 'Total Images', value: 'totalImages' }
+                ]}
+                value={search.sortBy}
+                onClean={() => onPaginationChangeFactory('sortBy')('')}
+                className='rs-theme-dark w-40 mr-4'
+                menuClassName='rs-theme-dark'
+                placeholder='Sort by...'
+                cleanable
+                onChange={onPaginationChangeFactory('sortBy')}
+              />
             </div>
 
-            <div className='flex w-full mt-4 justify-center items-center'>
+            <div className='flex w-full mt-4 justify-center items-center mr-28'>
               {(isExpanded || !!series?.length) && (
                 <TagPicker
                   data={seriesList}

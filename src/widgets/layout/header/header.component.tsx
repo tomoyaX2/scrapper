@@ -1,7 +1,7 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { changeSearchStateFx, searchAlbumsFx } from '@entities/album';
 import { createView } from '@shared/lib/view';
-import { Logo } from '@shared/ui/atoms/icons/logo';
 import { Search } from '@shared/ui/atoms/icons/search';
 import { Input } from '@shared/ui/atoms/input/input';
 
@@ -26,14 +26,16 @@ const Header = createView()
         } else {
           handleSearch({ page: 1, perPage: 20 });
         }
-        setSearch({ page: 1, perPage: 20 });
+        setSearch({ page: 1, perPage: 20, shouldResetPage: false });
         router.replace(`/?page=1`);
       }, 800);
     };
 
     return (
       <header className='bg-primary flex items-center justify-between md:px-10 sm:px-2 xsm:px-2 py-4'>
-        <Logo fill='white' className='cursor-pointer' />
+        <Link href='/' passHref>
+          <h1 className='italic text-3xl cursor-pointer'>MH</h1>
+        </Link>
 
         <div className='flex flex-row items-center'>
           <Input

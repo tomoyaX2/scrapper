@@ -1,6 +1,9 @@
-let switchPageIndexTimeout = setTimeout(() => {});
+import type { Search } from './pagination';
 
-export const switchPageTimeoutHandler = ({
+let switchPageIndexTimeout = setTimeout(() => {});
+let searchTimeout = setTimeout(() => {});
+
+const switchPageTimeoutHandler = ({
   isActive,
   value,
   onChangeReaderPage,
@@ -33,3 +36,11 @@ export const switchPageTimeoutHandler = ({
   }
   clearTimeout(switchPageIndexTimeout);
 };
+
+const searchTimeoutHandler =
+  (searchCallback: (data: Search) => void) => (data: Search) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => searchCallback(data), 1000);
+  };
+
+export { searchTimeoutHandler, switchPageTimeoutHandler };

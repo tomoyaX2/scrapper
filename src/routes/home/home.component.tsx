@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { Loader } from 'rsuite';
 import { PageList } from '@features/pagination/ui';
 import { SearchBar } from '@features/search-bar';
@@ -11,18 +10,14 @@ import { homePage } from './home.model';
 
 const props = {
   albumsState: $albumsState,
-  resetAlbumState: resetAlbumStateFx
+  onResetAlbumState: resetAlbumStateFx
 };
 
 const Home = createView()
   .props(props)
   .enter(homePage.enter)
-  .view(({ albumsState: { data, isLoading }, resetAlbumState }) => {
+  .view(({ albumsState: { data, isLoading }, onResetAlbumState }) => {
     const router = useRouter();
-
-    useEffect(() => {
-      resetAlbumState();
-    }, []);
 
     if (router.isReady) {
       return (
@@ -37,7 +32,11 @@ const Home = createView()
             <div className='flex flex-col items-center justify-center w-full'>
               <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
                 {data.map(album => (
-                  <Album album={album} key={album.id} />
+                  <Album
+                    album={album}
+                    key={album.id}
+                    onResetAlbumState={onResetAlbumState}
+                  />
                 ))}
               </div>
 

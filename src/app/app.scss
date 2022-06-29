@@ -28,3 +28,11 @@ body {
 #__next {
   min-height: 100vh;
 }
+
+a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}

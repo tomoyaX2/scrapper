@@ -19,6 +19,8 @@ type Search = {
   title?: string;
   page: number;
   perPage: number;
+  sortBy?: 'rate' | 'views' | 'totalImages';
+  shouldResetPage: boolean;
 };
 
 type Album = {
@@ -36,6 +38,7 @@ type Album = {
   path: string;
   downloadPath: string;
   views?: number;
+  rate?: number;
   // preview: string[] will be done later
 };
 
@@ -58,7 +61,11 @@ const $albumsState = createStore<{
   isLoading: false
 });
 
-const $search = createStore<Search>({ page: 1, perPage: 20 });
+const $search = createStore<Search>({
+  page: 1,
+  perPage: 20,
+  shouldResetPage: false
+});
 
 const $albumPage = createStore<Album | null>(null);
 
@@ -91,6 +98,11 @@ $readerPage.on(fetchAlbumFx.doneData, (_, album) => ({
 }));
 
 $albumPage.on(resetAlbumStateFx, () => null);
+$albumsState.on(resetAlbumStateFx, () => ({
+  data: [],
+  total: 0,
+  isLoading: true
+}));
 
 $readerPage.on(changeReaderPageFx, (readerState, readerPage) => ({
   ...readerState,
@@ -98,7 +110,11 @@ $readerPage.on(changeReaderPageFx, (readerState, readerPage) => ({
 }));
 
 $search.on(changeSearchStateFx, (_, search) => {
-  const initialSearch: Search = { page: 1, perPage: 20 };
+  const initialSearch: Search = {
+    page: 1,
+    perPage: 20,
+    shouldResetPage: false
+  };
   const searchKeys = Object.keys(search) as unknown as (keyof Search)[];
 
   for (const searchKey of searchKeys) {
@@ -136,7 +152,9 @@ downloadAlbumFx.use(async album => {
 searchAlbumsFx.use(async body => {
   const response = await axios.post<AlbumResponse>(
     `${backendUrl}/albums/search`,
-    body
+    body?.sortBy
+      ? { ...body, sortBy: { [body.sortBy as string]: 'DESC' } }
+      : body
   );
 
   return response.data;
