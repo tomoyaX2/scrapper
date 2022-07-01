@@ -22,6 +22,12 @@ import {
 } from '@shared/utils/pagination';
 import { searchTimeoutHandler } from '@shared/utils/timeoutHandler';
 
+const selectData = [
+  { label: 'Rate', value: 'rate' },
+  { label: 'Views', value: 'views' },
+  { label: 'Total Images', value: 'totalImages' }
+];
+
 const props = {
   tags: $tags,
   types: $types,
@@ -119,17 +125,10 @@ export const SearchBar = createView()
               />
 
               <SelectPicker
-                data={[
-                  { label: 'Rate', value: 'rate' },
-                  { label: 'Views', value: 'views' },
-                  { label: 'Total Images', value: 'totalImages' }
-                ]}
-                value={search.sortBy}
-                onClean={() => onPaginationChangeFactory('sortBy')('')}
+                data={selectData}
                 className='rs-theme-dark w-40 mr-4'
                 menuClassName='rs-theme-dark'
                 placeholder='Sort by...'
-                cleanable
                 onChange={onPaginationChangeFactory('sortBy')}
               />
             </div>

@@ -34,7 +34,7 @@ const Header = createView()
     return (
       <header className='bg-primary flex items-center justify-between md:px-10 sm:px-2 xsm:px-2 py-4'>
         <Link href='/' passHref>
-          <h1 className='italic text-3xl cursor-pointer'>MH</h1>
+          <h1 className='italic text-3xl cursor-pointer'>mH</h1>
         </Link>
 
         <div className='flex flex-row items-center'>

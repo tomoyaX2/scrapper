@@ -49,7 +49,7 @@ const paginationChangeFactory =
     search: Search
   ) =>
   (key: string) =>
-  (data: string[] | string) => {
+  (data: string[] | string | null) => {
     setSearch({ ...search, [key]: data, shouldResetPage: true });
     router.replace(
       `/${buildPaginationString({
