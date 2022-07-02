@@ -46,7 +46,7 @@ const PageList = createView()
           total={total}
           limit={search.perPage}
           limitOptions={limitOptions}
-          maxButtons={10}
+          maxButtons={5}
           activePage={search.page}
           onChangePage={onChangePageOptions}
         />

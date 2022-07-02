@@ -127,7 +127,7 @@ const Reader = createView()
 
       return (
         <div className='w-full'>
-          <div className='flex flex-row bg-primary w-full h-16 items-center justify-center'>
+          <div className='flex flex-row bg-primary w-full h-16 items-center md:ustify-center sm:justify-center xsm:justify-start'>
             <Arrow
               fill={currentPage > 1 ? 'white' : 'gray'}
               className='rotate-180 md:flex sm:hidden xsm:hidden'
@@ -137,7 +137,7 @@ const Reader = createView()
             <SelectPicker
               data={pagesList}
               value={currentPage}
-              className='rs-theme-dark w-32 px-4'
+              className='rs-theme-dark md:w-32 sm:w-20 xsm:w-24 px-4'
               menuClassName='rs-theme-dark'
               cleanable={false}
               onChange={onChangeReaderPage}
@@ -173,7 +173,7 @@ const Reader = createView()
           </div>
 
           <div
-            className='flex items-center justify-center cursor-pointer'
+            className='flex items-center justify-center cursor-pointer mt-4'
             //@ts-expect-error cause of i want
             onTouchStart={onTouchEvent}
             //@ts-expect-error cause of i want

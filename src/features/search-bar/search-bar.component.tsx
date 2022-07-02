@@ -83,7 +83,7 @@ export const SearchBar = createView()
 
       return (
         <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
-          <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col items-center w-full flex-wrap'>
+          <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col md:items-center sm:items-start xsm:items-start w-full flex-wrap'>
             <div className='flex flex-row flex-wrap w-full justify-center items-center'>
               <TagPicker
                 data={tagsList}
@@ -126,14 +126,15 @@ export const SearchBar = createView()
 
               <SelectPicker
                 data={selectData}
-                className='rs-theme-dark w-40 mr-4'
+                className='rs-theme-dark w-40 mr-4 my-2 min-w-searchInput'
                 menuClassName='rs-theme-dark'
+                searchable={false}
                 placeholder='Sort by...'
                 onChange={onPaginationChangeFactory('sortBy')}
               />
             </div>
 
-            <div className='flex w-full mt-4 justify-center items-center mr-28'>
+            <div className='flex lg:flex-row md:flex-row sm:flex-col xsm:flex-col w-full lg:mt-4 md:mt-4 sm:mt-0 xsm:mt-0 justify-center items-center mr-28'>
               {(isExpanded || !!series?.length) && (
                 <TagPicker
                   data={seriesList}
