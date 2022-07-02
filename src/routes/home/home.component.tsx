@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { DefaultSeo as Seo } from 'next-seo';
 import { useRouter } from 'next/router';
 import { Loader } from 'rsuite';
 import { PageList } from '@features/pagination/ui';
 import { SearchBar } from '@features/search-bar';
 import { $albumsState, resetAlbumStateFx } from '@entities/album';
 import { Album } from '@entities/album/ui';
+import { DEFAULT_SEO } from '@shared/config/seo';
 import { createView } from '@shared/lib/view';
 import { homePage } from './home.model';
 
@@ -21,29 +23,33 @@ const Home = createView()
 
     if (router.isReady) {
       return (
-        <div className='flex flex-col'>
-          <SearchBar />
+        <>
+          <Seo {...DEFAULT_SEO} />
 
-          {isLoading ? (
-            <div className='fixed top-loader left-2/4'>
-              <Loader size='md' />
-            </div>
-          ) : (
-            <div className='flex flex-col items-center justify-center w-full'>
-              <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
-                {data.map(album => (
-                  <Album
-                    album={album}
-                    key={album.id}
-                    onResetAlbumState={onResetAlbumState}
-                  />
-                ))}
+          <div className='flex flex-col'>
+            <SearchBar />
+
+            {isLoading ? (
+              <div className='fixed top-loader left-2/4'>
+                <Loader size='md' />
               </div>
+            ) : (
+              <div className='flex flex-col items-center justify-center w-full'>
+                <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
+                  {data.map(album => (
+                    <Album
+                      album={album}
+                      key={album.id}
+                      onResetAlbumState={onResetAlbumState}
+                    />
+                  ))}
+                </div>
 
-              {data.length ? <PageList /> : null}
-            </div>
-          )}
-        </div>
+                {data.length ? <PageList /> : null}
+              </div>
+            )}
+          </div>
+        </>
       );
     }
 
