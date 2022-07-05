@@ -12,7 +12,7 @@ import { $authors } from '@entities/author';
 import { $groups } from '@entities/groups';
 import { $languages } from '@entities/language';
 import { $series } from '@entities/series';
-import { $tags } from '@entities/tag';
+import { $tags, incrementPageFx, onSearchTagFx } from '@entities/tag';
 import { $types } from '@entities/type';
 import { createView } from '@shared/lib/view';
 import { Arrow } from '@shared/ui/atoms/icons/arrow';
@@ -20,7 +20,10 @@ import {
   buildSearchState,
   paginationChangeFactory
 } from '@shared/utils/pagination';
-import { searchTimeoutHandler } from '@shared/utils/timeoutHandler';
+import {
+  scrollTimeoutHandler,
+  searchTimeoutHandler
+} from '@shared/utils/timeoutHandler';
 
 const selectData = [
   { label: 'Rate', value: 'rate' },
@@ -38,14 +41,16 @@ const props = {
   albums: $albumsState,
   handleSearch: searchAlbumsFx,
   search: $search,
-  setSearch: changeSearchStateFx
+  setSearch: changeSearchStateFx,
+  incrementTagPage: incrementPageFx,
+  onSearchTag: onSearchTagFx
 };
 
 export const SearchBar = createView()
   .props(props)
   .view(
     ({
-      tags: { tagsList },
+      tags: { visibleTags },
       types: { typesList },
       languages: { languagesList },
       series: { seriesList },
@@ -53,12 +58,40 @@ export const SearchBar = createView()
       groups: { groupsList },
       handleSearch,
       setSearch,
-      search
+      search,
+      incrementTagPage,
+      onSearchTag
     }) => {
       const router = useRouter();
       const [isExpanded, setExpanded] = useState(false);
       const onSetExpanded = () => setExpanded(!isExpanded);
       const { tags, types, languages, series, authors, groups } = search;
+
+      const handleMenuScroll = () => {
+        const wrappedElement = document.getElementsByClassName(
+          'rs-picker-check-menu rs-picker-check-menu-items'
+        )[0];
+        const endScrollCounter =
+          wrappedElement.scrollHeight -
+          (wrappedElement.clientHeight + Math.floor(wrappedElement.scrollTop));
+
+        if (endScrollCounter < 10 || endScrollCounter > 10) {
+          incrementTagPage();
+        }
+      };
+
+      const onTagEntering = () => {
+        const wrappedElement = document.getElementsByClassName(
+          'rs-picker-check-menu rs-picker-check-menu-items'
+        )[0];
+        wrappedElement.addEventListener('scroll', () =>
+          scrollTimeoutHandler(handleMenuScroll)
+        );
+      };
+
+      const onTagExited = () => {
+        document.removeEventListener('scroll', handleMenuScroll);
+      };
 
       useEffect(() => {
         const searchData = buildSearchState(router, search.perPage);
@@ -86,11 +119,14 @@ export const SearchBar = createView()
           <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col md:items-center sm:items-start xsm:items-start w-full flex-wrap'>
             <div className='flex flex-row flex-wrap w-full justify-center items-center'>
               <TagPicker
-                data={tagsList}
+                data={visibleTags}
                 className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                 menuClassName='rs-theme-dark'
                 placeholder='Tags...'
                 value={tags ?? []}
+                onEntered={onTagEntering}
+                onSearch={onSearchTag}
+                onExited={onTagExited}
                 onChange={onPaginationChangeFactory('tags')}
                 searchable
                 renderMenuItem={label => (

@@ -1,3 +1,3 @@
-import { $tags, getTagsFx } from './model';
+import { $tags, getTagsFx, incrementPageFx, onSearchTagFx } from './model';
 
-export { $tags, getTagsFx };
+export { $tags, getTagsFx, incrementPageFx, onSearchTagFx };

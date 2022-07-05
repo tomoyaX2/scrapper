@@ -3,6 +3,8 @@ import type { Search } from './pagination';
 let switchPageIndexTimeout = setTimeout(() => {});
 let searchTimeout = setTimeout(() => {});
 
+let scrollTimeout = setTimeout(() => {});
+
 const switchPageTimeoutHandler = ({
   isActive,
   value,
@@ -43,4 +45,8 @@ const searchTimeoutHandler =
     searchTimeout = setTimeout(() => searchCallback(data), 1000);
   };
 
-export { searchTimeoutHandler, switchPageTimeoutHandler };
+const scrollTimeoutHandler = (callback: () => void) => {
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => callback(), 500);
+};
+export { searchTimeoutHandler, switchPageTimeoutHandler, scrollTimeoutHandler };
