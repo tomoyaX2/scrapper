@@ -1,11 +1,13 @@
 import type { NextSeoProps } from 'next-seo';
 
 const DEFAULT_SEO: NextSeoProps = {
-  title: 'mangaH - Collection of handmade titles',
-  description: 'Hentai collection of handmade titles',
+  title: 'MangaH - Collection of H titles',
+  description:
+    'H collection of titles in different languages. Here you can download any album for free',
   openGraph: {
-    title: 'mangaH - Free catalog of hentai albums',
-    description: 'Hentai collection of handmade titles',
+    title: 'MangaH - Free catalog of H albums',
+    description:
+      'H collection of titles in different languages Here you can download any album for free',
     url: 'https://mangah.org'
   }
 };

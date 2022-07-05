@@ -54,11 +54,11 @@ const Album = ({
             <span>{0}</span>
           </div> */}
 
-            <div className='flex items-center justify-center ml-3'>
+            {/* <div className='flex items-center justify-center ml-3'>
               <EyeIcon className='w-4 h-4 mr-2' fill='white' />
 
               <span>{views ?? 0}</span>
-            </div>
+            </div> */}
           </div>
 
           <div className={isHovered ? 'z-50' : ''}>
