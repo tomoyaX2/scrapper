@@ -24,7 +24,15 @@ const Home = createView()
     if (router.isReady) {
       return (
         <>
-          <Seo {...DEFAULT_SEO} />
+          <Seo
+            {...DEFAULT_SEO}
+            additionalMetaTags={[
+              {
+                property: 'dc:keywords',
+                content: 'hentai, manga, manhwa, adult manga'
+              }
+            ]}
+          />
 
           <div className='flex flex-col'>
             <SearchBar />

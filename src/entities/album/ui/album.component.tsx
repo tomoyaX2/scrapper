@@ -2,13 +2,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { cdnUrl } from '@shared/api';
-import { EyeIcon } from '@shared/ui/atoms/icons/eye';
+// import { EyeIcon } from '@shared/ui/atoms/icons/eye';
 import { ImageIcon } from '@shared/ui/atoms/icons/image';
 // import { StarIcon } from '@shared/ui/atoms/icons/star';
 import type { AlbumProps } from './album.props';
 
 const Album = ({
-  album: { id, language, title, type, preview, totalImages, path, views },
+  album: { id, language, title, type, preview, totalImages, path },
   onResetAlbumState
 }: AlbumProps): JSX.Element => {
   const [isHovered, setHovered] = React.useState<boolean>(false);
