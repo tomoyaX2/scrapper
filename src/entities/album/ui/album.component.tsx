@@ -13,7 +13,7 @@ const Album = ({
 }: AlbumProps): JSX.Element => {
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const [imagePath, setImagePath] = React.useState(
-    preview ? preview : `${cdnUrl}/images/${path.split('/')[1]}/10001.webp`
+    preview ? preview : `${cdnUrl}/images-new/${path.split('/')[1]}/10001.webp`
   );
 
   const onHover = (status: boolean) => () => {
@@ -21,7 +21,7 @@ const Album = ({
   };
 
   const onImageError = () =>
-    setImagePath(`${cdnUrl}/images/${path.split('/')[1]}/10002.webp`);
+    setImagePath(`${cdnUrl}/images-new/${path.split('/')[1]}/10002.webp`);
 
   return (
     <Link href={`/album/${id}`} passHref>

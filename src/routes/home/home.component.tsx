@@ -29,7 +29,8 @@ const Home = createView()
             additionalMetaTags={[
               {
                 property: 'dc:keywords',
-                content: 'hentai, manga, manhwa, adult manga'
+                content:
+                  'hentai, manga, manhwa, adult manga, h-manga adult manhwa, hentai manga, hentai manhwa'
               }
             ]}
           />
