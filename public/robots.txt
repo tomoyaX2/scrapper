@@ -1,4 +1,4 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow:
-Sitemap: https://h-manga.club/sitemap.xml
+Sitemap: https://xmanga.org/sitemap.xml

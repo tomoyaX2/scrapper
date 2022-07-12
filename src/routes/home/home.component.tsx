@@ -30,9 +30,10 @@ const Home = createView()
               {
                 property: 'dc:keywords',
                 content:
-                  'hentai, manga, manhwa, adult manga, h-manga adult manhwa, hentai manga, hentai manhwa'
+                  'hentai, manga, manhwa, adult manga, xmanga adult manhwa, hentai manga, hentai manhwa'
               }
             ]}
+            canonical='https://xmanga.org'
           />
 
           <div className='flex flex-col'>
