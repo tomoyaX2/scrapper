@@ -16,6 +16,8 @@ const Album = ({
     preview ? preview : `${cdnUrl}/images-new/${path.split('/')[1]}/10001.webp`
   );
 
+  React.useEffect(() => () => onResetAlbumState(), []);
+
   const onHover = (status: boolean) => () => {
     setHovered(status);
   };
@@ -25,7 +27,7 @@ const Album = ({
 
   return (
     <Link href={`/album/${id}`} passHref>
-      <a onClick={onResetAlbumState}>
+      <a target='_blank'>
         <div
           className='mx-4 flex flex-col items-center bg-primary cursor-pointer w-80 my-12 py-4'
           key={id}

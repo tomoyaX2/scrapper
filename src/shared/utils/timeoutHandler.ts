@@ -6,32 +6,29 @@ let searchTimeout = setTimeout(() => {});
 let scrollTimeout = setTimeout(() => {});
 
 const switchPageTimeoutHandler = ({
-  isActive,
-  value,
+  time,
   onChangeReaderPage,
   currentPage,
   totalPages
 }: {
-  isActive: boolean;
-  value: number | string;
+  time: number;
   onChangeReaderPage: (currentPage: number) => void;
   currentPage: number;
   totalPages: number;
 }) => {
-  if (isActive) {
+  if (!isNaN(time) && time > 0) {
     clearTimeout(switchPageIndexTimeout);
 
-    if (totalPages > currentPage && typeof value === 'number') {
+    if (totalPages > currentPage && typeof time === 'number') {
       switchPageIndexTimeout = setTimeout(() => {
         onChangeReaderPage(currentPage + 1);
         switchPageTimeoutHandler({
-          isActive,
-          value,
+          time,
           onChangeReaderPage,
           currentPage: currentPage + 1,
           totalPages
         });
-      }, value * 1000);
+      }, time * 1000);
 
       return;
     }

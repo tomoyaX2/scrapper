@@ -18,7 +18,8 @@ import { createView } from '@shared/lib/view';
 import { Arrow } from '@shared/ui/atoms/icons/arrow';
 import {
   buildSearchState,
-  paginationChangeFactory
+  paginationChangeFactory,
+  searchInputOptionsFactory
 } from '@shared/utils/pagination';
 import {
   scrollTimeoutHandler,
@@ -50,7 +51,7 @@ export const SearchBar = createView()
   .props(props)
   .view(
     ({
-      tags: { visibleTags },
+      tags: { visibleTags, tagsList },
       types: { typesList },
       languages: { languagesList },
       series: { seriesList },
@@ -119,7 +120,7 @@ export const SearchBar = createView()
           <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col md:items-center sm:items-start xsm:items-start w-full flex-wrap'>
             <div className='flex flex-row flex-wrap w-full justify-center items-center'>
               <TagPicker
-                data={visibleTags}
+                data={searchInputOptionsFactory(visibleTags, tagsList, tags)}
                 className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                 menuClassName='rs-theme-dark'
                 placeholder='Tags...'

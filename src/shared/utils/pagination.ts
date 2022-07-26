@@ -60,6 +60,20 @@ const paginationChangeFactory =
     );
   };
 
+const searchInputOptionsFactory = (
+  visibleItems: { value: string; label: string }[],
+  allItems: { value: string; label: string }[],
+  activeIds?: string[]
+) => {
+  if (activeIds) {
+    const itemsToAdd = allItems.filter(el => activeIds.includes(el.value));
+
+    return [...itemsToAdd, ...visibleItems];
+  }
+
+  return visibleItems;
+};
+
 const buildSearchState = (router: NextRouter, perPage: number) => {
   const initialSearch: Search = {
     page: 1,
@@ -111,5 +125,10 @@ const buildSearchState = (router: NextRouter, perPage: number) => {
   return initialSearch;
 };
 
-export { paginationChangeFactory, buildPaginationString, buildSearchState };
+export {
+  paginationChangeFactory,
+  buildPaginationString,
+  buildSearchState,
+  searchInputOptionsFactory
+};
 export type { Search };

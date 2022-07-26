@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { SelectPicker, Input, Checkbox } from 'rsuite';
+import { SelectPicker, Input } from 'rsuite';
 import {
   fetchAlbumFx,
   $readerPage,
@@ -38,13 +38,7 @@ const Reader = createView()
       album
     }) => {
       const router = useRouter();
-      const [switchTimer, setSwitchTimer] = useState<{
-        isActive: boolean;
-        value: string | number;
-      }>({
-        isActive: false,
-        value: 3
-      });
+      const [switchTimer, setSwitchTimer] = useState<number>(0);
 
       useEffect(() => {
         router.query.id && fetchAlbum(router.query.id as string);
@@ -86,41 +80,21 @@ const Reader = createView()
 
       const onTimerValueChange = (value: string) => {
         const testReg = /^\d+$/;
-        const isCleanValue = value === '';
-        console.log(value === '', 'value');
 
-        if (
-          typeof value === 'string' &&
-          !testReg.test(value) &&
-          !isCleanValue
-        ) {
+        if (typeof value === 'string' && !testReg.test(value) && !!value) {
           return;
         }
 
-        const result = !isCleanValue ? parseInt(value) : value;
-        const resultState = isCleanValue
-          ? { isActive: false, value: '' }
-          : { ...switchTimer, value: result };
+        const result = parseInt(value);
+        const time = !value ? 0 : result;
 
         switchPageTimeoutHandler({
-          ...resultState,
+          time,
           onChangeReaderPage,
           currentPage,
           totalPages: images.length
         });
-        setSwitchTimer(resultState);
-      };
-
-      const onTimerActiveChange = () => {
-        const resultState = { ...switchTimer, isActive: !switchTimer.isActive };
-
-        switchPageTimeoutHandler({
-          ...resultState,
-          onChangeReaderPage,
-          currentPage,
-          totalPages: images.length
-        });
-        setSwitchTimer(resultState);
+        setSwitchTimer(time);
       };
 
       const isGameCG = album?.type?.name === 'game CG';
@@ -149,23 +123,13 @@ const Reader = createView()
               onClick={() => onChangeReaderPage(nextPage)}
             />
 
-            <span className='text-sm text-white-300 md:ml-8 sm:ml-2 xsm:ml-2 md:mr-2 sm:mr-0 xsm:mr-0'>
-              Enable:
-            </span>
-
-            <Checkbox
-              className='rs-theme-dark'
-              checked={switchTimer.isActive}
-              onChange={onTimerActiveChange}
-            />
-
             <span className='text-sm text-white-300 ml-2 mr-2'>
-              Switch every
+              Switch page every
             </span>
 
             <Input
               onChange={onTimerValueChange}
-              value={switchTimer.value}
+              value={switchTimer}
               className='md:w-20 sm:w-12 xsm:w-12 h-19 rs-theme-dark'
             />
 
