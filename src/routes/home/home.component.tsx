@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DefaultSeo as Seo } from 'next-seo';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import ReactGA from 'react-ga4';
 import { Loader } from 'rsuite';
 import { PageList } from '@features/pagination/ui';
 import { SearchBar } from '@features/search-bar';
@@ -15,9 +17,19 @@ const props = {
   onResetAlbumState: resetAlbumStateFx
 };
 
+const useEffects = () => {
+  useEffect(() => {
+    ReactGA.send({
+      hitType: 'pageview',
+      page: window.location.pathname + window.location.search
+    });
+  }, []);
+};
+
 const Home = createView()
   .props(props)
   .enter(homePage.enter)
+  .effect(useEffects)
   .view(({ albumsState: { data, isLoading }, onResetAlbumState }) => {
     const router = useRouter();
 
