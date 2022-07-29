@@ -45,5 +45,12 @@ const searchTimeoutHandler =
 const scrollTimeoutHandler = (callback: () => void) => {
   clearTimeout(scrollTimeout);
   scrollTimeout = setTimeout(() => callback(), 500);
+
+  return () => {};
 };
-export { searchTimeoutHandler, switchPageTimeoutHandler, scrollTimeoutHandler };
+export {
+  searchTimeoutHandler,
+  switchPageTimeoutHandler,
+  scrollTimeoutHandler,
+  scrollTimeout
+};

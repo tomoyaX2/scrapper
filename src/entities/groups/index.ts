@@ -1,3 +1,15 @@
-import { $groups, getGroupsFx } from './model';
+import {
+  $groups,
+  getGroupsFx,
+  incrementGroupsFx,
+  resetGroupsFx,
+  onSearchGroupsFx
+} from './model';
 
-export { $groups, getGroupsFx };
+export {
+  $groups,
+  getGroupsFx,
+  incrementGroupsFx,
+  resetGroupsFx,
+  onSearchGroupsFx
+};

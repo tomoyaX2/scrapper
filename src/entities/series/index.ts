@@ -1,3 +1,15 @@
-import { $series, getSeriesFx } from './model';
+import {
+  $series,
+  getSeriesFx,
+  incrementSeriesPageFx,
+  resetSeriesPageFx,
+  onSearchSeriesFx
+} from './model';
 
-export { $series, getSeriesFx };
+export {
+  $series,
+  getSeriesFx,
+  incrementSeriesPageFx,
+  resetSeriesPageFx,
+  onSearchSeriesFx
+};

@@ -1,3 +1,17 @@
-import { $authors, getAuthorsFx } from './model';
+import {
+  $authors,
+  getAuthorsFx,
+  onSearchAuthorFx,
+  incrementAuthorsPageFx,
+  resetAuthorsPageFx,
+  decrementAuthorsPageFx
+} from './model';
 
-export { $authors, getAuthorsFx };
+export {
+  $authors,
+  getAuthorsFx,
+  onSearchAuthorFx,
+  incrementAuthorsPageFx,
+  resetAuthorsPageFx,
+  decrementAuthorsPageFx
+};

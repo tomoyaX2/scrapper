@@ -8,11 +8,32 @@ import {
   searchAlbumsFx
 } from '@entities/album';
 import type { Search } from '@entities/album';
-import { $authors } from '@entities/author';
-import { $groups } from '@entities/groups';
+import {
+  $authors,
+  onSearchAuthorFx,
+  incrementAuthorsPageFx,
+  resetAuthorsPageFx,
+  decrementAuthorsPageFx
+} from '@entities/author';
+import {
+  $groups,
+  incrementGroupsFx,
+  resetGroupsFx,
+  onSearchGroupsFx
+} from '@entities/groups';
 import { $languages } from '@entities/language';
-import { $series } from '@entities/series';
-import { $tags, incrementPageFx, onSearchTagFx } from '@entities/tag';
+import {
+  $series,
+  incrementSeriesPageFx,
+  resetSeriesPageFx,
+  onSearchSeriesFx
+} from '@entities/series';
+import {
+  $tags,
+  incrementPageFx,
+  onSearchTagFx,
+  resetTagPageFx
+} from '@entities/tag';
 import { $types } from '@entities/type';
 import { createView } from '@shared/lib/view';
 import { Arrow } from '@shared/ui/atoms/icons/arrow';
@@ -21,10 +42,9 @@ import {
   paginationChangeFactory,
   searchInputOptionsFactory
 } from '@shared/utils/pagination';
-import {
-  scrollTimeoutHandler,
-  searchTimeoutHandler
-} from '@shared/utils/timeoutHandler';
+import { useMultiselectUpdateItemsInScroll } from '@shared/utils/selectScrollLoadItems';
+
+import { searchTimeoutHandler } from '@shared/utils/timeoutHandler';
 
 const selectData = [
   { label: 'Rate', value: 'rate' },
@@ -44,7 +64,18 @@ const props = {
   search: $search,
   setSearch: changeSearchStateFx,
   incrementTagPage: incrementPageFx,
-  onSearchTag: onSearchTagFx
+  onSearchTag: onSearchTagFx,
+  onSearchAuthor: onSearchAuthorFx,
+  incrementAuthorsPage: incrementAuthorsPageFx,
+  resetTagPage: resetTagPageFx,
+  resetAuthorsPage: resetAuthorsPageFx,
+  incrementSeriesPage: incrementSeriesPageFx,
+  resetSeriesPage: resetSeriesPageFx,
+  onSearchSeries: onSearchSeriesFx,
+  incrementGroups: incrementGroupsFx,
+  resetGroups: resetGroupsFx,
+  onSearchGroups: onSearchGroupsFx,
+  decrementAuthorsPage: decrementAuthorsPageFx
 };
 
 export const SearchBar = createView()
@@ -54,45 +85,47 @@ export const SearchBar = createView()
       tags: { visibleTags, tagsList },
       types: { typesList },
       languages: { languagesList },
-      series: { seriesList },
-      authors: { authorsList },
-      groups: { groupsList },
+      series: { seriesList, visibleSeries },
+      authors: { authorsList, visibleAuthors, page: authorsPage },
+      groups: { groupsList, visibleGroups },
       handleSearch,
       setSearch,
       search,
       incrementTagPage,
-      onSearchTag
+      onSearchTag,
+      onSearchAuthor,
+      incrementAuthorsPage,
+      resetTagPage,
+      resetAuthorsPage,
+      incrementSeriesPage,
+      resetSeriesPage,
+      onSearchSeries,
+      incrementGroups,
+      resetGroups,
+      onSearchGroups,
+      decrementAuthorsPage
     }) => {
       const router = useRouter();
       const [isExpanded, setExpanded] = useState(false);
       const onSetExpanded = () => setExpanded(!isExpanded);
       const { tags, types, languages, series, authors, groups } = search;
-
-      const handleMenuScroll = () => {
-        const wrappedElement = document.getElementsByClassName(
-          'rs-picker-check-menu rs-picker-check-menu-items'
-        )[0];
-        const endScrollCounter =
-          wrappedElement.scrollHeight -
-          (wrappedElement.clientHeight + Math.floor(wrappedElement.scrollTop));
-
-        if (endScrollCounter < 10 || endScrollCounter > 10) {
-          incrementTagPage();
-        }
-      };
-
-      const onTagEntering = () => {
-        const wrappedElement = document.getElementsByClassName(
-          'rs-picker-check-menu rs-picker-check-menu-items'
-        )[0];
-        wrappedElement.addEventListener('scroll', () =>
-          scrollTimeoutHandler(handleMenuScroll)
-        );
-      };
-
-      const onTagExited = () => {
-        document.removeEventListener('scroll', handleMenuScroll);
-      };
+      const tagScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
+        increment: incrementTagPage,
+        resetPage: resetTagPage
+      });
+      const authorScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
+        increment: incrementAuthorsPage,
+        decrement: decrementAuthorsPage,
+        resetPage: resetAuthorsPage
+      });
+      const seriesScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
+        increment: incrementSeriesPage,
+        decrement: resetSeriesPage
+      });
+      const groupsScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
+        increment: incrementGroups,
+        resetPage: resetGroups
+      });
 
       useEffect(() => {
         const searchData = buildSearchState(router, search.perPage);
@@ -125,14 +158,13 @@ export const SearchBar = createView()
                 menuClassName='rs-theme-dark'
                 placeholder='Tags...'
                 value={tags ?? []}
-                onEntered={onTagEntering}
                 onSearch={onSearchTag}
-                onExited={onTagExited}
                 onChange={onPaginationChangeFactory('tags')}
                 searchable
                 renderMenuItem={label => (
                   <span className='font-normal text-base'>{label}</span>
                 )}
+                {...tagScrollMultiselectProps}
               />
 
               <TagPicker
@@ -174,46 +206,64 @@ export const SearchBar = createView()
             <div className='flex lg:flex-row md:flex-row sm:flex-col xsm:flex-col w-full lg:mt-4 md:mt-4 sm:mt-0 xsm:mt-0 justify-center items-center mr-28'>
               {(isExpanded || !!series?.length) && (
                 <TagPicker
-                  data={seriesList}
+                  data={searchInputOptionsFactory(
+                    visibleSeries,
+                    seriesList,
+                    series
+                  )}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                   menuClassName='rs-theme-dark'
                   placeholder='Series...'
                   value={series ?? []}
                   onChange={onPaginationChangeFactory('series')}
+                  onSearch={onSearchSeries}
                   searchable
                   renderMenuItem={label => (
                     <span className='font-normal text-base'>{label}</span>
                   )}
+                  {...seriesScrollMultiselectProps}
                 />
               )}
 
               {(isExpanded || !!authors?.length) && (
                 <TagPicker
-                  data={authorsList}
+                  data={searchInputOptionsFactory(
+                    visibleAuthors,
+                    authorsList,
+                    authors
+                  )}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                   menuClassName='rs-theme-dark'
                   placeholder='Authors...'
                   value={authors ?? []}
+                  onSearch={onSearchAuthor}
                   onChange={onPaginationChangeFactory('authors')}
                   searchable
                   renderMenuItem={label => (
                     <span className='font-normal text-base'>{label}</span>
                   )}
+                  {...authorScrollMultiselectProps}
                 />
               )}
 
               {(isExpanded || !!groups?.length) && (
                 <TagPicker
-                  data={groupsList}
+                  data={searchInputOptionsFactory(
+                    visibleGroups,
+                    groupsList,
+                    groups
+                  )}
                   className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
                   menuClassName='rs-theme-dark'
                   placeholder='Groups...'
                   onChange={onPaginationChangeFactory('groups')}
                   value={groups ?? []}
+                  onSearch={onSearchGroups}
                   searchable
                   renderMenuItem={label => (
                     <span className='font-normal text-base'>{label}</span>
                   )}
+                  {...groupsScrollMultiselectProps}
                 />
               )}
             </div>

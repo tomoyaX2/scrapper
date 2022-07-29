@@ -22,6 +22,7 @@ type TagsState = {
 
 const getTagsFx = createEffect<void, Tag[]>();
 const incrementPageFx = createEvent();
+const resetTagPageFx = createEvent();
 const onSearchTagFx = createEvent<string>();
 
 const $tags = createStore<TagsState>({
@@ -43,6 +44,12 @@ $tags.on(incrementPageFx, state => ({
       : state.tagsList.slice(0, (state.page + 1) * state.perPage)
 }));
 
+$tags.on(resetTagPageFx, state => ({
+  ...state,
+  page: 1,
+  visibleTags: state.tagsList.slice(0, 1 * state.perPage)
+}));
+
 $tags.on(onSearchTagFx, (state, value) => {
   if (value) {
     return {
@@ -56,7 +63,7 @@ $tags.on(onSearchTagFx, (state, value) => {
     tagsList: state.tagsList,
     page: 1,
     perPage: 50,
-    visibleTags: state.tagsList.slice(0, state.page * state.perPage)
+    visibleTags: state.tagsList.slice(0, state.perPage)
   };
 });
 
@@ -75,4 +82,4 @@ $tags.on(getTagsFx.doneData, (state, tagsList) => ({
   visibleTags: tagsList.slice(0, state.perPage)
 }));
 
-export { $tags, getTagsFx, incrementPageFx, onSearchTagFx };
+export { $tags, getTagsFx, incrementPageFx, onSearchTagFx, resetTagPageFx };
