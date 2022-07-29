@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import ReactGA from 'react-ga4';
 import { Tag, Button } from 'rsuite';
 import {
   $albumPage,
@@ -30,12 +29,7 @@ const useEffects = (props: { fetchAlbum: Effect<string, AlbumEntity> }) => {
     router.query.id && props.fetchAlbum(router.query.id as string);
   }, [router.query.id]);
 
-  useEffect(() => {
-    ReactGA.send({
-      hitType: 'pageview',
-      page: window.location.pathname + window.location.search
-    });
-  }, []);
+  useEffect(() => {}, []);
 };
 
 const Album = createView()

@@ -43,7 +43,6 @@
     "patronum": "^1.8.2",
     "quicktype-core": "^6.0.71",
     "react-device-detect": "^2.1.2",
-    "react-ga4": "^1.4.1",
     "react-i18next": "^11.16.9",
     "rsuite": "^5.14.0",
     "yup": "^0.32.11"

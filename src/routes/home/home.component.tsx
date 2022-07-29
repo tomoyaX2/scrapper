@@ -2,7 +2,6 @@
 import { DefaultSeo as Seo } from 'next-seo';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import ReactGA from 'react-ga4';
 import { Loader } from 'rsuite';
 import { PageList } from '@features/pagination/ui';
 import { SearchBar } from '@features/search-bar';
@@ -18,12 +17,7 @@ const props = {
 };
 
 const useEffects = () => {
-  useEffect(() => {
-    ReactGA.send({
-      hitType: 'pageview',
-      page: window.location.pathname + window.location.search
-    });
-  }, []);
+  useEffect(() => {}, []);
 };
 
 const Home = createView()
