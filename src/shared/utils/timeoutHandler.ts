@@ -1,5 +1,3 @@
-import type { Search } from './pagination';
-
 let switchPageIndexTimeout = setTimeout(() => {});
 let searchTimeout = setTimeout(() => {});
 
@@ -7,12 +5,12 @@ let scrollTimeout = setTimeout(() => {});
 
 const switchPageTimeoutHandler = ({
   time,
-  onChangeReaderPage,
+  changeReaderPage,
   currentPage,
   totalPages
 }: {
   time: number;
-  onChangeReaderPage: (currentPage: number) => void;
+  changeReaderPage: (currentPage: number) => void;
   currentPage: number;
   totalPages: number;
 }) => {
@@ -21,10 +19,10 @@ const switchPageTimeoutHandler = ({
 
     if (totalPages > currentPage && typeof time === 'number') {
       switchPageIndexTimeout = setTimeout(() => {
-        onChangeReaderPage(currentPage + 1);
+        changeReaderPage(currentPage + 1);
         switchPageTimeoutHandler({
           time,
-          onChangeReaderPage,
+          changeReaderPage,
           currentPage: currentPage + 1,
           totalPages
         });
@@ -36,11 +34,10 @@ const switchPageTimeoutHandler = ({
   clearTimeout(switchPageIndexTimeout);
 };
 
-const searchTimeoutHandler =
-  (searchCallback: (data: Search) => void) => (data: Search) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => searchCallback(data), 1000);
-  };
+const searchTimeoutHandler = (searchCallback: () => void) => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => searchCallback(), 1000);
+};
 
 const scrollTimeoutHandler = (callback: () => void) => {
   clearTimeout(scrollTimeout);

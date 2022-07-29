@@ -3,73 +3,72 @@ import { DefaultSeo as Seo } from 'next-seo';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { Loader } from 'rsuite';
-import { PageList } from '@features/pagination/ui';
-import { SearchBar } from '@features/search-bar';
-import { $albumsState, resetAlbumStateFx } from '@entities/album';
-import { Album } from '@entities/album/ui';
+import { PageList } from 'src/components/pagination/ui';
 import { DEFAULT_SEO } from '@shared/config/seo';
-import { createView } from '@shared/lib/view';
-import { homePage } from './home.model';
+import { getTags } from 'src/store/tags';
+import { getTypes } from 'src/store/types';
+import { getLanguages } from 'src/store/languages';
+import { getSeries } from 'src/store/series';
+import { getAuthors } from 'src/store/authors';
+import { getGroups } from 'src/store/groups';
+import { SearchBar } from 'src/components/search-bar';
+import { Album } from 'src/components/album';
+import { useAppDispatch, useAppSelector } from 'src/store';
 
-const props = {
-  albumsState: $albumsState,
-  onResetAlbumState: resetAlbumStateFx
-};
+const Home = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { data, isLoading } = useAppSelector(state => state.albums);
+  console.log(data, 'data');
+  useEffect(() => {
+    dispatch(getTags());
+    dispatch(getTypes());
+    dispatch(getLanguages());
+    dispatch(getSeries());
+    dispatch(getAuthors());
+    dispatch(getGroups());
+  }, []);
 
-const useEffects = () => {
-  useEffect(() => {}, []);
-};
+  const router = useRouter();
 
-const Home = createView()
-  .props(props)
-  .enter(homePage.enter)
-  .effect(useEffects)
-  .view(({ albumsState: { data, isLoading }, onResetAlbumState }) => {
-    const router = useRouter();
+  if (router.isReady) {
+    return (
+      <>
+        <Seo
+          {...DEFAULT_SEO}
+          additionalMetaTags={[
+            {
+              property: 'dc:keywords',
+              content:
+                'hentai, manga, manhwa, adult manga, xmanga adult manhwa, hentai manga, hentai manhwa'
+            }
+          ]}
+          canonical='https://xmanga.org'
+        />
 
-    if (router.isReady) {
-      return (
-        <>
-          <Seo
-            {...DEFAULT_SEO}
-            additionalMetaTags={[
-              {
-                property: 'dc:keywords',
-                content:
-                  'hentai, manga, manhwa, adult manga, xmanga adult manhwa, hentai manga, hentai manhwa'
-              }
-            ]}
-            canonical='https://xmanga.org'
-          />
+        <div className='flex flex-col'>
+          <SearchBar />
 
-          <div className='flex flex-col'>
-            <SearchBar />
-
-            {isLoading ? (
-              <div className='fixed top-loader left-2/4'>
-                <Loader size='md' />
+          {isLoading ? (
+            <div className='fixed top-loader left-2/4'>
+              <Loader size='md' />
+            </div>
+          ) : (
+            <div className='flex flex-col items-center justify-center w-full'>
+              <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
+                {data.map(album => (
+                  <Album album={album} key={album.id} />
+                ))}
               </div>
-            ) : (
-              <div className='flex flex-col items-center justify-center w-full'>
-                <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
-                  {data.map(album => (
-                    <Album
-                      album={album}
-                      key={album.id}
-                      onResetAlbumState={onResetAlbumState}
-                    />
-                  ))}
-                </div>
 
-                {data.length ? <PageList /> : null}
-              </div>
-            )}
-          </div>
-        </>
-      );
-    }
+              {data.length ? <PageList /> : null}
+            </div>
+          )}
+        </div>
+      </>
+    );
+  }
 
-    return <div />;
-  });
+  return <div />;
+};
 
 export { Home };

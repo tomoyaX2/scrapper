@@ -4,13 +4,6 @@ module.exports = {
 
     'next/core-web-vitals',
 
-    'plugin:effector/recommended',
-    'plugin:effector/scope',
-
-    '@feature-sliced',
-    '@feature-sliced/eslint-config/rules/public-api/lite',
-    '@feature-sliced/eslint-config/rules/import-order',
-
     'prettier/@typescript-eslint',
 
     'plugin:json/recommended'
@@ -22,7 +15,6 @@ module.exports = {
     '@typescript-eslint',
     'react',
     'prettier',
-    'effector',
     'import',
     'unused-imports'
   ],
@@ -93,126 +85,7 @@ module.exports = {
 
     'use-isnan': ['error', { enforceForSwitchCase: true }],
 
-    'padding-line-between-statements': [
-      'error',
-
-      {
-        blankLine: 'any',
-        prev: 'import',
-        next: 'import'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'block'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'block-like'
-      },
-
-      {
-        blankLine: 'never',
-        prev: 'export',
-        next: 'export'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'block-like'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'function'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'function',
-        next: '*'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'const',
-        next: 'let'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'let',
-        next: 'const'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'const',
-        next: 'let'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'return'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'try'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'try',
-        next: '*'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'switch'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'switch',
-        next: '*'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'while'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'while',
-        next: '*'
-      },
-
-      {
-        blankLine: 'always',
-        prev: '*',
-        next: 'for'
-      },
-
-      {
-        blankLine: 'always',
-        prev: 'for',
-        next: '*'
-      }
-    ],
-
     'import/no-internal-modules': 'off',
-    'import/group-exports': 'error',
     'import/exports-last': 'error',
     'import/export': 'error',
     'import/no-deprecated': 'error',
@@ -262,7 +135,6 @@ module.exports = {
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     '@typescript-eslint/unified-signatures': 'error',
     '@typescript-eslint/return-await': 'error',
-    '@typescript-eslint/consistent-type-exports': 'error',
     '@typescript-eslint/no-redeclare': 'error',
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/no-base-to-string': 'error',
@@ -296,14 +168,6 @@ module.exports = {
       {
         assertionStyle: 'as',
         objectLiteralTypeAssertions: 'allow-as-parameter'
-      }
-    ],
-
-    '@typescript-eslint/consistent-type-imports': [
-      'error',
-      {
-        prefer: 'type-imports',
-        disallowTypeAnnotations: true
       }
     ],
 
@@ -443,16 +307,6 @@ module.exports = {
       {
         namedComponents: 'arrow-function',
         unnamedComponents: 'arrow-function'
-      }
-    ],
-
-    'react/jsx-handler-names': [
-      'error',
-      {
-        eventHandlerPrefix: 'on',
-        eventHandlerPropPrefix: 'on',
-        checkLocalVariables: true,
-        checkInlineFunction: true
       }
     ]
   }

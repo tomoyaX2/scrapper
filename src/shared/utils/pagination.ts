@@ -43,11 +43,7 @@ const buildPaginationString = (search: Search) => {
 };
 
 const paginationChangeFactory =
-  (
-    router: NextRouter,
-    setSearch: (payload: Search | undefined) => void,
-    search: Search
-  ) =>
+  (router: NextRouter, setSearch: (payload: Search) => void, search: Search) =>
   (key: string) =>
   (data: string[] | string | null) => {
     setSearch({ ...search, [key]: data, shouldResetPage: true });
