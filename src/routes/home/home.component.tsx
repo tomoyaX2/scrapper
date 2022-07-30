@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 const Home = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { data, isLoading } = useAppSelector(state => state.albums);
-  console.log(data, 'data');
+
   useEffect(() => {
     dispatch(getTags());
     dispatch(getTypes());

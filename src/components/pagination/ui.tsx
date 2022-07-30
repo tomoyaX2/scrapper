@@ -15,9 +15,7 @@ const PageList = (): JSX.Element => {
   const onChangePageOptions = (page: number) => {
     dispatch(resetAlbumState());
     dispatch(changeSearchState({ ...search, page, perPage: 20 }));
-    router.replace(
-      `/${buildPaginationString({ ...search, page, perPage: 20 })}`
-    );
+    router.push(`/${buildPaginationString({ ...search, page, perPage: 20 })}`);
   };
 
   return (

@@ -47,7 +47,7 @@ const paginationChangeFactory =
   (key: string) =>
   (data: string[] | string | null) => {
     setSearch({ ...search, [key]: data, shouldResetPage: true });
-    router.replace(
+    router.push(
       `/${buildPaginationString({
         ...search,
         shouldResetPage: true,
@@ -63,8 +63,10 @@ const searchInputOptionsFactory = (
 ) => {
   if (activeIds) {
     const itemsToAdd = allItems.filter(el => activeIds.includes(el.value));
-
-    return [...itemsToAdd, ...visibleItems];
+    const restItems = visibleItems.filter(
+      el => !itemsToAdd.some(existsItem => existsItem.value === el.value)
+    );
+    return [...itemsToAdd, ...restItems];
   }
 
   return visibleItems;
@@ -94,7 +96,6 @@ const buildSearchState = (router: NextRouter, perPage: number) => {
       }
 
       case 'sortBy': {
-        console.log(routerData[0], 'routerData[0]');
         initialSearch.sortBy = routerData as
           | 'rate'
           | 'views'

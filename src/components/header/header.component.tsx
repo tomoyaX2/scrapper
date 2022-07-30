@@ -23,7 +23,7 @@ const Header = (): JSX.Element => {
       dispatch(
         changeSearchState({ page: 1, perPage: 20, shouldResetPage: false })
       );
-      router.replace(`/?page=1`);
+      router.push(`/?page=1`);
     }, 800);
   };
 

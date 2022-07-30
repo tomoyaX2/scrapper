@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { backendUrl } from '@shared/api';
+import { keys } from '@shared/utils/keys';
 import axios from 'axios';
 import { RootState } from '..';
 import { AlbumsState, AlbumResponse, Search } from './types';
@@ -39,10 +40,13 @@ export const albumsSlice = createSlice({
       state.isLoading = true;
     },
     changeSearchState: (state, action: PayloadAction<Search>) => {
+      for (const searchKey of keys(state.search)) {
+        //@ts-expect-error cause of i need
+        state.search[searchKey] = null;
+      }
       state.search.page = 1;
       state.search.perPage = 20;
       state.search.shouldResetPage = false;
-
       const searchKeys = Object.keys(
         action.payload
       ) as unknown as (keyof Search)[];

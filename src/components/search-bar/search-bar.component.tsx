@@ -138,13 +138,11 @@ export const SearchBar = (): JSX.Element => {
     };
     searchTimeoutHandler(callback);
   }, [router.query]);
-
   const onPaginationChangeFactory = paginationChangeFactory(
     router,
     data => dispatch(changeSearchState(data)),
     search
   );
-
   return (
     <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
       <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col md:items-center sm:items-start xsm:items-start w-full flex-wrap'>

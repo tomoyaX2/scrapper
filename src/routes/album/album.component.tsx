@@ -8,8 +8,6 @@ import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { downloadAlbum, getAlbum } from 'src/store/album';
-import { Search } from '@shared/utils/pagination';
-import { changeSearchState } from 'src/store/albums';
 
 const Album = (): JSX.Element => {
   const router = useRouter();
@@ -20,23 +18,10 @@ const Album = (): JSX.Element => {
     router.query.id && dispatch(getAlbum(router.query.id as string));
   }, [router.query.id]);
 
-  const onRedirect = (ids: string | string[], key: keyof Search) => () => {
-    const targetString = Array.isArray(ids) ? ids.join(',') : ids;
-    dispatch(
-      changeSearchState({
-        [key]: [ids],
-        page: 1,
-        perPage: 20,
-        shouldResetPage: false
-      })
-    );
-    router.replace(`/?page=1&${key}=${targetString}`);
-  };
-
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
   };
-  console.log(album);
+
   return album?.id ? (
     <>
       <Seo
@@ -66,12 +51,16 @@ const Album = (): JSX.Element => {
                 <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                   <span className='text-sm mr-4 w-20'>Language:</span>
 
-                  <Tag
-                    className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'
-                    onClick={onRedirect(album.language.id, 'languages')}
+                  <Link
+                    href={`/?page=1&languages=${album.language.id}`}
+                    passHref
                   >
-                    {album.language.name}
-                  </Tag>
+                    <a target='_blank'>
+                      <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                        {album.language.name}
+                      </Tag>
+                    </a>
+                  </Link>
                 </div>
               ) : null}
 
@@ -79,12 +68,13 @@ const Album = (): JSX.Element => {
                 <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                   <span className='text-sm mr-4 w-20'>Type:</span>
 
-                  <Tag
-                    className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'
-                    onClick={onRedirect(album.type.id, 'types')}
-                  >
-                    {album.type.name}
-                  </Tag>
+                  <Link href={`/?page=1&types=${album.type.id}`} passHref>
+                    <a target='_blank'>
+                      <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                        {album.type.name}
+                      </Tag>
+                    </a>
+                  </Link>
                 </div>
               ) : null}
 
@@ -94,13 +84,17 @@ const Album = (): JSX.Element => {
 
                   <div className='flex items-center flex-wrap max-w-tags'>
                     {album.tags.map(el => (
-                      <Tag
-                        className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'
-                        onClick={onRedirect(el.id, 'tags')}
+                      <Link
+                        href={`/?page=1&tags=${el.id}`}
+                        passHref
                         key={el.id}
                       >
-                        {el.name}
-                      </Tag>
+                        <a target='_blank'>
+                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                            {el.name}
+                          </Tag>
+                        </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -112,13 +106,17 @@ const Album = (): JSX.Element => {
 
                   <div className='flex items-center flex-wrap'>
                     {album.authors.map(el => (
-                      <Tag
-                        className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize rs-theme-dark'
+                      <Link
+                        href={`/?page=1&authors=${el.id}`}
+                        passHref
                         key={el.id}
-                        onClick={onRedirect(el.id, 'authors')}
                       >
-                        {el.name}
-                      </Tag>
+                        <a target='_blank'>
+                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                            {el.name}
+                          </Tag>
+                        </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -130,13 +128,17 @@ const Album = (): JSX.Element => {
 
                   <div className='flex items-center flex-wrap'>
                     {album.series.map(el => (
-                      <Tag
-                        className='cursor-pointer mr-1 bg-third hover:bg-third-hover rs-theme-dark'
-                        onClick={onRedirect(el.id, 'series')}
+                      <Link
+                        href={`/?page=1&series=${el.id}`}
+                        passHref
                         key={el.id}
                       >
-                        {el.name}
-                      </Tag>
+                        <a target='_blank'>
+                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                            {el.name}
+                          </Tag>
+                        </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -146,12 +148,13 @@ const Album = (): JSX.Element => {
                 <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 rs-theme-dark'>
                   <span className='text-sm mr-4 w-20'>Group:</span>
 
-                  <Tag
-                    className='cursor-pointer mr-1 bg-third hover:bg-third-hover rs-theme-dark'
-                    onClick={onRedirect(album.group.id, 'groups')}
-                  >
-                    {album.group?.name}
-                  </Tag>
+                  <Link href={`/?page=1&types=${album.group.id}`} passHref>
+                    <a target='_blank'>
+                      <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover rs-theme-dark'>
+                        {album.group?.name}
+                      </Tag>
+                    </a>
+                  </Link>
                 </div>
               ) : null}
 
