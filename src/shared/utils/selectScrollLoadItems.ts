@@ -1,7 +1,29 @@
+import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 import {
   scrollTimeoutHandler,
   scrollTimeout
 } from '@shared/utils/timeoutHandler';
+import { AppDispatch, RootState } from 'src/store';
+import {
+  incrementAuthorsPage,
+  decrementAuthorsPage,
+  resetAuthorsPage
+} from 'src/store/authors';
+import {
+  incrementGroupsPage,
+  decrementGroupsPage,
+  resetGroupsPage
+} from 'src/store/groups';
+import {
+  incrementSeriesPage,
+  decrementSeriesPage,
+  resetSeriesPage
+} from 'src/store/series';
+import {
+  incrementTagsPage,
+  decrementTagsPage,
+  resetTagsPage
+} from 'src/store/tags';
 
 const useMultiselectUpdateItemsInScroll = ({
   increment,
@@ -62,4 +84,71 @@ const useMultiselectUpdateItemsInScroll = ({
   return { onEnter, onExit };
 };
 
-export { useMultiselectUpdateItemsInScroll };
+const buildMultiselectScrollArgs = ({
+  dispatch,
+  increment,
+  decrement,
+  reset
+}: {
+  dispatch: AppDispatch;
+  increment: ActionCreatorWithoutPayload;
+  decrement: ActionCreatorWithoutPayload;
+  reset: ActionCreatorWithoutPayload;
+}) => ({
+  increment: () => {
+    dispatch(increment());
+  },
+  decrement: () => {
+    const data = dispatch(decrement()) as unknown as {
+      state: RootState;
+    };
+    return data.state.tags.page - 1;
+  },
+  resetPage: () => {
+    dispatch(reset());
+  }
+});
+
+const useMultiselectScrollPropsFactory = (dispatch: AppDispatch) => {
+  const tagScrollMultiselectProps = useMultiselectUpdateItemsInScroll(
+    buildMultiselectScrollArgs({
+      dispatch,
+      increment: incrementTagsPage,
+      decrement: decrementTagsPage,
+      reset: resetTagsPage
+    })
+  );
+  const authorScrollMultiselectProps = useMultiselectUpdateItemsInScroll(
+    buildMultiselectScrollArgs({
+      dispatch,
+      increment: incrementAuthorsPage,
+      decrement: decrementAuthorsPage,
+      reset: resetAuthorsPage
+    })
+  );
+  const seriesScrollMultiselectProps = useMultiselectUpdateItemsInScroll(
+    buildMultiselectScrollArgs({
+      dispatch,
+      increment: incrementSeriesPage,
+      decrement: decrementSeriesPage,
+      reset: resetSeriesPage
+    })
+  );
+  const groupsScrollMultiselectProps = useMultiselectUpdateItemsInScroll(
+    buildMultiselectScrollArgs({
+      dispatch,
+      increment: incrementGroupsPage,
+      decrement: decrementGroupsPage,
+      reset: resetGroupsPage
+    })
+  );
+
+  return {
+    groupsScrollMultiselectProps,
+    seriesScrollMultiselectProps,
+    authorScrollMultiselectProps,
+    tagScrollMultiselectProps
+  };
+};
+
+export { useMultiselectScrollPropsFactory };

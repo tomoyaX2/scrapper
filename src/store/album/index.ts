@@ -3,7 +3,7 @@ import { backendUrl } from '@shared/api';
 import { keys } from '@shared/utils/keys';
 import axios from 'axios';
 import { RootState } from '..';
-import { AlbumState } from './types';
+import { AlbumState, Image } from './types';
 
 const initialState: AlbumState = {
   id: '',
@@ -28,21 +28,40 @@ export const getAlbum = createAsyncThunk(
   }
 );
 
+export const getAlbumImages = createAsyncThunk(
+  'get images',
+  async ({ albumId }: { albumId: string; page: number }) => {
+    const res = await axios.get<{ data: Image[] }>(
+      `${backendUrl}/image?albumId=${albumId}`
+    );
+    return res.data.data;
+  }
+);
+
 export const albumsSlice = createSlice({
   name: 'albums',
   initialState,
   reducers: {},
-  extraReducers: builder =>
+  extraReducers: builder => {
     builder.addCase(
       getAlbum.fulfilled,
       (state, action: PayloadAction<AlbumState>) => {
         const fields = keys(action.payload);
         for (const field of fields) {
-          //@ts-expect-error shit happens
-          state[field] = action.payload[field];
+          if (field !== 'images') {
+            //@ts-expect-error shit happens
+            state[field] = action.payload[field];
+          }
         }
       }
-    )
+    );
+    builder.addCase(
+      getAlbumImages.fulfilled,
+      (state, action: PayloadAction<Image[]>) => {
+        state.images = action.payload;
+      }
+    );
+  }
 });
 export default albumsSlice.reducer;
 

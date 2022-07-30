@@ -7,35 +7,15 @@ import {
   paginationChangeFactory,
   searchInputOptionsFactory
 } from '@shared/utils/pagination';
-import { useMultiselectUpdateItemsInScroll } from '@shared/utils/selectScrollLoadItems';
-import { RootState, useAppDispatch, useAppSelector } from 'src/store';
-
+import { useMultiselectScrollPropsFactory } from '@shared/utils/selectScrollLoadItems';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { optionsSelector } from './selectors';
 import { searchTimeoutHandler } from '@shared/utils/timeoutHandler';
 import { changeSearchState, getAlbums } from 'src/store/albums';
-import {
-  decrementTagsPage,
-  incrementTagsPage,
-  onSearchTags,
-  resetTagsPage
-} from 'src/store/tags';
-import {
-  decrementSeriesPage,
-  incrementSeriesPage,
-  onSearchSeries,
-  resetSeriesPage
-} from 'src/store/series';
-import {
-  decrementAuthorsPage,
-  incrementAuthorsPage,
-  onSearchAuthor,
-  resetAuthorsPage
-} from 'src/store/authors';
-import {
-  decrementGroupsPage,
-  incrementGroupsPage,
-  onSearchGroup,
-  resetGroupsPage
-} from 'src/store/groups';
+import { onSearchTags } from 'src/store/tags';
+import { onSearchSeries } from 'src/store/series';
+import { onSearchAuthor } from 'src/store/authors';
+import { onSearchGroup } from 'src/store/groups';
 
 const selectData = [
   { label: 'Rate', value: 'rate' },
@@ -44,15 +24,22 @@ const selectData = [
 ];
 
 export const SearchBar = (): JSX.Element => {
-  const { visibleTags, tagsList } = useAppSelector(state => state.tags);
-  const { typesList } = useAppSelector(state => state.types);
-  const { languagesList } = useAppSelector(state => state.languages);
-  const { seriesList, visibleSeries } = useAppSelector(state => state.series);
-  const { authorsList, visibleAuthors } = useAppSelector(
-    state => state.authors
-  );
-  const { groupsList, visibleGroups } = useAppSelector(state => state.groups);
-  const { search } = useAppSelector(state => state.albums);
+  const {
+    tagsSelector,
+    typesSelector,
+    languagesSelector,
+    seriesSelector,
+    authorsSelector,
+    groupsSelector,
+    albumsSelector
+  } = useAppSelector(optionsSelector);
+  const { visibleTags, tagsList } = tagsSelector;
+  const { typesList } = typesSelector;
+  const { languagesList } = languagesSelector;
+  const { seriesList, visibleSeries } = seriesSelector;
+  const { authorsList, visibleAuthors } = authorsSelector;
+  const { groupsList, visibleGroups } = groupsSelector;
+  const { search } = albumsSelector;
 
   const dispatch = useAppDispatch();
 
@@ -61,62 +48,12 @@ export const SearchBar = (): JSX.Element => {
   const onSetExpanded = () => setExpanded(!isExpanded);
   const { tags, types, languages, series, authors, groups } = search;
 
-  const tagScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
-    increment: () => {
-      dispatch(incrementTagsPage());
-    },
-    decrement: () => {
-      const data = dispatch(decrementTagsPage()) as unknown as {
-        state: RootState;
-      };
-      return data.state.tags.page - 1;
-    },
-    resetPage: () => {
-      dispatch(resetTagsPage());
-    }
-  });
-  const authorScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
-    increment: () => {
-      dispatch(incrementAuthorsPage());
-    },
-    decrement: () => {
-      const data = dispatch(decrementAuthorsPage()) as unknown as {
-        state: RootState;
-      };
-      return data.state.tags.page - 1;
-    },
-    resetPage: () => {
-      dispatch(resetAuthorsPage());
-    }
-  });
-  const seriesScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
-    increment: () => {
-      dispatch(incrementSeriesPage());
-    },
-    decrement: () => {
-      const data = dispatch(decrementSeriesPage()) as unknown as {
-        state: RootState;
-      };
-      return data.state.tags.page - 1;
-    },
-    resetPage: () => {
-      dispatch(resetSeriesPage());
-    }
-  });
-  const groupsScrollMultiselectProps = useMultiselectUpdateItemsInScroll({
-    increment: () => {
-      dispatch(incrementGroupsPage());
-    },
-    decrement: () => {
-      const data = dispatch(decrementGroupsPage()) as unknown as {
-        state: RootState;
-      };
-      return data.state.tags.page - 1;
-    },
-    resetPage: () => {
-      dispatch(resetGroupsPage());
-    }
-  });
+  const {
+    groupsScrollMultiselectProps,
+    seriesScrollMultiselectProps,
+    authorScrollMultiselectProps,
+    tagScrollMultiselectProps
+  } = useMultiselectScrollPropsFactory(dispatch);
 
   useEffect(() => {
     const searchData = buildSearchState(router, search.perPage);
@@ -138,11 +75,13 @@ export const SearchBar = (): JSX.Element => {
     };
     searchTimeoutHandler(callback);
   }, [router.query]);
+
   const onPaginationChangeFactory = paginationChangeFactory(
     router,
     data => dispatch(changeSearchState(data)),
     search
   );
+
   return (
     <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
       <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col md:items-center sm:items-start xsm:items-start w-full flex-wrap'>

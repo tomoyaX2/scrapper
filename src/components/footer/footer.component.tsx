@@ -3,7 +3,7 @@ const Footer = (): JSX.Element => (
     <span className='text-sm'>Support E-mail: xHentaisupp@gmail.com </span>
 
     <span className='text-xs'>
-      Feel free to write for questions, bug reports or porposals
+      Feel free to write for questions, bug reports or proposals
     </span>
   </footer>
 );

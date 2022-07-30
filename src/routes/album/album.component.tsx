@@ -7,7 +7,7 @@ import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { downloadAlbum, getAlbum } from 'src/store/album';
+import { downloadAlbum, getAlbum, getAlbumImages } from 'src/store/album';
 
 const Album = (): JSX.Element => {
   const router = useRouter();
@@ -16,6 +16,8 @@ const Album = (): JSX.Element => {
 
   useEffect(() => {
     router.query.id && dispatch(getAlbum(router.query.id as string));
+    router.query.id &&
+      dispatch(getAlbumImages({ albumId: router.query.id as string, page: 1 }));
   }, [router.query.id]);
 
   const onDownloadAlbum = () => {
