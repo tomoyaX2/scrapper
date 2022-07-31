@@ -18,8 +18,8 @@ import { onSearchAuthor } from 'src/store/authors';
 import { onSearchGroup } from 'src/store/groups';
 
 const selectData = [
-  { label: 'Rate', value: 'rate' },
-  { label: 'Views', value: 'views' },
+  // { label: 'Rate', value: 'rate' },
+  // { label: 'Views', value: 'views' },
   { label: 'Total Images', value: 'totalImages' }
 ];
 

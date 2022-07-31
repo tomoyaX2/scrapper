@@ -1,13 +1,18 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { SelectPicker, Input } from 'rsuite';
 import { Arrow } from 'src/components/icons/arrow';
-import { switchPageTimeoutHandler } from '@shared/utils/timeoutHandler';
+import {
+  switchPageTimeoutHandler,
+  switchPageIndexTimeout
+} from '@shared/utils/timeoutHandler';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { getAlbum } from 'src/store/album';
+import { getReaderImages } from 'src/store/reader';
 import { changeReaderPage } from 'src/store/reader';
+import { Image } from 'src/components/image';
+import { NextSeo } from 'next-seo';
+import { getAlbum } from 'src/store/album';
 
 let clickTimeout = setTimeout(() => {});
 
@@ -26,16 +31,17 @@ const Reader = (): JSX.Element => {
   const album = useAppSelector(state => state.album);
   const [switchTimer, setSwitchTimer] = useState<number>(0);
 
+  useEffect(() => () => clearTimeout(switchPageIndexTimeout), []);
+
   useEffect(() => {
+    router.query.id && dispatch(getReaderImages(router.query.id as string));
     router.query.id && dispatch(getAlbum(router.query.id as string));
   }, [router.query.id]);
 
   useEffect(() => {
     if (images?.length) {
-      dispatch(
-        changeReaderPage(
-          images?.findIndex(el => el.id === router.query.readerId) + 1
-        )
+      handleChangePage(
+        images?.findIndex(el => el.id === router.query.readerId)
       );
     }
   }, [router.query.readerId, images]);
@@ -44,27 +50,28 @@ const Reader = (): JSX.Element => {
     return <div />;
   }
 
-  const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+  const handleChangePage = (page: number) => {
+    router.push(`/album/${album.id}/reader/${images[page]?.id}`);
+    dispatch(changeReaderPage(page));
+  };
+
+  const prevPage = !!currentPage ? currentPage - 1 : 0;
   const nextPage =
     currentPage < images.length - 1 ? currentPage + 1 : currentPage;
 
   const onTouchEvent = onHandleTouch(
     e =>
       e &&
-      dispatch(
-        changeReaderPage(
-          //@ts-expect-error cause of i want
-          e.target?.offsetWidth / 2 < e.touches[0].clientX ? nextPage : prevPage
-        )
+      handleChangePage(
+        //@ts-expect-error cause of i want
+        e.target?.offsetWidth / 2 < e.touches[0].clientX ? nextPage : prevPage
       )
   );
 
   const onClickEvent = onHandleTouch(e =>
-    dispatch(
-      changeReaderPage(
-        //@ts-expect-error cause of i want
-        e.target?.offsetWidth / 2 < e.pageX ? nextPage : prevPage
-      )
+    handleChangePage(
+      //@ts-expect-error cause of i want
+      e.target?.offsetWidth / 2 < e.pageX ? nextPage : prevPage
     )
   );
 
@@ -79,70 +86,70 @@ const Reader = (): JSX.Element => {
 
     switchPageTimeoutHandler({
       time,
-      changeReaderPage: (page: number) => {
-        dispatch(changeReaderPage(page));
-      },
+      changeReaderPage: handleChangePage,
       currentPage,
-      totalPages: images.length
+      totalPages: images.length - 1
     });
     setSwitchTimer(time);
   };
-
-  const isGameCG = album?.type?.name === 'game CG';
-
   return (
-    <div className='w-full'>
-      <div className='flex flex-row bg-primary w-full h-16 items-center md:ustify-center sm:justify-center xsm:justify-start'>
-        <Arrow
-          fill={currentPage > 1 ? 'white' : 'gray'}
-          className='rotate-180 md:flex sm:hidden xsm:hidden'
-          onClick={() => dispatch(changeReaderPage(prevPage))}
-        />
+    <>
+      <NextSeo noindex />
 
-        <SelectPicker
-          data={pagesList}
-          value={currentPage}
-          className='rs-theme-dark md:w-32 sm:w-20 xsm:w-24 px-4'
-          menuClassName='rs-theme-dark'
-          cleanable={false}
-          onChange={changeReaderPage}
-        />
+      <div className='w-full'>
+        <div className='flex flex-row bg-primary w-full h-16 items-center md:ustify-center sm:justify-center xsm:justify-start'>
+          <Arrow
+            fill={!!currentPage ? 'white' : 'gray'}
+            className='rotate-180 md:flex sm:hidden xsm:hidden'
+            onClick={() => handleChangePage(prevPage)}
+          />
 
-        <Arrow
-          fill={currentPage <= images.length - 1 ? 'white' : 'gray'}
-          className='cursor-pointer md:flex sm:hidden xsm:hidden'
-          onClick={() => changeReaderPage(nextPage)}
-        />
+          <SelectPicker
+            data={pagesList}
+            value={currentPage}
+            className='rs-theme-dark md:w-32 sm:w-20 xsm:w-24 px-4'
+            menuClassName='rs-theme-dark'
+            cleanable={false}
+            onChange={handleChangePage}
+          />
 
-        <span className='text-sm text-white-300 ml-2 mr-2'>
-          Switch page every
-        </span>
+          <Arrow
+            fill={currentPage < images.length - 1 ? 'white' : 'gray'}
+            className='cursor-pointer md:flex sm:hidden xsm:hidden'
+            onClick={() => handleChangePage(nextPage)}
+          />
 
-        <Input
-          onChange={onTimerValueChange}
-          value={switchTimer}
-          className='md:w-20 sm:w-12 xsm:w-12 h-19 rs-theme-dark'
-        />
+          <span className='text-sm text-white-300 ml-2 mr-2'>
+            Switch page every
+          </span>
 
-        <span className='text-sm text-white-300 ml-2'>sec</span>
+          <Input
+            onChange={onTimerValueChange}
+            value={switchTimer}
+            className='md:w-20 sm:w-12 xsm:w-12 h-19 rs-theme-dark'
+          />
+
+          <span className='text-sm text-white-300 ml-2'>sec</span>
+        </div>
+
+        <div
+          className='flex items-center justify-center cursor-pointer mt-4'
+          //@ts-expect-error cause of i want
+          onTouchStart={onTouchEvent}
+          //@ts-expect-error cause of i want
+          onClick={onClickEvent}
+        >
+          <Image
+            url={images[currentPage]?.url}
+            width={images[currentPage]?.width}
+            height={images[currentPage]?.height}
+            alt='preview'
+            horizontalSizes={{ height: 800, width: 1200 }}
+            verticalSizes={{ height: 900, width: 800 }}
+          />
+        </div>
       </div>
-
-      <div
-        className='flex items-center justify-center cursor-pointer mt-4'
-        //@ts-expect-error cause of i want
-        onTouchStart={onTouchEvent}
-        //@ts-expect-error cause of i want
-        onClick={onClickEvent}
-      >
-        <Image
-          src={images[currentPage - 1]?.url}
-          loader={({ src, width }) => `${src}?w=${width}`}
-          alt='preview'
-          width={isGameCG ? 1100 : 700}
-          height={900}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

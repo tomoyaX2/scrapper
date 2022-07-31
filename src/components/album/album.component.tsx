@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { cdnUrl } from '@shared/api';
@@ -8,9 +7,19 @@ import { ImageIcon } from 'src/components/icons/image';
 import type { AlbumProps } from './album.props';
 import { useAppDispatch } from 'src/store';
 import { resetAlbumState } from 'src/store/albums';
+import { Image } from 'src/components/image';
 
 const Album = ({
-  album: { id, language, title, type, preview, totalImages, path }
+  album: {
+    id,
+    language,
+    title,
+    type,
+    preview,
+    totalImages,
+    path,
+    previewOrientation
+  }
 }: AlbumProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const [isHovered, setHovered] = React.useState<boolean>(false);
@@ -41,12 +50,14 @@ const Album = ({
           onMouseLeave={onHover(false)}
         >
           <Image
-            src={imagePath}
+            url={imagePath}
             onError={onImageError}
-            loader={({ src, width }) => `${src}?w=${width}`}
+            previewOrientation={previewOrientation}
             alt='preview'
-            width={300}
-            height={300}
+            width={0}
+            height={0}
+            horizontalSizes={{ height: 200, width: 300 }}
+            verticalSizes={{ height: 300, width: 300 }}
           />
 
           <div className='flex items-center justify-start w-full mt-1 px-4'>

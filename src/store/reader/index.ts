@@ -2,20 +2,21 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { backendUrl } from '@shared/api';
 import axios from 'axios';
 import { RootState } from '..';
-import { AlbumState } from '../album/types';
-import { ReaderPage } from './types';
+import { ReaderPage, Image } from './types';
 
 const initialState: ReaderPage = {
-  currentPage: 1,
+  currentPage: 0,
   images: [],
   pagesList: []
 };
 
-export const getAlbum = createAsyncThunk(
-  'get album',
+export const getReaderImages = createAsyncThunk(
+  'get images list',
   async (albumId: string) => {
-    const res = await axios.get<AlbumState>(`${backendUrl}/albums/${albumId}`);
-    return res.data;
+    const res = await axios.get<{ data: Image[] }>(
+      `${backendUrl}/image?albumId=${albumId}`
+    );
+    return res.data.data;
   }
 );
 
@@ -29,16 +30,16 @@ export const readerSlice = createSlice({
   },
   extraReducers: builder =>
     builder.addCase(
-      getAlbum.fulfilled,
-      (state, action: PayloadAction<AlbumState>) => {
-        state.images = action.payload.images;
+      getReaderImages.fulfilled,
+      (state, action: PayloadAction<Image[]>) => {
+        state.images = action.payload;
 
-        state.pagesList = Array.from(
-          Array(action.payload?.images?.length).keys()
-        ).map(key => ({
-          label: key + 1,
-          value: key + 1
-        }));
+        state.pagesList = Array.from(Array(action.payload?.length).keys()).map(
+          key => ({
+            label: key + 1,
+            value: key
+          })
+        );
       }
     )
 });

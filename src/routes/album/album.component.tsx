@@ -1,5 +1,4 @@
 import { DefaultSeo as Seo } from 'next-seo';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -8,6 +7,7 @@ import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { downloadAlbum, getAlbum, getAlbumImages } from 'src/store/album';
+import { Image } from 'src/components/image';
 
 const Album = (): JSX.Element => {
   const router = useRouter();
@@ -24,24 +24,26 @@ const Album = (): JSX.Element => {
     album && downloadAlbum(album);
   };
 
-  return album?.id ? (
+  return album?.id && album.images?.length ? (
     <>
       <Seo
         {...TITLE_SEO({
           title: album?.title,
           language: album?.language?.name ?? ''
         })}
+        canonical={window.location.href}
       />
 
       <div className='flex flex-col items-center justify-start w-full'>
         <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
-          <div className='flex items-center justify-center lg:w-84 md:w-full sm:w-full xsm:w-full h-100'>
+          <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full h-100'>
             <Image
-              src={album.images[0]?.url}
-              loader={({ src, width }) => `${src}?w=${width}`}
+              url={album.images[0]?.url}
+              width={album.images[0]?.width}
+              height={album.images[0]?.height}
               alt='preview'
-              width={350}
-              height={400}
+              horizontalSizes={{ height: 400, width: 600 }}
+              verticalSizes={{ height: 400, width: 320 }}
             />
           </div>
 
@@ -189,12 +191,12 @@ const Album = (): JSX.Element => {
               >
                 <div className='px-4 py-2 cursor-pointer'>
                   <Image
-                    src={el?.url}
-                    loader={({ src, width }) => `${src}?w=${width}`}
+                    url={el?.url}
+                    width={el.width}
+                    height={el.height}
                     alt={`image-${el.id}`}
-                    width={200}
-                    height={250}
-                    key={el.id}
+                    horizontalSizes={{ height: 200, width: 450 }}
+                    verticalSizes={{ height: 300, width: 200 }}
                     className='px-4 py-2'
                   />
                 </div>

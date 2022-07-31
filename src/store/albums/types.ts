@@ -35,6 +35,7 @@ export type Album = {
   authors: { name: string; id: string }[];
   group: { name: string; id: string };
   preview?: string;
+  previewOrientation?: 'horizontal' | 'vertical';
   totalImages?: number;
   images: Image[];
   path: string;

@@ -26,7 +26,7 @@ const switchPageTimeoutHandler = ({
           currentPage: currentPage + 1,
           totalPages
         });
-      }, time * 1000);
+      }, time * 1200);
 
       return;
     }
@@ -49,5 +49,6 @@ export {
   searchTimeoutHandler,
   switchPageTimeoutHandler,
   scrollTimeoutHandler,
-  scrollTimeout
+  scrollTimeout,
+  switchPageIndexTimeout
 };

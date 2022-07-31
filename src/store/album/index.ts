@@ -48,10 +48,8 @@ export const albumsSlice = createSlice({
       (state, action: PayloadAction<AlbumState>) => {
         const fields = keys(action.payload);
         for (const field of fields) {
-          if (field !== 'images') {
-            //@ts-expect-error shit happens
-            state[field] = action.payload[field];
-          }
+          //@ts-expect-error shit happens
+          state[field] = action.payload[field];
         }
       }
     );
