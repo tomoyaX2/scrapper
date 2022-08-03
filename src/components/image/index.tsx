@@ -20,7 +20,6 @@ const Image = ({
     verticalSizes,
     previewOrientation
   });
-
   return (
     <NextImage
       src={url}
@@ -28,6 +27,8 @@ const Image = ({
       alt={alt}
       width={sizes.width}
       height={sizes.height}
+      placeholder='blur'
+      blurDataURL={`${window.location.host}/images/blur.png`}
       className={className}
     />
   );
