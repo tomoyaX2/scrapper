@@ -28,7 +28,7 @@ const Image = ({
       width={sizes.width}
       height={sizes.height}
       placeholder='blur'
-      blurDataURL={`${window.location.host}/images/blur.png`}
+      blurDataURL={`${window.location.origin}/images/blur.png`}
       className={className}
     />
   );

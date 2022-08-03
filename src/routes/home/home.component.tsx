@@ -2,7 +2,6 @@
 import { DefaultSeo as Seo } from 'next-seo';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { Loader } from 'rsuite';
 import { PageList } from 'src/components/pagination/ui';
 import { DEFAULT_SEO } from '@shared/config/seo';
 import { getTags } from 'src/store/tags';
@@ -29,7 +28,6 @@ const Home = (): JSX.Element => {
   }, []);
 
   const router = useRouter();
-
   if (router.isReady) {
     return (
       <>
@@ -49,8 +47,19 @@ const Home = (): JSX.Element => {
           <SearchBar />
 
           {isLoading ? (
-            <div className='fixed top-loader left-2/4'>
-              <Loader size='md' />
+            <div className='flex flex-col items-center justify-center w-full'>
+              <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
+                {new Array(25)
+                  .map((_, index) => ({
+                    id: `${index}`,
+                    preview: `${window.location.origin}/images/blur.png`,
+                    path: '',
+                    title: ''
+                  }))
+                  .map(album => (
+                    <Album album={album} key={album.id} />
+                  ))}
+              </div>
             </div>
           ) : (
             <div className='flex flex-col items-center justify-center w-full'>

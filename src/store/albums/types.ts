@@ -28,18 +28,18 @@ export type AlbumsState = {
 export type Album = {
   title: string;
   id: string;
-  series: { name: string; id: string }[];
-  type: { name: string; id: string };
-  language: { name: string; id: string };
-  tags: { name: string; id: string }[];
-  authors: { name: string; id: string }[];
-  group: { name: string; id: string };
+  series?: { name: string; id: string }[];
+  type?: { name: string; id: string };
+  language?: { name: string; id: string };
+  tags?: { name: string; id: string }[];
+  authors?: { name: string; id: string }[];
+  group?: { name: string; id: string };
   preview?: string;
   previewOrientation?: 'horizontal' | 'vertical';
   totalImages?: number;
-  images: Image[];
+  images?: Image[];
   path: string;
-  downloadPath: string;
+  downloadPath?: string;
   views?: number;
   rate?: number;
   // preview: string[] will be done later
