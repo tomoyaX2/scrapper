@@ -45,6 +45,7 @@
     "patronum": "^1.8.2",
     "quicktype-core": "^6.0.71",
     "react-device-detect": "^2.1.2",
+    "react-ga4": "^1.4.1",
     "react-i18next": "^11.16.9",
     "react-redux": "^8.0.2",
     "reselect": "^4.1.6",

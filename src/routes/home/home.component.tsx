@@ -13,6 +13,7 @@ import { getGroups } from 'src/store/groups';
 import { SearchBar } from 'src/components/search-bar';
 import { Album } from 'src/components/album';
 import { useAppDispatch, useAppSelector } from 'src/store';
+import ReactGA from 'react-ga4';
 
 const Home = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ const Home = (): JSX.Element => {
     dispatch(getSeries());
     dispatch(getAuthors());
     dispatch(getGroups());
+    ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, []);
 
   const router = useRouter();

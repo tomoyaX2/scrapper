@@ -13,13 +13,14 @@ import { changeReaderPage } from 'src/store/reader';
 import { Image } from 'src/components/image';
 import { NextSeo } from 'next-seo';
 import { getAlbum } from 'src/store/album';
+import ReactGA from 'react-ga4';
 
 let clickTimeout = setTimeout(() => {});
 
 const onHandleTouch =
   (callback: (event: TouchEvent) => void) => (event: TouchEvent) => {
     clearTimeout(clickTimeout);
-    clickTimeout = setTimeout(() => callback(event), 100);
+    clickTimeout = setTimeout(() => callback(event), 200);
   };
 
 const Reader = (): JSX.Element => {
@@ -31,7 +32,11 @@ const Reader = (): JSX.Element => {
   const album = useAppSelector(state => state.album);
   const [switchTimer, setSwitchTimer] = useState<number>(0);
 
-  useEffect(() => () => clearTimeout(switchPageIndexTimeout), []);
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: window.location.href });
+
+    return () => clearTimeout(switchPageIndexTimeout);
+  }, []);
 
   useEffect(() => {
     router.query.id && dispatch(getReaderImages(router.query.id as string));
@@ -40,9 +45,12 @@ const Reader = (): JSX.Element => {
 
   useEffect(() => {
     if (images?.length) {
-      handleChangePage(
-        images?.findIndex(el => el.id === router.query.readerId)
+      const cuurentIndex = images?.findIndex(
+        el => el.id === router.query.readerId
       );
+      if (cuurentIndex !== currentPage) {
+        handleChangePage(cuurentIndex);
+      }
     }
   }, [router.query.readerId, images]);
 
@@ -135,7 +143,7 @@ const Reader = (): JSX.Element => {
         <div
           className='flex items-center justify-center cursor-pointer mt-4'
           //@ts-expect-error cause of i want
-          onTouchStart={onTouchEvent}
+          onTouchEnd={onTouchEvent}
           //@ts-expect-error cause of i want
           onClick={onClickEvent}
         >

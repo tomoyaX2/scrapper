@@ -8,6 +8,7 @@ import { Download } from 'src/components/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { downloadAlbum, getAlbum, getAlbumImages } from 'src/store/album';
 import { Image } from 'src/components/image';
+import ReactGA from 'react-ga4';
 
 const Album = (): JSX.Element => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const Album = (): JSX.Element => {
     router.query.id && dispatch(getAlbum(router.query.id as string));
     router.query.id &&
       dispatch(getAlbumImages({ albumId: router.query.id as string, page: 1 }));
+    ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, [router.query.id]);
 
   const onDownloadAlbum = () => {

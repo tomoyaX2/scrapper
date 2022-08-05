@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Layout } from 'src/components/layout.component';
 import store from 'src/store';
+import ReactGA from 'react-ga4';
+ReactGA.initialize('G-NHQCMD7VWN');
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [isMounted, setMounted] = useState(false);
