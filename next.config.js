@@ -1,7 +1,7 @@
 const merge = require('webpack-merge').default;
 const { apiUrl } =
   process.env.NODE_ENV == 'production' ? process.env : require('./config.json');
-const { i18n } = require('./next-i18next.config');
+// const { i18n } = require('./next-i18next.config');
 
 /** @type {import('next').NextConfig} */
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
     apiUrl
   },
 
-  i18n,
+  // i18n,
 
   webpack: (config, { isServer }) => {
     [

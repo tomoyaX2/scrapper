@@ -20,7 +20,7 @@ const TITLE_SEO = ({
   language: string;
 }) => ({
   title: `${title} - X-Manga collection`,
-  description: `${title} - read on ${language}`
+  description: `${title} - read on ${language} x manga`
 });
 
 export { DEFAULT_SEO, TITLE_SEO };

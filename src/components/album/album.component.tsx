@@ -24,7 +24,7 @@ const Album = ({
   const dispatch = useAppDispatch();
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const [imagePath, setImagePath] = React.useState(
-    preview ? preview : `${cdnUrl}/images-new/${path.split('/')[1]}/10001.webp`
+    preview ? preview : `${cdnUrl}/images-new/${path?.split('/')[1]}/10001.webp`
   );
 
   React.useEffect(() => {
@@ -83,16 +83,16 @@ const Album = ({
           <div className={isHovered ? 'z-50' : ''}>
             <div
               className={`absolute -ml-40 w-80 bg-primary flex flex-col ${
-                isHovered && title.length > 30 ? 'h-24' : 'h-16'
+                isHovered && title?.length > 30 ? 'h-24' : 'h-16'
               }`}
             >
-              <span className='text-sm text-title text-left py-1 px-4'>
+              <h2 className='text-sm text-title text-left py-1 px-4'>
                 {`${language?.name ? `[${language.name}]` : ''}  ${
                   type?.name ? `[${type.name}]` : ''
                 }`}
 
-                {`  ${isHovered ? title : title.substring(0, 30)} `}
-              </span>
+                {`  ${isHovered ? title : title?.substring(0, 30)} `}
+              </h2>
             </div>
           </div>
         </div>

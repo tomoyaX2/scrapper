@@ -39,7 +39,7 @@ const Home = (): JSX.Element => {
             {
               property: 'dc:keywords',
               content:
-                'hentai, manga, manhwa, adult manga, xmanga adult manhwa, hentai manga, hentai manhwa'
+                'xmanga, x-manga, hentai, manga, manhwa, adult manga, xmanga adult manhwa, hentai manga, hentai manhwa'
             }
           ]}
           canonical='https://xmanga.org'
