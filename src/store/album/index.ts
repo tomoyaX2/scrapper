@@ -30,11 +30,23 @@ export const getAlbum = createAsyncThunk(
 
 export const getAlbumImages = createAsyncThunk(
   'get images',
-  async ({ albumId }: { albumId: string; page: number }) => {
-    const res = await axios.get<{ data: Image[] }>(
-      `${backendUrl}/image?albumId=${albumId}`
-    );
-    return res.data.data;
+  async ({
+    albumId,
+    redirectOnError
+  }: {
+    albumId: string;
+    page: number;
+    redirectOnError: () => {};
+  }) => {
+    try {
+      const res = await axios.get<{ data: Image[] }>(
+        `${backendUrl}/image?albumId=${albumId}`
+      );
+      return res.data.data;
+    } catch (e) {
+      redirectOnError();
+      return [];
+    }
   }
 );
 

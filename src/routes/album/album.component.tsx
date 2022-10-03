@@ -18,8 +18,14 @@ const Album = (): JSX.Element => {
   useEffect(() => {
     router.query.id && dispatch(getAlbum(router.query.id as string));
     router.query.id &&
-      dispatch(getAlbumImages({ albumId: router.query.id as string, page: 1 }));
-    ReactGA.send({ hitType: 'pageview', page: window.location.href });
+      dispatch(
+        getAlbumImages({
+          albumId: router.query.id as string,
+          page: 1,
+          redirectOnError: async () => router.push('/')
+        })
+      );
+    ReactGA.send({ hitType: 'album_pageview', page: window.location.href });
   }, [router.query.id]);
 
   const onDownloadAlbum = () => {
