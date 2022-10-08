@@ -10,3 +10,8 @@ export type User = {
   phone: string;
   isAdmin: boolean;
 };
+
+export type State = {
+  data: User[];
+  total: number;
+};

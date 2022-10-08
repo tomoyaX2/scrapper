@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { backendUrl } from '@shared/api';
 import { keys } from '@shared/utils/keys';
 import axios from 'axios';
+import { NextRouter } from 'next/router';
 import { RootState } from '..';
 import { AlbumState, Image } from './types';
 
@@ -22,9 +23,27 @@ export const downloadAlbum = async (album: AlbumState) => {
 
 export const getAlbum = createAsyncThunk(
   'get album',
+  async (router: NextRouter) => {
+    try {
+      const res = await axios.get<AlbumState>(
+        `${backendUrl}/albums/${router.query.id as string}`
+      );
+      return res.data;
+    } catch (e) {
+      router.push('/');
+      return {};
+    }
+  }
+);
+
+export const deleteAlbum = createAsyncThunk(
+  'delete album',
   async (albumId: string) => {
-    const res = await axios.get<AlbumState>(`${backendUrl}/albums/${albumId}`);
-    return res.data;
+    const accessToken = localStorage.getItem('accessToken') ?? '';
+
+    await axios.delete(`${backendUrl}/albums/${albumId}`, {
+      headers: { access_token: accessToken }
+    });
   }
 );
 
@@ -55,16 +74,14 @@ export const albumsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addCase(
-      getAlbum.fulfilled,
-      (state, action: PayloadAction<AlbumState>) => {
+    builder.addCase(getAlbum.fulfilled, (state, action) => {
+      if (action.payload) {
         const fields = keys(action.payload);
         for (const field of fields) {
-          //@ts-expect-error shit happens
           state[field] = action.payload[field];
         }
       }
-    );
+    });
     builder.addCase(
       getAlbumImages.fulfilled,
       (state, action: PayloadAction<Image[]>) => {

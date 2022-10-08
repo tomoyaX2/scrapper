@@ -6,17 +6,26 @@ import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/common/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { downloadAlbum, getAlbum, getAlbumImages } from 'src/store/album';
+import {
+  deleteAlbum,
+  downloadAlbum,
+  getAlbum,
+  getAlbumImages
+} from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
+import { TrashIcon } from 'src/components/common/icons/trash';
+import { getUser } from 'src/store/user';
 
 const Album = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const album = useAppSelector(state => state.album);
+  const { data: user } = useAppSelector(state => state.user);
 
   useEffect(() => {
-    router.query.id && dispatch(getAlbum(router.query.id as string));
+    router.query.id && dispatch(getAlbum(router));
+    dispatch(getUser());
     router.query.id &&
       dispatch(
         getAlbumImages({
@@ -30,6 +39,11 @@ const Album = (): JSX.Element => {
 
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
+  };
+
+  const onDeleteAlbum = () => {
+    dispatch(deleteAlbum(album.id));
+    router.push('/');
   };
 
   return album?.id ? (
@@ -190,6 +204,16 @@ const Album = (): JSX.Element => {
                   <Download fill='white' className='mr-2' />
                   Download
                 </Button>
+
+                {user.isAdmin && (
+                  <Button
+                    className='flex items-center px-2'
+                    onClick={onDeleteAlbum}
+                  >
+                    <TrashIcon className='w-6 h-6' fill='white' />
+                    Remove
+                  </Button>
+                )}
               </div>
             </div>
           </div>

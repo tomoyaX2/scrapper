@@ -13,11 +13,13 @@ const initialUser: User = {
   isActive: true,
   twoFaEnabled: false,
   avatarUrl: '',
-  phone: ''
+  phone: '',
+  isAdmin: false
 };
 
 const initialState = {
-  data: initialUser
+  data: initialUser,
+  isLoading: true
 };
 
 export const getUser = createAsyncThunk('get user', async () => {
@@ -41,6 +43,7 @@ export const userSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(getUser.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.isLoading = false;
     });
   }
 });
