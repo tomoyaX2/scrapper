@@ -10,6 +10,8 @@ import types from './types';
 import albums from './albums';
 import album from './album';
 import reader from './reader';
+import auth from './auth';
+import user from './user';
 import { Middleware } from 'redux';
 
 const reducer = combineReducers({
@@ -21,7 +23,9 @@ const reducer = combineReducers({
   types,
   albums,
   album,
-  reader
+  reader,
+  auth,
+  user
 });
 
 const customMiddleware: Middleware<{ state: RootState }, RootState> =

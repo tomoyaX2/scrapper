@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
-import { Download } from 'src/components/icons/download-icon';
+import { Download } from 'src/components/common/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { downloadAlbum, getAlbum, getAlbumImages } from 'src/store/album';
-import { Image } from 'src/components/image';
+import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
 
 const Album = (): JSX.Element => {
@@ -25,7 +25,7 @@ const Album = (): JSX.Element => {
           redirectOnError: async () => router.push('/')
         })
       );
-    ReactGA.send({ hitType: 'album_pageview', page: window.location.href });
+    ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, [router.query.id]);
 
   const onDownloadAlbum = () => {
@@ -73,7 +73,7 @@ const Album = (): JSX.Element => {
                       passHref
                     >
                       <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
                           {album.language.name}
                         </Tag>
                       </a>
@@ -87,7 +87,7 @@ const Album = (): JSX.Element => {
 
                     <Link href={`/?page=1&types=${album.type.id}`} passHref>
                       <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
                           {album.type.name}
                         </Tag>
                       </a>
@@ -107,7 +107,7 @@ const Album = (): JSX.Element => {
                           key={el.id}
                         >
                           <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
                               {el.name}
                             </Tag>
                           </a>
@@ -129,7 +129,7 @@ const Album = (): JSX.Element => {
                           key={el.id}
                         >
                           <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
                               {el.name}
                             </Tag>
                           </a>
@@ -151,7 +151,7 @@ const Album = (): JSX.Element => {
                           key={el.id}
                         >
                           <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 rs-theme-dark'>
+                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
                               {el.name}
                             </Tag>
                           </a>
@@ -162,12 +162,12 @@ const Album = (): JSX.Element => {
                 ) : null}
 
                 {album.group?.name ? (
-                  <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 rs-theme-dark'>
+                  <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 '>
                     <span className='text-sm mr-4 w-20'>Group:</span>
 
                     <Link href={`/?page=1&types=${album.group.id}`} passHref>
                       <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover rs-theme-dark'>
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover '>
                           {album.group?.name}
                         </Tag>
                       </a>
@@ -184,7 +184,7 @@ const Album = (): JSX.Element => {
 
               <div className='w-full flex items-center justify-start mt-4 mb-2'>
                 <Button
-                  className='flex items-center px-2 -ml-2 rs-theme-dark'
+                  className='flex items-center px-2 -ml-2 '
                   onClick={onDownloadAlbum}
                 >
                   <Download fill='white' className='mr-2' />

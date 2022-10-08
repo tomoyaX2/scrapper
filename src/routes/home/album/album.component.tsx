@@ -2,12 +2,12 @@ import Link from 'next/link';
 import React from 'react';
 import { cdnUrl } from '@shared/api';
 // import { EyeIcon } from '@shared/ui/atoms/icons/eye';
-import { ImageIcon } from 'src/components/icons/image';
+import { ImageIcon } from 'src/components/common/icons/image';
 // import { StarIcon } from '@shared/ui/atoms/icons/star';
 import type { AlbumProps } from './album.props';
-import { useAppDispatch } from 'src/store';
 import { resetAlbumState } from 'src/store/albums';
-import { Image } from 'src/components/image';
+import { Image } from 'src/components/common/image';
+import { useDispatch } from 'react-redux';
 
 const Album = ({
   album: {
@@ -21,7 +21,7 @@ const Album = ({
     previewOrientation
   }
 }: AlbumProps): JSX.Element => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const [imagePath, setImagePath] = React.useState(
     preview ? preview : `${cdnUrl}/images-new/${path?.split('/')[1]}/10001.webp`

@@ -2,7 +2,7 @@
 import { DefaultSeo as Seo } from 'next-seo';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { PageList } from 'src/components/pagination/ui';
+import { PageList } from '@routes/home/pagination/ui';
 import { DEFAULT_SEO } from '@shared/config/seo';
 import { getTags } from 'src/store/tags';
 import { getTypes } from 'src/store/types';
@@ -11,9 +11,10 @@ import { getSeries } from 'src/store/series';
 import { getAuthors } from 'src/store/authors';
 import { getGroups } from 'src/store/groups';
 import { SearchBar } from 'src/components/search-bar';
-import { Album } from 'src/components/album';
+import { Album } from '@routes/home/album';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import ReactGA from 'react-ga4';
+import { getUser } from 'src/store/user';
 
 const Home = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -26,7 +27,8 @@ const Home = (): JSX.Element => {
     dispatch(getSeries());
     dispatch(getAuthors());
     dispatch(getGroups());
-    ReactGA.send({ hitType: 'pageview', page: window.location.href });
+    dispatch(getUser());
+    ReactGA.send({ hitType: 'pageview' });
   }, []);
 
   const router = useRouter();

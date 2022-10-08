@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { SelectPicker, Input } from 'rsuite';
-import { Arrow } from 'src/components/icons/arrow';
+import { Arrow } from 'src/components/common/icons/arrow';
 import {
   switchPageTimeoutHandler,
   switchPageIndexTimeout
@@ -10,7 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { getReaderImages } from 'src/store/reader';
 import { changeReaderPage } from 'src/store/reader';
-import { Image } from 'src/components/image';
+import { Image } from 'src/components/common/image';
 import { NextSeo } from 'next-seo';
 import { getAlbum } from 'src/store/album';
 import ReactGA from 'react-ga4';
@@ -88,6 +88,7 @@ const Reader = (): JSX.Element => {
     if (typeof value === 'string' && !testReg.test(value) && !!value) {
       return;
     }
+    ReactGA.send({ hitType: 'autoread_interract' });
 
     const result = parseInt(value);
     const time = !value ? 0 : result;
@@ -115,8 +116,8 @@ const Reader = (): JSX.Element => {
           <SelectPicker
             data={pagesList}
             value={currentPage}
-            className='rs-theme-dark md:w-32 sm:w-20 xsm:w-24 px-4'
-            menuClassName='rs-theme-dark'
+            className=' md:w-32 sm:w-20 xsm:w-24 px-4'
+            menuClassName=''
             cleanable={false}
             onChange={handleChangePage}
           />
@@ -134,7 +135,7 @@ const Reader = (): JSX.Element => {
           <Input
             onChange={onTimerValueChange}
             value={switchTimer}
-            className='md:w-20 sm:w-12 xsm:w-12 h-19 rs-theme-dark'
+            className='md:w-20 sm:w-12 xsm:w-12 h-19 '
           />
 
           <span className='text-sm text-white-300 ml-2'>sec</span>

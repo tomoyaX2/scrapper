@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { TagPicker, SelectPicker } from 'rsuite';
-import { Arrow } from 'src/components/icons/arrow';
+import { TagPicker, SelectPicker, Input } from 'rsuite';
+import { Arrow } from 'src/components/common/icons/arrow';
 import {
   buildSearchState,
   paginationChangeFactory,
@@ -22,6 +22,7 @@ const selectData = [
   // { label: 'Views', value: 'views' },
   { label: 'Total Images', value: 'totalImages' }
 ];
+let inputTimeout = setTimeout(() => {}, 0);
 
 export const SearchBar = (): JSX.Element => {
   const {
@@ -82,14 +83,32 @@ export const SearchBar = (): JSX.Element => {
     search
   );
 
+  const onSearchChange = (value: string) => {
+    clearTimeout(inputTimeout);
+    inputTimeout = setTimeout(() => {
+      if (value) {
+        dispatch(getAlbums({ title: value, page: 1, perPage: 50 }));
+      } else {
+        dispatch(getAlbums({ page: 1, perPage: 20 }));
+      }
+    }, 800);
+  };
+
   return (
-    <div className='flex flex-col items-center w-full py-4 flex-wrap px-8'>
+    <div className='flex flex-col items-center w-full py-4 flex-wrap px-12'>
       <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col md:items-center sm:items-start xsm:items-start w-full flex-wrap'>
         <div className='flex flex-row flex-wrap w-full justify-center items-center'>
+          <Input
+            name='search'
+            className='min-w-searchInput mr-4 my-2 w-40 '
+            onChange={onSearchChange}
+            placeholder='Name'
+          />
+
           <TagPicker
             data={searchInputOptionsFactory(visibleTags, tagsList, tags)}
-            className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
-            menuClassName='rs-theme-dark'
+            className='min-w-searchInput mr-4 my-2 w-40 '
+            menuClassName=''
             placeholder='Tags...'
             value={tags ?? []}
             onSearch={(value: string) => dispatch(onSearchTags(value))}
@@ -102,22 +121,9 @@ export const SearchBar = (): JSX.Element => {
           />
 
           <TagPicker
-            data={typesList}
-            className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
-            menuClassName='rs-theme-dark'
-            placeholder='Types...'
-            value={types ?? []}
-            onChange={onPaginationChangeFactory('types')}
-            searchable
-            renderMenuItem={label => (
-              <span className='font-normal text-base'>{label}</span>
-            )}
-          />
-
-          <TagPicker
             data={languagesList}
-            className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
-            menuClassName='rs-theme-dark'
+            className='min-w-searchInput mr-4 my-2 w-40 '
+            menuClassName=''
             placeholder='Languages...'
             onChange={onPaginationChangeFactory('languages')}
             value={languages ?? []}
@@ -129,15 +135,15 @@ export const SearchBar = (): JSX.Element => {
 
           <SelectPicker
             data={selectData}
-            className='rs-theme-dark w-40 mr-4 my-2 min-w-searchInput'
-            menuClassName='rs-theme-dark'
+            className=' w-40 mr-4 my-2 min-w-searchInput'
+            menuClassName=''
             searchable={false}
             placeholder='Sort by...'
             onChange={onPaginationChangeFactory('sortBy')}
           />
         </div>
 
-        <div className='flex lg:flex-row md:flex-row sm:flex-col xsm:flex-col w-full lg:mt-4 md:mt-4 sm:mt-0 xsm:mt-0 justify-center items-center mr-28'>
+        <div className='flex lg:flex-row md:flex-row sm:flex-col xsm:flex-col w-full lg:mt-4 md:mt-4 sm:mt-0 xsm:mt-0 justify-center items-center'>
           {(isExpanded || !!series?.length) && (
             <TagPicker
               data={searchInputOptionsFactory(
@@ -145,8 +151,8 @@ export const SearchBar = (): JSX.Element => {
                 seriesList,
                 series
               )}
-              className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
-              menuClassName='rs-theme-dark'
+              className='min-w-searchInput mr-4 my-2 w-40 '
+              menuClassName=''
               placeholder='Series...'
               value={series ?? []}
               onChange={onPaginationChangeFactory('series')}
@@ -159,6 +165,21 @@ export const SearchBar = (): JSX.Element => {
             />
           )}
 
+          {isExpanded && (
+            <TagPicker
+              data={typesList}
+              className='min-w-searchInput mr-4 my-2 w-40 '
+              menuClassName=''
+              placeholder='Types...'
+              value={types ?? []}
+              onChange={onPaginationChangeFactory('types')}
+              searchable
+              renderMenuItem={label => (
+                <span className='font-normal text-base'>{label}</span>
+              )}
+            />
+          )}
+
           {(isExpanded || !!authors?.length) && (
             <TagPicker
               data={searchInputOptionsFactory(
@@ -166,8 +187,8 @@ export const SearchBar = (): JSX.Element => {
                 authorsList,
                 authors
               )}
-              className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
-              menuClassName='rs-theme-dark'
+              className='min-w-searchInput mr-4 my-2 w-40 '
+              menuClassName=''
               placeholder='Authors...'
               value={authors ?? []}
               onSearch={(value: string) => dispatch(onSearchAuthor(value))}
@@ -187,8 +208,8 @@ export const SearchBar = (): JSX.Element => {
                 groupsList,
                 groups
               )}
-              className='min-w-searchInput mr-4 my-2 w-40 rs-theme-dark'
-              menuClassName='rs-theme-dark'
+              className='min-w-searchInput mr-4 my-2 w-40 '
+              menuClassName=''
               placeholder='Groups...'
               onChange={onPaginationChangeFactory('groups')}
               value={groups ?? []}

@@ -1,0 +1,51 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { backendUrl } from '@shared/api';
+import axios from 'axios';
+import { RootState } from '..';
+import { User } from './types';
+
+const initialUser: User = {
+  id: '',
+  login: '',
+  email: '',
+  name: '',
+  password: '',
+  isActive: true,
+  twoFaEnabled: false,
+  avatarUrl: '',
+  phone: ''
+};
+
+const initialState = {
+  data: initialUser
+};
+
+export const getUser = createAsyncThunk('get user', async () => {
+  const accessToken = localStorage.getItem('accessToken') ?? '';
+  const res = await axios.get<User>(`${backendUrl}/auth/user`, {
+    headers: { access_token: accessToken }
+  });
+
+  return res.data;
+});
+
+export const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    cleanUser: state => {
+      state.data = initialUser;
+      localStorage.removeItem('accessToken');
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(getUser.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
+  }
+});
+export default userSlice.reducer;
+
+export const { cleanUser } = userSlice.actions;
+
+export const selectUserState = (state: RootState) => state.user;
