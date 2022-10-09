@@ -1,3 +1,5 @@
 import { Album } from '@routes/album';
 
-export default Album;
+const Page = () => <Album />;
+
+export default Page;

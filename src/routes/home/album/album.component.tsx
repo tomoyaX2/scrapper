@@ -8,6 +8,8 @@ import type { AlbumProps } from './album.props';
 import { resetAlbumState } from 'src/store/albums';
 import { Image } from 'src/components/common/image';
 import { useDispatch } from 'react-redux';
+import { useAppSelector } from 'src/store';
+import { EyeIcon } from 'src/components/common/icons/eye';
 
 const Album = ({
   album: {
@@ -17,11 +19,13 @@ const Album = ({
     type,
     preview,
     totalImages,
+    views,
     path,
     previewOrientation
   }
 }: AlbumProps): JSX.Element => {
   const dispatch = useDispatch();
+  const { data: user } = useAppSelector(state => state.user);
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const [imagePath, setImagePath] = React.useState(
     preview ? preview : `${cdnUrl}/images-new/${path?.split('/')[1]}/10001.webp`
@@ -39,7 +43,7 @@ const Album = ({
 
   const onImageError = () =>
     setImagePath(`${cdnUrl}/images-new/${path.split('/')[1]}/10002.webp`);
-
+  const isInreadableTitle = title?.substring(0, 30).endsWith('(');
   return (
     <Link href={`/album/${id}`} passHref>
       <a target='_blank'>
@@ -73,11 +77,13 @@ const Album = ({
             <span>{0}</span>
           </div> */}
 
-            {/* <div className='flex items-center justify-center ml-3'>
-              <EyeIcon className='w-4 h-4 mr-2' fill='white' />
+            {user.isAdmin && (
+              <div className='flex items-center justify-center ml-3'>
+                <EyeIcon className='w-4 h-4 mr-2' fill='white' />
 
-              <span>{views ?? 0}</span>
-            </div> */}
+                <span>{views ?? 0}</span>
+              </div>
+            )}
           </div>
 
           <div className={isHovered ? 'z-50' : ''}>
@@ -91,7 +97,13 @@ const Album = ({
                   type?.name ? `[${type.name}]` : ''
                 }`}
 
-                {`  ${isHovered ? title : title?.substring(0, 30)} `}
+                {`  ${
+                  isHovered
+                    ? title
+                    : isInreadableTitle
+                    ? title?.substring(0, 50)
+                    : title?.substring(0, 30)
+                } `}
               </h2>
             </div>
           </div>

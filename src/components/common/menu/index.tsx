@@ -1,4 +1,4 @@
-import { Popover, Whisper, Button } from 'rsuite';
+import { Popover, Whisper } from 'rsuite';
 import { forwardRef } from 'react';
 
 const DefaultPopover = forwardRef(
@@ -13,18 +13,20 @@ const DefaultPopover = forwardRef(
 const PopoverWindow = ({
   placement,
   content,
-  children
+  children,
+  trigger
 }: {
-  placement: 'bottom';
+  placement: 'bottom' | 'top' | 'right';
   content: JSX.Element;
   children: JSX.Element;
+  trigger?: 'hover' | 'click';
 }) => (
   <Whisper
-    trigger='click'
     placement={placement}
+    trigger={trigger ?? 'click'}
     speaker={<DefaultPopover content={content} />}
   >
-    <Button appearance='subtle'>{children}</Button>
+    {children}
   </Whisper>
 );
 

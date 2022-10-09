@@ -62,7 +62,6 @@ module.exports = {
     'valid-typeof': 'warn',
     'no-implicit-globals': 'error',
     'no-lonely-if': 'error',
-    'no-nested-ternary': 'error',
     'no-proto': 'error',
     'no-return-assign': 'error',
     'no-script-url': 'error',

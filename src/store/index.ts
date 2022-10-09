@@ -13,6 +13,7 @@ import reader from './reader';
 import auth from './auth';
 import user from './user';
 import users from './users';
+import galleries from './galleries';
 import { Middleware } from 'redux';
 
 const reducer = combineReducers({
@@ -27,7 +28,8 @@ const reducer = combineReducers({
   reader,
   auth,
   user,
-  users
+  users,
+  galleries
 });
 
 const customMiddleware: Middleware<{ state: RootState }, RootState> =

@@ -10,6 +10,7 @@ import type {
 import { RootState } from '..';
 import { keys } from '@shared/utils/keys';
 import { getUser } from '../user';
+import { createGallery } from '../galleries';
 
 const initialRegistrationValues = {
   login: '',
@@ -85,8 +86,8 @@ export const initiateRegistration = createAsyncThunk(
         formData
       );
       localStorage.setItem('accessToken', res.data.accessToken);
+      store.dispatch(createGallery('Favourites'));
       store.dispatch(getUser());
-
       return res.data;
     } catch (e) {
       return (e as AxiosError)?.response?.data as AuthResponseType;

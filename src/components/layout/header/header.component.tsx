@@ -8,7 +8,7 @@ import { cleanUser } from 'src/store/user';
 import { Button } from 'src/components/common/button';
 import { PersonIcon } from 'src/components/common/icons/person';
 import { Login } from 'src/components/layout/header/login/login.component';
-import { PopoverWindow } from 'src/components/common/popoverWindow';
+import { PopoverWindow } from 'src/components/common/menu';
 import { Registration } from 'src/components/layout/header/registration/registration.component';
 
 const Header = (): JSX.Element => {
@@ -41,17 +41,19 @@ const Header = (): JSX.Element => {
           <PopoverWindow
             content={
               <div className='flex flex-col items-center justify-center w-24'>
-                <div className='opacity-50 cursor-pointer w-full flex items-center justify-center rounded-md h-8'>
-                  <span>Collection</span>
-                </div>
+                <Link href='/favourites' passHref>
+                  <div className='hover:bg-black-100 cursor-pointer w-full flex items-center justify-center rounded-md h-8'>
+                    <span>Favourites</span>
+                  </div>
+                </Link>
 
-                <div className='opacity-50 cursor-pointer w-full flex items-center justify-center rounded-md h-8'>
+                <div className='opacity-50 cursor-pointer hover:bg-black-100 w-full flex items-center justify-center rounded-md h-8'>
                   <span>Account</span>
                 </div>
 
                 {user.data.isAdmin && (
                   <Link href='/users' passHref>
-                    <div className='cursor-pointer w-full flex items-center justify-center rounded-md h-8'>
+                    <div className='cursor-pointer w-full hover:bg-black-100 flex items-center justify-center rounded-md h-8'>
                       <span>Users</span>
                     </div>
                   </Link>
@@ -59,7 +61,7 @@ const Header = (): JSX.Element => {
 
                 <div
                   onClick={onLogout}
-                  className='hover:bg-black-100 cursor-pointer w-full flex items-center justify-center rounded-md h-8'
+                  className='hover:bg-black-100 cursor-pointer  w-full flex items-center justify-center rounded-md h-8'
                 >
                   <span>Logout</span>
                 </div>

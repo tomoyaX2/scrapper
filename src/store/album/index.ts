@@ -23,10 +23,17 @@ export const downloadAlbum = async (album: AlbumState) => {
 
 export const getAlbum = createAsyncThunk(
   'get album',
-  async (router: NextRouter) => {
+  async (router: NextRouter, store) => {
     try {
       const res = await axios.get<AlbumState>(
         `${backendUrl}/albums/${router.query.id as string}`
+      );
+      store.dispatch(
+        getAlbumImages({
+          albumId: router.query.id as string,
+          page: 1,
+          redirectOnError: async () => router.push('/')
+        })
       );
       return res.data;
     } catch (e) {

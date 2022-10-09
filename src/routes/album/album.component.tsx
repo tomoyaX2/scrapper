@@ -1,41 +1,54 @@
 import { DefaultSeo as Seo } from 'next-seo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/common/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import {
-  deleteAlbum,
-  downloadAlbum,
-  getAlbum,
-  getAlbumImages
-} from 'src/store/album';
+import { deleteAlbum, downloadAlbum, getAlbum } from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
 import { TrashIcon } from 'src/components/common/icons/trash';
 import { getUser } from 'src/store/user';
+import {
+  addToGallery,
+  getGalleries,
+  removeFromGallery
+} from 'src/store/galleries';
+import { HeartIcon } from 'src/components/common/icons/heart';
+import { PopoverWindow } from 'src/components/common/menu';
+import { Checkbox } from 'rsuite';
+import { Toast } from 'src/components/common/toast';
+import { useToaster } from 'rsuite/toaster';
 
 const Album = (): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const album = useAppSelector(state => state.album);
   const { data: user } = useAppSelector(state => state.user);
+  const { galleryList } = useAppSelector(state => state.galleries);
+  const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
+    []
+  );
+  const toaster = useToaster();
 
   useEffect(() => {
     router.query.id && dispatch(getAlbum(router));
     dispatch(getUser());
-    router.query.id &&
-      dispatch(
-        getAlbumImages({
-          albumId: router.query.id as string,
-          page: 1,
-          redirectOnError: async () => router.push('/')
-        })
-      );
+    dispatch(getGalleries());
     ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, [router.query.id]);
+
+  useEffect(() => {
+    const result = [];
+    for (const galleryItem of galleryList) {
+      if (galleryItem.albums.some(el => el.id === album.id)) {
+        result.push(galleryItem.id);
+      }
+    }
+    setIncludedIntoGalleries(result);
+  }, [galleryList, album.id]);
 
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
@@ -46,6 +59,27 @@ const Album = (): JSX.Element => {
     router.push('/');
   };
 
+  const onChangeAlbumGalleryStatus = (galleryId: string) => {
+    const exists = includedIntoGalleries.includes(galleryId);
+    if (exists) {
+      setIncludedIntoGalleries(
+        includedIntoGalleries.filter(id => id !== galleryId)
+      );
+      dispatch(removeFromGallery({ galleryId, albumId: album.id }));
+    } else {
+      setIncludedIntoGalleries([...includedIntoGalleries, galleryId]);
+      void dispatch(
+        addToGallery({ albumId: album.id, galleryId: galleryList[0].id })
+      );
+    }
+    toaster.push(
+      <Toast type='success' header='Success' text='Your changes were saved' />,
+      {
+        placement: 'topEnd'
+      }
+    );
+  };
+  console.log(album, 'album');
   return album?.id ? (
     <>
       <Seo
@@ -179,7 +213,7 @@ const Album = (): JSX.Element => {
                   <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 '>
                     <span className='text-sm mr-4 w-20'>Group:</span>
 
-                    <Link href={`/?page=1&types=${album.group.id}`} passHref>
+                    <Link href={`/?page=1&groups=${album.group.id}`} passHref>
                       <a target='_blank'>
                         <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover '>
                           {album.group?.name}
@@ -210,9 +244,49 @@ const Album = (): JSX.Element => {
                     className='flex items-center px-2'
                     onClick={onDeleteAlbum}
                   >
-                    <TrashIcon className='w-6 h-6' fill='white' />
+                    <TrashIcon className='w-6 h-6 mt-1' fill='white' />
                     Remove
                   </Button>
+                )}
+
+                {user.id ? (
+                  <PopoverWindow
+                    placement='right'
+                    trigger='click'
+                    content={
+                      <div className='flex flex-col items-center justify-center'>
+                        {galleryList.map(el => (
+                          <Checkbox
+                            key={el.id}
+                            checked={includedIntoGalleries.includes(el.id)}
+                            onChange={() => onChangeAlbumGalleryStatus(el.id)}
+                          >
+                            {el.name}
+                          </Checkbox>
+                        ))}
+                      </div>
+                    }
+                  >
+                    <Button className='flex items-center px-2'>
+                      <HeartIcon className='w-5 h-5 mr-2 mt-1' fill='white' />
+                      Add To -&gt;
+                    </Button>
+                  </PopoverWindow>
+                ) : (
+                  <PopoverWindow
+                    placement='top'
+                    trigger='hover'
+                    content={
+                      <span>
+                        You have to be logged it for saving this title
+                      </span>
+                    }
+                  >
+                    <Button className='flex items-center px-2'>
+                      <HeartIcon className='w-5 h-5 mr-2 mt-1' fill='white' />
+                      Add To Favourites
+                    </Button>
+                  </PopoverWindow>
                 )}
               </div>
             </div>

@@ -40,7 +40,7 @@ const Reader = (): JSX.Element => {
 
   useEffect(() => {
     router.query.id && dispatch(getReaderImages(router.query.id as string));
-    router.query.id && dispatch(getAlbum(router.query.id as string));
+    router.query.id && dispatch(getAlbum(router));
   }, [router.query.id]);
 
   useEffect(() => {

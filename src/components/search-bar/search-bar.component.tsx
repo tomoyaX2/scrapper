@@ -19,7 +19,7 @@ import { onSearchGroup } from 'src/store/groups';
 
 const selectData = [
   // { label: 'Rate', value: 'rate' },
-  // { label: 'Views', value: 'views' },
+  { label: 'Views', value: 'views' },
   { label: 'Total Images', value: 'totalImages' }
 ];
 let inputTimeout = setTimeout(() => {}, 0);

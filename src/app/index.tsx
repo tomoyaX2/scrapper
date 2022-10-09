@@ -10,14 +10,14 @@ ReactGA.initialize('G-NHQCMD7VWN');
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [isMounted, setMounted] = useState(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
   return isMounted ? (
     <CustomProvider theme='dark'>
       <Provider store={store}>
-        {/* <CustomProvider theme='dark'> */}
-
         <Layout>
           {/* @ts-expect-error JSX typings */}
 

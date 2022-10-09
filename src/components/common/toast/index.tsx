@@ -1,0 +1,17 @@
+import { Notification } from 'rsuite';
+
+const Toast = ({
+  type,
+  text,
+  header
+}: {
+  type: 'success' | 'info';
+  text: string;
+  header: string;
+}) => (
+  <Notification type={type} header={header} closable>
+    {text}
+  </Notification>
+);
+
+export { Toast };

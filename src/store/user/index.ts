@@ -22,14 +22,24 @@ const initialState = {
   isLoading: true
 };
 
-export const getUser = createAsyncThunk('get user', async () => {
-  const accessToken = localStorage.getItem('accessToken') ?? '';
-  const res = await axios.get<User>(`${backendUrl}/auth/user`, {
-    headers: { access_token: accessToken }
-  });
-
-  return res.data;
-});
+export const getUser = createAsyncThunk(
+  'get user',
+  async (onErrorRedirect?: () => void) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken') ?? '';
+      if (!accessToken) {
+        onErrorRedirect?.();
+      }
+      const res = await axios.get<User>(`${backendUrl}/auth/user`, {
+        headers: { access_token: accessToken }
+      });
+      return res.data;
+    } catch (e) {
+      onErrorRedirect?.();
+      return initialUser;
+    }
+  }
+);
 
 export const userSlice = createSlice({
   name: 'user',
