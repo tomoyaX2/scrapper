@@ -10,6 +10,7 @@ import { PersonIcon } from 'src/components/common/icons/person';
 import { Login } from 'src/components/layout/header/login/login.component';
 import { PopoverWindow } from 'src/components/common/menu';
 import { Registration } from 'src/components/layout/header/registration/registration.component';
+import { ForgotPassword } from './forgotPassword/forgotPassword.component';
 
 const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -27,10 +28,12 @@ const Header = (): JSX.Element => {
   };
 
   return (
-    <header className='bg-primary flex items-center justify-between md:px-10 sm:px-2 xsm:px-2 py-4'>
+    <header className='bg-primary flex items-center justify-between md:px-16 sm:px-2 xsm:px-2 py-4'>
       <Registration />
 
       <Login />
+
+      <ForgotPassword />
 
       <Link href='/' passHref>
         <h1 className='italic text-3xl cursor-pointer'>mH</h1>

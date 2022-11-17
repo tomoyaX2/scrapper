@@ -5,7 +5,9 @@ import type {
   AuthState,
   RegistrationFormState,
   BackEndResponseErrorKeys,
-  LoginFormState
+  LoginFormState,
+  ForgotPasswordState,
+  RestorePasswordState
 } from './types';
 import { RootState } from '..';
 import { keys } from '@shared/utils/keys';
@@ -42,6 +44,26 @@ const initialLoginTouched = {
   login: false
 };
 
+const initialForgotPasswordValues = {
+  email: '',
+  login: ''
+};
+
+const initialForgotPasswordTouched = {
+  email: false,
+  login: false
+};
+
+const initialRestorePasswordValues = {
+  newPassword: '',
+  confirmPassword: ''
+};
+
+const initialRestorePasswordTouched = {
+  newPassword: false,
+  confirmPassword: false
+};
+
 const backEndResponseErrorsMatch = {
   invalidPassword: 'password',
   invalidLogin: 'login',
@@ -66,6 +88,20 @@ const initialState: AuthState = {
     errors: initialLoginValues,
     touched: initialLoginTouched,
     fields: initialLoginValues,
+    visibleModal: false,
+    isSubmitted: false
+  },
+  forgotPassword: {
+    errors: initialForgotPasswordValues,
+    touched: initialForgotPasswordTouched,
+    fields: initialForgotPasswordValues,
+    visibleModal: false,
+    isSubmitted: false
+  },
+  restorePassword: {
+    errors: initialRestorePasswordValues,
+    touched: initialRestorePasswordTouched,
+    fields: initialRestorePasswordValues,
     visibleModal: false,
     isSubmitted: false
   }
@@ -108,6 +144,62 @@ export const initiateLogin = createAsyncThunk(
       return res.data;
     } catch (e) {
       return (e as AxiosError)?.response?.data as AuthResponseType;
+    }
+  }
+);
+
+export const initiateForgotPassword = createAsyncThunk(
+  'forgot password',
+  async (
+    {
+      fields,
+      onError,
+      onSuccess
+    }: {
+      fields: { email: string; login: string };
+      onError: (text?: string) => void;
+      onSuccess: () => void;
+    },
+    store
+  ) => {
+    try {
+      const res = await axios.post<AuthResponseType>(
+        `${backendUrl}/auth/reset-password`,
+        fields
+      );
+      store.dispatch(changeForgotPasswordModalVisible());
+      onSuccess();
+      return res.data;
+    } catch (e) {
+      onError((e as AxiosError<{ errors: string }>)?.response?.data.errors);
+    }
+  }
+);
+
+export const initiateRestorePassword = createAsyncThunk(
+  'restore password',
+  async (
+    {
+      fields,
+      onError,
+      onSuccess
+    }: {
+      fields: RestorePasswordState & { token: string };
+      onError: (text?: string) => void;
+      onSuccess: () => void;
+    },
+    store
+  ) => {
+    try {
+      const res = await axios.post<AuthResponseType>(
+        `${backendUrl}/auth/restore-password`,
+        fields
+      );
+      store.dispatch(changeForgotPasswordModalVisible());
+      onSuccess();
+      return res.data;
+    } catch (e) {
+      onError((e as AxiosError<{ errors: string }>)?.response?.data.errors);
     }
   }
 );
@@ -159,6 +251,51 @@ export const authSlice = createSlice({
     },
     changeLoginModalVisible: state => {
       state.login.visibleModal = !state.login.visibleModal;
+    },
+
+    //forgot password
+    changeForgotPasswordFields: (
+      state,
+      action: PayloadAction<ForgotPasswordState>
+    ) => {
+      state.forgotPassword.fields = action.payload;
+    },
+    changeForgotPasswordErrors: (
+      state,
+      action: PayloadAction<Record<keyof ForgotPasswordState, string>>
+    ) => {
+      state.forgotPassword.errors = action.payload;
+    },
+
+    changeForgotPasswordTouched: (
+      state,
+      action: PayloadAction<Record<keyof ForgotPasswordState, boolean>>
+    ) => {
+      state.forgotPassword.touched = action.payload;
+    },
+    changeForgotPasswordModalVisible: state => {
+      state.forgotPassword.visibleModal = !state.forgotPassword.visibleModal;
+    },
+
+    //restore password
+    changeRestorePasswordFields: (
+      state,
+      action: PayloadAction<RestorePasswordState>
+    ) => {
+      state.restorePassword.fields = action.payload;
+    },
+    changeRestorePasswordErrors: (
+      state,
+      action: PayloadAction<Record<keyof RestorePasswordState, string>>
+    ) => {
+      state.restorePassword.errors = action.payload;
+    },
+
+    changeRestorePasswordTouched: (
+      state,
+      action: PayloadAction<Record<keyof RestorePasswordState, boolean>>
+    ) => {
+      state.restorePassword.touched = action.payload;
     }
   },
   extraReducers: builder => {
@@ -221,14 +358,25 @@ export const {
   changeLoginFields,
   changeLoginErrors,
   changeLoginModalVisible,
-  changeLoginTouched
+  changeLoginTouched,
+  changeForgotPasswordModalVisible,
+  changeForgotPasswordErrors,
+  changeForgotPasswordFields,
+  changeForgotPasswordTouched,
+  changeRestorePasswordFields,
+  changeRestorePasswordErrors,
+  changeRestorePasswordTouched
 } = authSlice.actions;
 
 export {
   initialRegistrationValues,
   initialRegistrationTouched,
   initialLoginTouched,
-  initialLoginValues
+  initialLoginValues,
+  initialForgotPasswordValues,
+  initialForgotPasswordTouched,
+  initialRestorePasswordValues,
+  initialRestorePasswordTouched
 };
 
 export const selectAuthState = (state: RootState) => state.auth;

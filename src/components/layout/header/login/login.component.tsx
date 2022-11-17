@@ -4,7 +4,11 @@ import { Input, InputGroup } from 'rsuite';
 import { EyeIcon } from 'src/components/common/icons/eye';
 
 import { useFormActions } from './utils';
-import { changeLoginModalVisible, initiateLogin } from 'src/store/auth';
+import {
+  changeLoginModalVisible,
+  initiateLogin,
+  changeForgotPasswordModalVisible
+} from 'src/store/auth';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { EyeClosedIcon } from 'src/components/common/icons/closedEye';
 
@@ -26,6 +30,11 @@ const Login = (): JSX.Element => {
 
   const onClose = () => {
     resetFields();
+    dispatch(changeLoginModalVisible());
+  };
+
+  const onSetForgotPasswordActive = () => {
+    dispatch(changeForgotPasswordModalVisible());
     dispatch(changeLoginModalVisible());
   };
 
@@ -92,6 +101,13 @@ const Login = (): JSX.Element => {
       </Modal.Body>
 
       <Modal.Footer className='flex items-center md:justify-end sm:justify-center xsm:justify-center'>
+        <span
+          className='text-xs mr-10 text-center underline cursor-pointer'
+          onClick={onSetForgotPasswordActive}
+        >
+          Forgot password?
+        </span>
+
         <Button
           onClick={onSubmit}
           disabled={isSubmitted}

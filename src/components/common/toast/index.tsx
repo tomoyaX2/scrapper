@@ -5,7 +5,7 @@ const Toast = ({
   text,
   header
 }: {
-  type: 'success' | 'info';
+  type: 'success' | 'info' | 'error';
   text: string;
   header: string;
 }) => (
