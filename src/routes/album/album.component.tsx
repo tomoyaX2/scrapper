@@ -21,8 +21,9 @@ import { PopoverWindow } from 'src/components/common/menu';
 import { Checkbox } from 'rsuite';
 import { Toast } from 'src/components/common/toast';
 import { useToaster } from 'rsuite/toaster';
+import { AlbumState } from 'src/store/album/types';
 
-const Album = (): JSX.Element => {
+const Album = ({ initialData }: { initialData?: AlbumState }): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const album = useAppSelector(state => state.album);
@@ -32,6 +33,7 @@ const Album = (): JSX.Element => {
     []
   );
   const toaster = useToaster();
+  const availableData = initialData ?? album;
 
   useEffect(() => {
     router.query.id && dispatch(getAlbum(router));
@@ -79,17 +81,17 @@ const Album = (): JSX.Element => {
       }
     );
   };
-  console.log(album, 'album');
-  return album?.id ? (
+
+  return (
     <>
       <Seo
         {...TITLE_SEO({
           title: `${
-            album?.authors?.length
-              ? `[${album.authors.map(el => el.name).join(',')}] | `
+            availableData?.authors?.length
+              ? `[${availableData.authors.map(el => el.name).join(',')}] | `
               : ''
-          }${album?.title}`,
-          language: album?.language?.name ?? ''
+          }${availableData?.title}`,
+          language: availableData?.language?.name ?? ''
         })}
         canonical={window.location.href}
       />
@@ -318,8 +320,6 @@ const Album = (): JSX.Element => {
         </div>
       )}
     </>
-  ) : (
-    <div />
   );
 };
 
