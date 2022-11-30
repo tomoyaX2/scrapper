@@ -7,12 +7,16 @@ import { GetServerSideProps } from 'next/types';
 const Page = (props: { initialData: AlbumState }) => <Album {...props} />;
 
 export const getServerSideProps: GetServerSideProps<{
-  initialData: AlbumState;
+  initialData: AlbumState | null;
 }> = async context => {
-  const res = await axios.get<AlbumState>(
-    `${backendUrl}/albums/${context.params?.id as string}`
-  );
-  return { props: { initialData: res.data } };
+  try {
+    const res = await axios.get<AlbumState>(
+      `${backendUrl}/albums/${context.params?.id as string}`
+    );
+    return { props: { initialData: res.data } };
+  } catch (e) {
+    return { props: { initialData: null } };
+  }
 };
 
 export default Page;

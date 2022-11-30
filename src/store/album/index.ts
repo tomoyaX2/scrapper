@@ -37,6 +37,7 @@ export const getAlbum = createAsyncThunk(
       );
       return res.data;
     } catch (e) {
+      console.log('123131213');
       router.push('/');
       return {};
     }
