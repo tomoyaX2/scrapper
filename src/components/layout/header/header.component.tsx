@@ -35,9 +35,59 @@ const Header = (): JSX.Element => {
 
       <ForgotPassword />
 
-      <Link href='/' passHref>
-        <h1 className='italic text-3xl cursor-pointer'>mH</h1>
-      </Link>
+      <div className='flex flex-row'>
+        <Link href='/' passHref>
+          <h1 className='italic text-xl cursor-pointer p-2'>Home</h1>
+        </Link>
+
+        <PopoverWindow
+          placement='bottom'
+          trigger='click'
+          content={
+            <div className='flex flex-col'>
+              <Link href='/?tags=8afdecf9-0a1d-4c00-85cd-362b34796a9b' passHref>
+                <h1 className='italic text-lg cursor-pointer p-2 hover:bg-black-100 rounded-md'>
+                  Loli
+                </h1>
+              </Link>
+
+              <Link href='/?tags=49c503aa-cb75-40cc-82cc-8e7e478da9ce' passHref>
+                <h1 className='italic text-lg cursor-pointer p-2 hover:bg-black-100 rounded-md'>
+                  Netorare
+                </h1>
+              </Link>
+
+              <Link href='/?tags=5f9a9d88-d7bb-4910-b4c6-9fc1993cb4c5' passHref>
+                <h1 className='italic text-lg cursor-pointer p-2 hover:bg-black-100 rounded-md'>
+                  Milf
+                </h1>
+              </Link>
+
+              <Link href='/?tags=ba38df58-fca9-446e-8098-773cdb37fc7b' passHref>
+                <h1 className='italic text-lg cursor-pointer p-2 hover:bg-black-100 rounded-md'>
+                  Shota
+                </h1>
+              </Link>
+
+              <Link href='/?tags=002bcbc2-a1ed-4cd2-afbd-a10de8c9e391' passHref>
+                <h1 className='italic text-lg cursor-pointer p-2 hover:bg-black-100 rounded-md'>
+                  Rape
+                </h1>
+              </Link>
+
+              <Link href='/?tags=3d0a1bd6-f9b1-439a-91ac-24529e6655ae' passHref>
+                <h1 className='italic text-lg cursor-pointer p-2 hover:bg-black-100 rounded-md'>
+                  Yaoi
+                </h1>
+              </Link>
+            </div>
+          }
+        >
+          <h1 className='italic text-xl cursor-pointer ml-16 hover:bg-black-100 py-2 rounded-lg px-4'>
+            Popular
+          </h1>
+        </PopoverWindow>
+      </div>
 
       <div className='flex flex-row items-center'>
         {user?.data.id ? (

@@ -70,7 +70,7 @@ const useMultiselectUpdateItemsInScroll = ({
     const wrappedElement = document.getElementsByClassName(
       'rs-picker-check-menu rs-picker-check-menu-items'
     )[0];
-    wrappedElement.addEventListener('scroll', () =>
+    wrappedElement?.addEventListener('scroll', () =>
       scrollTimeoutHandler(handleMenuScroll)
     );
   };
