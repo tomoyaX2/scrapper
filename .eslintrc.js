@@ -63,6 +63,7 @@ module.exports = {
     'no-implicit-globals': 'error',
     'no-lonely-if': 'error',
     'no-proto': 'error',
+    '@typescript-eslint/explicit-member-accessibility': 'off',
     'no-return-assign': 'error',
     'no-script-url': 'error',
     'no-undef-init': 'error',

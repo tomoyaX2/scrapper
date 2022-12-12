@@ -6,7 +6,7 @@ import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/common/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { deleteAlbum, downloadAlbum, getAlbum } from 'src/store/album';
+import { deleteAlbum, downloadAlbum, getAlbumImages } from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
 import { TrashIcon } from 'src/components/common/icons/trash';
@@ -23,20 +23,34 @@ import { Toast } from 'src/components/common/toast';
 import { useToaster } from 'rsuite/toaster';
 import { AlbumState } from 'src/store/album/types';
 
-const Album = ({ initialData }: { initialData?: AlbumState }): JSX.Element => {
+const Album = ({
+  initialData: album
+}: {
+  initialData: AlbumState;
+}): JSX.Element => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const album = useAppSelector(state => state.album);
+  const albumImages = useAppSelector(state => state.album.images);
   const { data: user } = useAppSelector(state => state.user);
   const { galleryList } = useAppSelector(state => state.galleries);
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
   const toaster = useToaster();
-  const availableData = initialData ?? album;
+  useEffect(() => {
+    if (!album.id) {
+      router.push('/');
+    }
+  }, [album.id]);
 
   useEffect(() => {
-    router.query.id && dispatch(getAlbum(router));
+    dispatch(
+      getAlbumImages({
+        albumId: router.query.id as string,
+        page: 1,
+        redirectOnError: async () => router.push('/')
+      })
+    );
     dispatch(getUser());
     dispatch(getGalleries());
     ReactGA.send({ hitType: 'pageview', page: window.location.href });
@@ -87,23 +101,23 @@ const Album = ({ initialData }: { initialData?: AlbumState }): JSX.Element => {
       <Seo
         {...TITLE_SEO({
           title: `${
-            availableData?.authors?.length
-              ? `[${availableData.authors.map(el => el.name).join(',')}] | `
+            album?.authors?.length
+              ? `[${album.authors.map(el => el.name).join(',')}] | `
               : ''
-          }${availableData?.title}`,
-          language: availableData?.language?.name ?? ''
+          }${album?.title}`,
+          language: album?.language?.name ?? ''
         })}
         canonical={window.location.href}
       />
 
-      {!!album.images.length && (
+      {!!albumImages?.length && (
         <div className='flex flex-col items-center justify-start w-full'>
           <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
             <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full h-100'>
               <Image
-                url={album.images[0]?.url}
-                width={album.images[0]?.width}
-                height={album.images[0]?.height}
+                url={albumImages[0]?.url}
+                width={albumImages[0]?.width}
+                height={albumImages[0]?.height}
                 alt='preview'
                 horizontalSizes={{ height: 400, width: 600 }}
                 verticalSizes={{ height: 400, width: 320 }}
@@ -228,7 +242,7 @@ const Album = ({ initialData }: { initialData?: AlbumState }): JSX.Element => {
                 <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                   <span className='text-sm mr-4 w-20'>Pages:</span>
 
-                  <span className='text-sm'>{album.images.length}</span>
+                  <span className='text-sm'>{albumImages.length}</span>
                 </div>
               </div>
 
@@ -295,7 +309,7 @@ const Album = ({ initialData }: { initialData?: AlbumState }): JSX.Element => {
           </div>
 
           <div className='flex flex-row flex-wrap items-center max-w-gallery justify-center bg-secondary mt-4'>
-            {album.images.map(el =>
+            {albumImages.map(el =>
               el ? (
                 <Link
                   href={`/album/${album.id}/reader/${el.id}`}
