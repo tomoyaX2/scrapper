@@ -21,6 +21,7 @@ const Home = (): JSX.Element => {
   const { data, isLoading } = useAppSelector(state => state.albums);
 
   useEffect(() => {
+    console.log('213123');
     dispatch(getTags());
     dispatch(getTypes());
     dispatch(getLanguages());
