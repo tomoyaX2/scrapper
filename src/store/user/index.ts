@@ -3,6 +3,7 @@ import { backendUrl } from '@shared/api';
 import axios from 'axios';
 import { RootState } from '..';
 import { User } from './types';
+import { getUsers } from '../users';
 
 const initialUser: User = {
   id: '',
@@ -21,6 +22,18 @@ const initialState = {
   data: initialUser,
   isLoading: true
 };
+
+export const deleteUser = createAsyncThunk(
+  'delete user',
+  async (userId: string, store) => {
+    const accessToken = localStorage.getItem('accessToken') ?? '';
+
+    await axios.delete(`${backendUrl}/users?userIds=${userId}`, {
+      headers: { access_token: accessToken }
+    });
+    store.dispatch(getUsers());
+  }
+);
 
 export const getUser = createAsyncThunk(
   'get user',
