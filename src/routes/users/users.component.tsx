@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { getUser } from 'src/store/user';
+import { deleteUser, getUser } from 'src/store/user';
 import { changeAdminStatus, getUsers } from 'src/store/users';
 import { Table } from 'rsuite';
 import { User } from 'src/store/user/types';
@@ -24,8 +24,8 @@ const Users = (): JSX.Element => {
     }
   }, [user]);
 
-  const onDelete = (id: string) => {
-    console.log(id);
+  const onDelete = (userId: string) => {
+    dispatch(deleteUser(userId));
   };
 
   const onChangeAdminStatus = (id: string, status: boolean) => {
@@ -71,7 +71,12 @@ const Users = (): JSX.Element => {
 
             <Cell>
               {(row: User) => (
-                <span onClick={() => onDelete(row.id)}>Delete</span>
+                <span
+                  className='cursor-pointer'
+                  onClick={() => onDelete(row.id)}
+                >
+                  Delete
+                </span>
               )}
             </Cell>
           </Column>
