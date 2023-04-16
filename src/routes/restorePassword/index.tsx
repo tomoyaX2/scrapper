@@ -46,6 +46,7 @@ const RestorePassword = (): JSX.Element => {
       })
     );
   };
+
   const onCancel = () => {
     router.push('/');
   };

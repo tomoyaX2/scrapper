@@ -41,10 +41,10 @@ const Home = (): JSX.Element => {
             {
               property: 'dc:keywords',
               content:
-                'xmanga, x-manga, hentai, manga, manhwa, adult manga, xmanga adult manhwa, hentai manga, hentai manhwa'
+                'mangamischief, hentai, manga, manhwa, adult manga, adult manhwa, hentai manga, hentai manhwa'
             }
           ]}
-          canonical='https://xmanga.org'
+          canonical='https://mangamischief.com'
         />
 
         <div className='flex flex-col'>

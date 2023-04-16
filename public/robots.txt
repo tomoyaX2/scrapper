@@ -4,4 +4,4 @@ Disallow: /images/*.webp
 Disallow: ?page*
 Disallow: https://cdn.xmanga.org/
 
-Sitemap: https://xmanga.org/sitemap.xml
+Sitemap: https://mangamischief.com/sitemap.xml

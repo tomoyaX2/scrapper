@@ -33,6 +33,7 @@ const Album = ({
   const albumImages = useAppSelector(state => state.album.images);
   const { data: user } = useAppSelector(state => state.user);
   const { galleryList } = useAppSelector(state => state.galleries);
+
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );

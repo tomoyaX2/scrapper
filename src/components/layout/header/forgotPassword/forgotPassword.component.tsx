@@ -38,7 +38,6 @@ const ForgotPassword = (): JSX.Element => {
   };
 
   const onSubmit = async () => {
-    dispatch(changeForgotPasswordModalVisible());
     await dispatch(initiateForgotPassword({ fields, onError, onSuccess }));
   };
 

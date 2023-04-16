@@ -1,4 +1,4 @@
-const backendUrl = 'https://xmanga.org/backend';
+const backendUrl = 'https://mangamischief.com/backend';
 // const backendUrl = 'http://localhost:8000';
 
 const cdnUrl = 'https://scrapper-images-data.fra1.digitaloceanspaces.com';

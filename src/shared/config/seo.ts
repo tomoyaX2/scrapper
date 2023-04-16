@@ -1,14 +1,14 @@
 import type { NextSeoProps } from 'next-seo';
 
 const DEFAULT_SEO: NextSeoProps = {
-  title: 'X-Manga - Collection of H titles',
+  title: 'Manga Mischief - Collection of H titles',
   description:
     'H collection of titles in different languages. Here you can download any album for free',
   openGraph: {
-    title: 'X-Manga - Free catalog of H albums',
+    title: 'Manga Mischief - Free catalog of H albums',
     description:
       'H collection of titles in different languages Here you can download any album for free',
-    url: 'https://xmanga.org'
+    url: 'https://mangamischief.com'
   }
 };
 
@@ -19,8 +19,8 @@ const TITLE_SEO = ({
   title: string;
   language: string;
 }) => ({
-  title: `${title} - X-Manga collection`,
-  description: `${title} - read on ${language} x manga`
+  title: `${title} - Manga Mischief collection`,
+  description: `${title} - read on ${language} `
 });
 
 export { DEFAULT_SEO, TITLE_SEO };
