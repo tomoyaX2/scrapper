@@ -51,6 +51,17 @@ export const deleteAlbum = createAsyncThunk(
   }
 );
 
+export const rateAlbum = createAsyncThunk(
+  'rate album',
+  async (albumId: number) => {
+    const accessToken = localStorage.getItem('accessToken') ?? '';
+
+    await axios.post(`${backendUrl}/albums/${albumId}`, {
+      headers: { access_token: accessToken }
+    });
+  }
+);
+
 export const getAlbumImages = createAsyncThunk(
   'get images',
   async ({
