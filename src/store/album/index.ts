@@ -14,6 +14,22 @@ const initialState: AlbumState = {
   currentRate: 0
 };
 
+export const getAlbumRate = createAsyncThunk(
+  'get rate',
+  async ({ albumId }: { albumId: string }) => {
+    try {
+      const res = await axios.get<{ rate: number }>(
+        `${backendUrl}/albums/${albumId}/rate`
+      );
+
+      return res.data;
+    } catch (e) {
+      console.log(e);
+      return { rate: 0 };
+    }
+  }
+);
+
 export const rateAlbum = createAsyncThunk(
   'rate album',
   async ({ albumId, rate }: { albumId: string; rate: number }) => {
@@ -98,6 +114,12 @@ export const albumsSlice = createSlice({
       getAlbumImages.fulfilled,
       (state, action: PayloadAction<Image[]>) => {
         state.images = action.payload;
+      }
+    );
+    builder.addCase(
+      getAlbumRate.fulfilled,
+      (state, action: PayloadAction<{ rate: number }>) => {
+        state.currentRate = action.payload.rate;
       }
     );
   }

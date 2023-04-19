@@ -11,7 +11,8 @@ import {
   deleteAlbum,
   downloadAlbum,
   getAlbumImages,
-  rateAlbum
+  rateAlbum,
+  getAlbumRate
 } from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
@@ -31,7 +32,6 @@ import {
   showNotification
 } from 'src/store/notifications';
 import { StarIcon } from 'src/components/common/icons/star';
-import { getAlbumRate } from 'src/store/rate';
 
 const Album = ({
   initialData: album
@@ -41,9 +41,9 @@ const Album = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const albumImages = useAppSelector(state => state.album.images);
+  const currentRate = useAppSelector(state => state.album.currentRate);
   const { data: user } = useAppSelector(state => state.user);
   const { galleryList } = useAppSelector(state => state.galleries);
-  const rate = useAppSelector(state => state.rate);
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
@@ -64,7 +64,7 @@ const Album = ({
     );
     dispatch(getUser());
     dispatch(getGalleries());
-    dispatch(getAlbumRate({ albumId: album.id, dispatch }));
+    dispatch(getAlbumRate({ albumId: album.id }));
     ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, [router.query.id]);
 
@@ -81,6 +81,8 @@ const Album = ({
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
   };
+
+  console.log(album);
 
   const onDeleteAlbum = () => {
     dispatch(deleteAlbum(album.id));
@@ -142,7 +144,7 @@ const Album = ({
                   <h1 className='text-lg flex flex-row'>{album.title}</h1>
 
                   <div className='flex flex-row items-center justify-start w-12'>
-                    <span>{rate.rate}</span>
+                    <span>{album.rate}</span>
 
                     <StarIcon className='w-5 h-5 ml-2' fill='white' />
                   </div>
@@ -362,10 +364,10 @@ const Album = ({
 
                   <div className='m-3'>
                     <Rate
-                      defaultValue={1}
                       size='xs'
                       color='cyan'
                       onChange={onRateAlbum}
+                      value={currentRate}
                     />
                   </div>
                 </div>
