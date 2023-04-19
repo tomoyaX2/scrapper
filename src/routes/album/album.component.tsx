@@ -7,7 +7,12 @@ import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/common/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { deleteAlbum, downloadAlbum, getAlbumImages } from 'src/store/album';
+import {
+  deleteAlbum,
+  downloadAlbum,
+  getAlbumImages,
+  rateAlbum
+} from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
 import { TrashIcon } from 'src/components/common/icons/trash';
@@ -26,7 +31,7 @@ import {
   showNotification
 } from 'src/store/notifications';
 import { StarIcon } from 'src/components/common/icons/star';
-import { getAlbumRate, rateAlbum } from 'src/store/rate';
+import { getAlbumRate } from 'src/store/rate';
 
 const Album = ({
   initialData: album

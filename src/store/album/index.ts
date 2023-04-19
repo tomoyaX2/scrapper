@@ -10,8 +10,16 @@ const initialState: AlbumState = {
   id: '',
   images: [],
   downloadPath: '',
-  title: ''
+  title: '',
+  currentRate: 0
 };
+
+export const rateAlbum = createAsyncThunk(
+  'rate album',
+  async ({ albumId, rate }: { albumId: string; rate: number }) => {
+    await axios.post(`${backendUrl}/albums/${albumId}/rate`, { rate });
+  }
+);
 
 export const downloadAlbum = async (album: AlbumState) => {
   const link = document.createElement('a');

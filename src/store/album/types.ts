@@ -22,4 +22,5 @@ export type AlbumState = {
   downloadPath: string;
   views?: number;
   rate?: number;
+  currentRate?: number;
 };
