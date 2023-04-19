@@ -25,7 +25,7 @@ export const changeAdminStatus = createAsyncThunk(
   'change admin status',
   async (body: { id: string; status: boolean }, store) => {
     const accessToken = localStorage.getItem('accessToken') ?? '';
-    await axios.post(`${backendUrl}/users/change-admin-status`, body, {
+    await axios.patch(`${backendUrl}/users/change-admin-status`, body, {
       headers: { access_token: accessToken }
     });
     store.dispatch(getUsers());

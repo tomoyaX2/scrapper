@@ -100,9 +100,11 @@ const Header = (): JSX.Element => {
                   </div>
                 </Link>
 
-                <div className='opacity-50 cursor-pointer hover:bg-black-100 w-full flex items-center justify-center rounded-md h-8'>
-                  <span>Account</span>
-                </div>
+                <Link href='/account' passHref>
+                  <div className='cursor-pointer hover:bg-black-100 w-full flex items-center justify-center rounded-md h-8'>
+                    <span>Account</span>
+                  </div>
+                </Link>
 
                 {user.data.isAdmin && (
                   <Link href='/users' passHref>

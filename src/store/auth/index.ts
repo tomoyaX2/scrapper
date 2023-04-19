@@ -150,24 +150,20 @@ export const initiateLogin = createAsyncThunk(
 
 export const initiateForgotPassword = createAsyncThunk(
   'forgot password',
-  async (
-    {
-      fields,
-      onError,
-      onSuccess
-    }: {
-      fields: { email: string; login: string };
-      onError: (text?: string) => void;
-      onSuccess: () => void;
-    },
-    store
-  ) => {
+  async ({
+    fields,
+    onError,
+    onSuccess
+  }: {
+    fields: { email: string; login: string };
+    onError: (text?: string) => void;
+    onSuccess: () => void;
+  }) => {
     try {
       const res = await axios.post<AuthResponseType>(
         `${backendUrl}/auth/reset-password`,
         fields
       );
-      store.dispatch(changeForgotPasswordModalVisible());
       onSuccess();
       return res.data;
     } catch (e) {

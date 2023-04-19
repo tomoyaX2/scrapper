@@ -25,6 +25,9 @@ const ForgotPassword = (): JSX.Element => {
   };
 
   const onSuccess = () => {
+    dispatch(changeForgotPasswordModalVisible());
+    resetFields();
+
     toaster.push(
       <Toast
         type='success'

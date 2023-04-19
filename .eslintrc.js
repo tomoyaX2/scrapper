@@ -143,7 +143,6 @@ module.exports = {
     '@typescript-eslint/lines-between-class-members': ['error', 'always'],
     '@typescript-eslint/method-signature-style': ['error', 'property'],
     '@typescript-eslint/class-literal-property-style': ['error', 'fields'],
-    '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 
     '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
 
@@ -160,14 +159,6 @@ module.exports = {
     '@typescript-eslint/array-type': [
       'error',
       { default: 'array', readonly: 'array' }
-    ],
-
-    '@typescript-eslint/consistent-type-assertions': [
-      'error',
-      {
-        assertionStyle: 'as',
-        objectLiteralTypeAssertions: 'allow-as-parameter'
-      }
     ],
 
     '@typescript-eslint/explicit-member-accessibility': [
@@ -287,7 +278,6 @@ module.exports = {
     'react/jsx-closing-tag-location': 'error',
     'react/jsx-pascal-case': 'error',
     'react/jsx-key': 'error',
-    'react/jsx-newline': 'error',
     'react/jsx-no-constructed-context-values': 'error',
     'react/jsx-no-duplicate-props': 'error',
     'react/jsx-no-script-url': 'error',
