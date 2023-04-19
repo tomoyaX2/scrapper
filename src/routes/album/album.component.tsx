@@ -7,12 +7,7 @@ import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/common/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import {
-  deleteAlbum,
-  downloadAlbum,
-  getAlbumImages,
-  rateAlbum
-} from 'src/store/album';
+import { deleteAlbum, downloadAlbum, getAlbumImages } from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
 import { TrashIcon } from 'src/components/common/icons/trash';
@@ -31,6 +26,7 @@ import {
   showNotification
 } from 'src/store/notifications';
 import { StarIcon } from 'src/components/common/icons/star';
+import { getAlbumRate, rateAlbum } from 'src/store/rate';
 
 const Album = ({
   initialData: album
@@ -42,10 +38,11 @@ const Album = ({
   const albumImages = useAppSelector(state => state.album.images);
   const { data: user } = useAppSelector(state => state.user);
   const { galleryList } = useAppSelector(state => state.galleries);
+  const rate = useAppSelector(state => state.rate);
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
-
+  const [showMoreTags, setShowMoreTags] = useState<boolean>(false);
   useEffect(() => {
     if (!album.id) {
       router.push('/');
@@ -62,6 +59,7 @@ const Album = ({
     );
     dispatch(getUser());
     dispatch(getGalleries());
+    dispatch(getAlbumRate({ albumId: album.id, dispatch }));
     ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, [router.query.id]);
 
@@ -86,7 +84,7 @@ const Album = ({
 
   const onRateAlbum = (rate: number) => {
     console.log(rate);
-    dispatch(rateAlbum(rate));
+    dispatch(rateAlbum({ albumId: album.id, rate }));
   };
 
   const onChangeAlbumGalleryStatus = (galleryId: string) => {
@@ -139,7 +137,7 @@ const Album = ({
                   <h1 className='text-lg flex flex-row'>{album.title}</h1>
 
                   <div className='flex flex-row items-center justify-start w-12'>
-                    <span>1</span>
+                    <span>{rate.rate}</span>
 
                     <StarIcon className='w-5 h-5 ml-2' fill='white' />
                   </div>
@@ -181,19 +179,49 @@ const Album = ({
                     <span className='text-sm mr-4 w-20'>Tags:</span>
 
                     <div className='flex items-center flex-wrap max-w-tags'>
-                      {album.tags.map(el => (
-                        <Link
-                          href={`/?page=1&tags=${el.id}`}
-                          passHref
-                          key={el.id}
+                      {!showMoreTags
+                        ? album.tags.slice(0, 10).map(el => (
+                            <Link
+                              href={`/?page=1&tags=${el.id}`}
+                              passHref
+                              key={el.id}
+                            >
+                              <a target='_blank'>
+                                <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                                  {el.name}
+                                </Tag>
+                              </a>
+                            </Link>
+                          ))
+                        : album.tags.map(el => (
+                            <Link
+                              href={`/?page=1&tags=${el.id}`}
+                              passHref
+                              key={el.id}
+                            >
+                              <a target='_blank'>
+                                <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                                  {el.name}
+                                </Tag>
+                              </a>
+                            </Link>
+                          ))}
+
+                      {album.tags.length < 10 ? null : showMoreTags ? (
+                        <Button
+                          className='rs-tag-md'
+                          onClick={() => setShowMoreTags(false)}
                         >
-                          <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                              {el.name}
-                            </Tag>
-                          </a>
-                        </Link>
-                      ))}
+                          Hide
+                        </Button>
+                      ) : (
+                        <Button
+                          className='rs-tag-md'
+                          onClick={() => setShowMoreTags(true)}
+                        >
+                          Show
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ) : null}

@@ -4,6 +4,7 @@ import type { TypedUseSelectorHook } from 'react-redux';
 import axios, { AxiosRequestConfig } from 'axios';
 import authors from './authors';
 import tags from './tags';
+import rate from './rate';
 import groups from './groups';
 import languages from './languages';
 import series from './series';
@@ -21,6 +22,7 @@ import navigation from './navigation';
 import { Middleware } from 'redux';
 
 const reducer = combineReducers({
+  rate,
   tags,
   authors,
   groups,
