@@ -9,11 +9,7 @@ const initialState: GalleryState = {
 };
 
 export const getGalleries = createAsyncThunk('get galleries', async () => {
-  const accessToken = localStorage.getItem('accessToken') ?? '';
-
-  const galleries = await axios.get<Gallery[]>(`${backendUrl}/gallery`, {
-    headers: { access_token: accessToken }
-  });
+  const galleries = await axios.get<Gallery[]>(`${backendUrl}/gallery`);
 
   return galleries.data;
 });
@@ -21,34 +17,21 @@ export const getGalleries = createAsyncThunk('get galleries', async () => {
 export const createGallery = createAsyncThunk(
   'create gallery',
   async (name: string) => {
-    const accessToken = localStorage.getItem('accessToken') ?? '';
-    await axios.post(
-      `${backendUrl}/gallery`,
-      { name },
-      {
-        headers: { access_token: accessToken }
-      }
-    );
+    await axios.post(`${backendUrl}/gallery`, { name });
   }
 );
 
 export const addToGallery = createAsyncThunk(
   'add to gallery',
   async (body: { galleryId: string; albumId: string }) => {
-    const accessToken = localStorage.getItem('accessToken') ?? '';
-    await axios.patch(`${backendUrl}/gallery/add-album`, body, {
-      headers: { access_token: accessToken }
-    });
+    await axios.patch(`${backendUrl}/gallery/add-album`, body);
   }
 );
 
 export const removeFromGallery = createAsyncThunk(
   'remove from gallery',
   async (body: { galleryId: string; albumId: string }) => {
-    const accessToken = localStorage.getItem('accessToken') ?? '';
-    await axios.patch(`${backendUrl}/gallery/remove-album`, body, {
-      headers: { access_token: accessToken }
-    });
+    await axios.patch(`${backendUrl}/gallery/remove-album`, body);
   }
 );
 

@@ -1,4 +1,4 @@
-import { Modal, Button, useToaster } from 'rsuite';
+import { Modal, Button } from 'rsuite';
 import { Input } from 'rsuite';
 
 import { useFormActions } from './utils';
@@ -7,41 +7,16 @@ import {
   initiateForgotPassword
 } from 'src/store/auth';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { Toast } from 'src/components/common/toast';
 
 const ForgotPassword = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { fields, errors, touched, visibleModal, isSubmitted } = useAppSelector(
     state => state.auth.forgotPassword
   );
-  const toaster = useToaster();
-
   const { handleChange, resetFields } = useFormActions();
 
-  const onError = (errorText?: string) => {
-    toaster.push(<Toast type='error' header='Error' text={errorText ?? ''} />, {
-      placement: 'topEnd'
-    });
-  };
-
-  const onSuccess = () => {
-    dispatch(changeForgotPasswordModalVisible());
-    resetFields();
-
-    toaster.push(
-      <Toast
-        type='success'
-        header='Success'
-        text='Restore link was sent to your email'
-      />,
-      {
-        placement: 'topEnd'
-      }
-    );
-  };
-
   const onSubmit = async () => {
-    await dispatch(initiateForgotPassword({ fields, onError, onSuccess }));
+    await dispatch(initiateForgotPassword({ fields, resetFields }));
   };
 
   const onClose = () => {

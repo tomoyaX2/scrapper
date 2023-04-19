@@ -47,11 +47,7 @@ export const getAlbum = createAsyncThunk(
 export const deleteAlbum = createAsyncThunk(
   'delete album',
   async (albumId: string) => {
-    const accessToken = localStorage.getItem('accessToken') ?? '';
-
-    await axios.delete(`${backendUrl}/albums/${albumId}`, {
-      headers: { access_token: accessToken }
-    });
+    await axios.delete(`${backendUrl}/albums/${albumId}`);
   }
 );
 

@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Layout } from 'src/components/layout/layout.component';
-import store from 'src/store';
+import store, { initToken } from 'src/store';
 import ReactGA from 'react-ga4';
 import { CustomProvider } from 'rsuite';
 ReactGA.initialize('G-NHQCMD7VWN');
@@ -13,6 +13,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   useEffect(() => {
     setMounted(true);
+    initToken();
   }, []);
 
   return isMounted ? (

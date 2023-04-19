@@ -10,12 +10,8 @@ const initialState: State = {
 };
 
 export const getUsers = createAsyncThunk('get users', async () => {
-  const accessToken = localStorage.getItem('accessToken') ?? '';
   const res = await axios.get<{ data: User[]; total: number }>(
-    `${backendUrl}/users`,
-    {
-      headers: { access_token: accessToken }
-    }
+    `${backendUrl}/users`
   );
 
   return res.data;
@@ -24,10 +20,7 @@ export const getUsers = createAsyncThunk('get users', async () => {
 export const changeAdminStatus = createAsyncThunk(
   'change admin status',
   async (body: { id: string; status: boolean }, store) => {
-    const accessToken = localStorage.getItem('accessToken') ?? '';
-    await axios.patch(`${backendUrl}/users/change-admin-status`, body, {
-      headers: { access_token: accessToken }
-    });
+    await axios.patch(`${backendUrl}/users/change-admin-status`, body);
     store.dispatch(getUsers());
   }
 );

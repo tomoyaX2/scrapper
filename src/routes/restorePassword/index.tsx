@@ -1,48 +1,24 @@
-import { Modal, Button, useToaster } from 'rsuite';
+import { Modal, Button } from 'rsuite';
 import { Input } from 'rsuite';
 import { useRouter } from 'next/router';
 
 import { useFormActions } from './utils';
 import { initiateRestorePassword } from 'src/store/auth';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { Toast } from 'src/components/common/toast';
 
 const RestorePassword = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { fields, errors, touched, isSubmitted } = useAppSelector(
     state => state.auth.restorePassword
   );
-  const toaster = useToaster();
   const router = useRouter();
 
   const { handleChange } = useFormActions();
 
-  const onError = (errorText?: string) => {
-    toaster.push(<Toast type='error' header='Error' text={errorText ?? ''} />, {
-      placement: 'topEnd'
-    });
-  };
-
-  const onSuccess = () => {
-    toaster.push(
-      <Toast
-        type='success'
-        header='Success'
-        text='Password has been changed. Please, log in'
-      />,
-      {
-        placement: 'topEnd'
-      }
-    );
-    router.push('/');
-  };
-
   const onSubmit = async () => {
     await dispatch(
       initiateRestorePassword({
-        fields: { ...fields, token: router.query.token as string },
-        onError,
-        onSuccess
+        fields: { ...fields, token: router.query.token as string }
       })
     );
   };

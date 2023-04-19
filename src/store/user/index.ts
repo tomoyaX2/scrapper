@@ -4,6 +4,11 @@ import axios from 'axios';
 import { RootState } from '..';
 import { User, UserFormState, UserState } from './types';
 import { getUsers } from '../users';
+import {
+  showNotification,
+  defaultErrorMessage,
+  defaultSuccessMessage
+} from '../notifications';
 
 const initialUser: User = {
   id: '',
@@ -39,11 +44,7 @@ const initialState: UserState = {
 export const deleteUser = createAsyncThunk(
   'delete user',
   async (userId: string, store) => {
-    const accessToken = localStorage.getItem('accessToken') ?? '';
-
-    await axios.delete(`${backendUrl}/users?userIds=${userId}`, {
-      headers: { access_token: accessToken }
-    });
+    await axios.delete(`${backendUrl}/users?userIds=${userId}`);
     store.dispatch(getUsers());
   }
 );
@@ -56,9 +57,7 @@ export const getUser = createAsyncThunk(
       if (!accessToken) {
         onErrorRedirect?.();
       }
-      const res = await axios.get<User>(`${backendUrl}/auth/user`, {
-        headers: { access_token: accessToken }
-      });
+      const res = await axios.get<User>(`${backendUrl}/auth/user`);
       return res.data;
     } catch (e) {
       onErrorRedirect?.();
@@ -69,28 +68,23 @@ export const getUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'update user',
-  async ({
-    fields,
-    onError,
-    onSuccess
-  }: {
-    fields: UserFormState;
-    onError: (text?: string) => void;
-    onSuccess: () => void;
-  }) => {
+  async (
+    {
+      fields
+    }: {
+      fields: UserFormState;
+    },
+    store
+  ) => {
     try {
-      const accessToken = localStorage.getItem('accessToken') ?? '';
       const res = await axios.patch<User>(
         `${backendUrl}/users/update-profile`,
-        fields,
-        {
-          headers: { access_token: accessToken }
-        }
+        fields
       );
-      onSuccess();
+      store.dispatch(showNotification(defaultSuccessMessage));
       return res.data;
     } catch (e) {
-      onError();
+      store.dispatch(showNotification(defaultErrorMessage));
       return initialUser;
     }
   }

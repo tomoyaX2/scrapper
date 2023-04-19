@@ -19,9 +19,11 @@ import {
 import { HeartIcon } from 'src/components/common/icons/heart';
 import { PopoverWindow } from 'src/components/common/menu';
 import { Checkbox } from 'rsuite';
-import { Toast } from 'src/components/common/toast';
-import { useToaster } from 'rsuite/toaster';
 import { AlbumState } from 'src/store/album/types';
+import {
+  defaultSuccessMessage,
+  showNotification
+} from 'src/store/notifications';
 
 const Album = ({
   initialData: album
@@ -37,7 +39,7 @@ const Album = ({
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
-  const toaster = useToaster();
+
   useEffect(() => {
     if (!album.id) {
       router.push('/');
@@ -89,12 +91,7 @@ const Album = ({
         addToGallery({ albumId: album.id, galleryId: galleryList[0].id })
       );
     }
-    toaster.push(
-      <Toast type='success' header='Success' text='Your changes were saved' />,
-      {
-        placement: 'topEnd'
-      }
-    );
+    dispatch(showNotification(defaultSuccessMessage));
   };
 
   return (

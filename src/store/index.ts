@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
+import axios, { AxiosRequestConfig } from 'axios';
 import authors from './authors';
 import tags from './tags';
 import groups from './groups';
@@ -14,6 +15,9 @@ import auth from './auth';
 import user from './user';
 import users from './users';
 import galleries from './galleries';
+import notifications from './notifications';
+import navigation from './navigation';
+
 import { Middleware } from 'redux';
 
 const reducer = combineReducers({
@@ -29,8 +33,22 @@ const reducer = combineReducers({
   auth,
   user,
   users,
-  galleries
+  galleries,
+  notifications,
+  navigation
 });
+
+const initToken = () => {
+  axios.interceptors.request.use((config: AxiosRequestConfig) => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (accessToken) {
+      config.headers.access_token = accessToken;
+    }
+
+    return config;
+  });
+};
 
 const customMiddleware: Middleware<{ state: RootState }, RootState> =
   store => next => action => {
@@ -44,9 +62,13 @@ const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().prepend(customMiddleware)
 });
-export type RootState = ReturnType<typeof reducer>;
 
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+type RootState = ReturnType<typeof reducer>;
+type AppDispatch = typeof store.dispatch;
+
+const useAppDispatch: () => AppDispatch = useDispatch;
+const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+export { initToken, useAppSelector, useAppDispatch };
+export type { RootState, AppDispatch };
 export default store;

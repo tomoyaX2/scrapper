@@ -3,9 +3,8 @@ import { UploadAvatar } from 'src/components/common/uploader';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { getUser, updateUser } from 'src/store/user';
 import { useFormActions } from './utils';
-import { Button, Input, useToaster } from 'rsuite';
+import { Button, Input } from 'rsuite';
 import { initiateForgotPassword } from 'src/store/auth';
-import { Toast } from 'src/components/common/toast';
 import { useRouter } from 'next/router';
 
 const Account = (): JSX.Element => {
@@ -13,7 +12,6 @@ const Account = (): JSX.Element => {
   const { fields, errors, touched, isSubmitted, isLoading, data } =
     useAppSelector(state => state.user);
   const { handleChange } = useFormActions();
-  const toaster = useToaster();
   const router = useRouter();
 
   useEffect(() => {
@@ -29,56 +27,15 @@ const Account = (): JSX.Element => {
   const onSubmit = () => {
     dispatch(
       updateUser({
-        fields,
-        onSuccess: () => {
-          toaster.push(
-            <Toast
-              type='success'
-              header='Success'
-              text='Your data was updated'
-            />,
-            {
-              placement: 'topEnd'
-            }
-          );
-        },
-        onError: (errorText?: string) => {
-          toaster.push(
-            <Toast type='error' header='Error' text={errorText ?? ''} />,
-            {
-              placement: 'topEnd'
-            }
-          );
-        }
+        fields
       })
-    );
-  };
-
-  const onError = (errorText?: string) => {
-    toaster.push(<Toast type='error' header='Error' text={errorText ?? ''} />, {
-      placement: 'topEnd'
-    });
-  };
-
-  const onSuccess = () => {
-    toaster.push(
-      <Toast
-        type='success'
-        header='Success'
-        text='Restore link was sent to your email'
-      />,
-      {
-        placement: 'topEnd'
-      }
     );
   };
 
   const onResetPassword = () => {
     dispatch(
       initiateForgotPassword({
-        fields: { email: fields.email, login: fields.login },
-        onError,
-        onSuccess
+        fields: { email: fields.email, login: fields.login }
       })
     );
   };

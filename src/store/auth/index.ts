@@ -9,10 +9,16 @@ import type {
   ForgotPasswordState,
   RestorePasswordState
 } from './types';
-import { RootState } from '..';
+import { initToken, RootState } from '..';
 import { keys } from '@shared/utils/keys';
 import { getUser } from '../user';
 import { createGallery } from '../galleries';
+import {
+  defaultErrorMessage,
+  defaultSuccessMessage,
+  showNotification
+} from '../notifications';
+import { redirect } from '../navigation';
 
 const initialRegistrationValues = {
   login: '',
@@ -140,6 +146,7 @@ export const initiateLogin = createAsyncThunk(
         formData
       );
       localStorage.setItem('accessToken', res.data.accessToken);
+      initToken();
       store.dispatch(getUser());
       return res.data;
     } catch (e) {
@@ -150,24 +157,39 @@ export const initiateLogin = createAsyncThunk(
 
 export const initiateForgotPassword = createAsyncThunk(
   'forgot password',
-  async ({
-    fields,
-    onError,
-    onSuccess
-  }: {
-    fields: { email: string; login: string };
-    onError: (text?: string) => void;
-    onSuccess: () => void;
-  }) => {
+  async (
+    {
+      fields,
+      resetFields
+    }: {
+      fields: { email: string; login: string };
+      resetFields?: () => void;
+    },
+    store
+  ) => {
     try {
       const res = await axios.post<AuthResponseType>(
         `${backendUrl}/auth/reset-password`,
         fields
       );
-      onSuccess();
+      store.dispatch(
+        showNotification({
+          ...defaultSuccessMessage,
+          text: 'Restore link was sent to your email'
+        })
+      );
+      store.dispatch(changeForgotPasswordModalVisible());
+      resetFields?.();
       return res.data;
     } catch (e) {
-      onError((e as AxiosError<{ errors: string }>)?.response?.data.errors);
+      store.dispatch(
+        showNotification({
+          ...defaultErrorMessage,
+          text:
+            (e as AxiosError<{ errors: string }>)?.response?.data?.errors ??
+            defaultErrorMessage.text
+        })
+      );
     }
   }
 );
@@ -176,13 +198,9 @@ export const initiateRestorePassword = createAsyncThunk(
   'restore password',
   async (
     {
-      fields,
-      onError,
-      onSuccess
+      fields
     }: {
       fields: RestorePasswordState & { token: string };
-      onError: (text?: string) => void;
-      onSuccess: () => void;
     },
     store
   ) => {
@@ -192,10 +210,23 @@ export const initiateRestorePassword = createAsyncThunk(
         fields
       );
       store.dispatch(changeForgotPasswordModalVisible());
-      onSuccess();
+      store.dispatch(
+        showNotification({
+          ...defaultSuccessMessage,
+          text: 'Password has been changed. Please, log in'
+        })
+      );
+      store.dispatch(redirect('/'));
       return res.data;
     } catch (e) {
-      onError((e as AxiosError<{ errors: string }>)?.response?.data.errors);
+      store.dispatch(
+        showNotification({
+          ...defaultErrorMessage,
+          text:
+            (e as AxiosError<{ errors: string }>)?.response?.data.errors ??
+            defaultErrorMessage.text
+        })
+      );
     }
   }
 );
