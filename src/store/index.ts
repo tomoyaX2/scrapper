@@ -42,7 +42,7 @@ const initToken = () => {
   axios.interceptors.request.use((config: AxiosRequestConfig) => {
     const accessToken = localStorage.getItem('accessToken');
 
-    if (accessToken) {
+    if (accessToken && config?.headers) {
       config.headers.access_token = accessToken;
     }
 

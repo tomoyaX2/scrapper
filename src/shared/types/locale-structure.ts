@@ -1,10 +1,10 @@
-type CommonNamespaceStructure = { kek: 'dsad' };
 
-type HomeNamespaceStructure = {
-  title: 'Home';
-  footer: { ti: { pidor: ' NO' } };
-};
+  type CommonNamespaceStructure = {"kek":"dsad"};
 
-type LocaleStructure = CommonNamespaceStructure & HomeNamespaceStructure;
+type HomeNamespaceStructure = {"title":"Home","footer":{"ti":{"pidor":" NO"}}};
 
-export type { LocaleStructure };
+
+
+  type LocaleStructure = CommonNamespaceStructure & HomeNamespaceStructure; 
+  
+  export type {LocaleStructure} 

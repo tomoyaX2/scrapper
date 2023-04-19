@@ -38,7 +38,10 @@ const initialState: UserState = {
   errors: initialUserErrors,
   touched: initialUserTouched,
   isLoading: true,
-  isSubmitted: false
+  isSubmitted: false,
+  login: '',
+  email: '',
+  name: ''
 };
 
 export const deleteUser = createAsyncThunk(
