@@ -24,7 +24,6 @@ export const getAlbumRate = createAsyncThunk(
 
       return res.data;
     } catch (e) {
-      console.log(e);
       return { rate: 0 };
     }
   }

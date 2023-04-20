@@ -32,6 +32,7 @@ import {
   showNotification
 } from 'src/store/notifications';
 import { StarIcon } from 'src/components/common/icons/star';
+import { TagsList } from 'src/components/common/tagsList/tagsList.component';
 
 const Album = ({
   initialData: album
@@ -47,7 +48,7 @@ const Album = ({
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
-  const [showMoreTags, setShowMoreTags] = useState<boolean>(false);
+  // const [showMoreTags, setShowMoreTags] = useState<boolean>(false);
   useEffect(() => {
     if (!album.id) {
       router.push('/');
@@ -90,7 +91,6 @@ const Album = ({
   };
 
   const onRateAlbum = (rate: number) => {
-    console.log(rate);
     dispatch(rateAlbum({ albumId: album.id, rate }));
   };
 
@@ -144,7 +144,7 @@ const Album = ({
                   <h1 className='text-lg flex flex-row'>{album.title}</h1>
 
                   <div className='flex flex-row items-center justify-start w-12'>
-                    <span>{album.rate}</span>
+                    <span>{album.rate?.toFixed(1)}</span>
 
                     <StarIcon className='w-5 h-5 ml-2' fill='white' />
                   </div>
@@ -185,7 +185,9 @@ const Album = ({
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Tags:</span>
 
-                    <div className='flex items-center flex-wrap max-w-tags'>
+                    <TagsList tags={album.tags} />
+
+                    {/* <div className='flex items-center flex-wrap max-w-tags'>
                       {!showMoreTags
                         ? album.tags.slice(0, 10).map(el => (
                             <Link
@@ -229,7 +231,7 @@ const Album = ({
                           Show
                         </Button>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 ) : null}
 
@@ -237,21 +239,7 @@ const Album = ({
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Authors:</span>
 
-                    <div className='flex items-center flex-wrap'>
-                      {album.authors.map(el => (
-                        <Link
-                          href={`/?page=1&authors=${el.id}`}
-                          passHref
-                          key={el.id}
-                        >
-                          <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                              {el.name}
-                            </Tag>
-                          </a>
-                        </Link>
-                      ))}
-                    </div>
+                    <TagsList tags={album.authors} />
                   </div>
                 ) : null}
 
