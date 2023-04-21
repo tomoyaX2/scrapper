@@ -1,7 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow: /images/*.webp
-Disallow: ?page*
+Disallow: /*?search=
 Disallow: https://cdn.xmanga.org/
 
 Sitemap: https://mangamischief.com/sitemap.xml
