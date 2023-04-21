@@ -1,5 +1,5 @@
 type TagsListProps = {
-  tags: {
+  items: {
     id: string;
     name: string;
   }[];
