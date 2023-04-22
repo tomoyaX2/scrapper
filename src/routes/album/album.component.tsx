@@ -32,7 +32,7 @@ import {
   showNotification
 } from 'src/store/notifications';
 import { StarIcon } from 'src/components/common/icons/star';
-import { TagsList } from 'src/components/common/tagsList/tagsList.component';
+import { TagsList } from 'src/components/common/tagsList';
 
 const Album = ({
   initialData: album
