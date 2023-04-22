@@ -48,7 +48,6 @@ const Album = ({
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
-  // const [showMoreTags, setShowMoreTags] = useState<boolean>(false);
   useEffect(() => {
     if (!album.id) {
       router.push('/');
@@ -185,53 +184,7 @@ const Album = ({
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Tags:</span>
 
-                    <TagsList tags={album.tags} />
-
-                    {/* <div className='flex items-center flex-wrap max-w-tags'>
-                      {!showMoreTags
-                        ? album.tags.slice(0, 10).map(el => (
-                            <Link
-                              href={`/?page=1&tags=${el.id}`}
-                              passHref
-                              key={el.id}
-                            >
-                              <a target='_blank'>
-                                <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                                  {el.name}
-                                </Tag>
-                              </a>
-                            </Link>
-                          ))
-                        : album.tags.map(el => (
-                            <Link
-                              href={`/?page=1&tags=${el.id}`}
-                              passHref
-                              key={el.id}
-                            >
-                              <a target='_blank'>
-                                <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                                  {el.name}
-                                </Tag>
-                              </a>
-                            </Link>
-                          ))}
-
-                      {album.tags.length < 10 ? null : showMoreTags ? (
-                        <Button
-                          className='rs-tag-md'
-                          onClick={() => setShowMoreTags(false)}
-                        >
-                          Hide
-                        </Button>
-                      ) : (
-                        <Button
-                          className='rs-tag-md'
-                          onClick={() => setShowMoreTags(true)}
-                        >
-                          Show
-                        </Button>
-                      )}
-                    </div> */}
+                    <TagsList items={album.tags} />
                   </div>
                 ) : null}
 
@@ -239,7 +192,7 @@ const Album = ({
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Authors:</span>
 
-                    <TagsList tags={album.authors} />
+                    <TagsList items={album.authors} />
                   </div>
                 ) : null}
 
