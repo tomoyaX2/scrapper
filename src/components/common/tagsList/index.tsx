@@ -18,6 +18,7 @@ export const TagsList = ({ items }: TagsListProps) => {
           <a target='_blank'>
             <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
               {el.name}
+              <span>({el.albumsCount})</span>
             </Tag>
           </a>
         </Link>

@@ -16,7 +16,11 @@ export const getTags = createAsyncThunk('get tags', async () => {
     `${backendUrl}/tags`
   );
 
-  return tags.data.data.map(el => ({ label: el.name, value: el.id }));
+  return tags.data.data.map(el => ({
+    label: el.name,
+    value: el.id,
+    count: el.albumsCount
+  }));
 });
 
 export const tagsSlice = createSlice({

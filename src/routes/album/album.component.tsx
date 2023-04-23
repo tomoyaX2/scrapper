@@ -82,8 +82,6 @@ const Album = ({
     album && downloadAlbum(album);
   };
 
-  console.log(album);
-
   const onDeleteAlbum = () => {
     dispatch(deleteAlbum(album.id));
     router.push('/');

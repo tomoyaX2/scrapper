@@ -2,6 +2,7 @@ type TagsListProps = {
   items: {
     id: string;
     name: string;
+    albumsCount: number;
   }[];
 };
 
