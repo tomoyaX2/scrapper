@@ -7,6 +7,7 @@ export type Gallery = {
 };
 
 export type GalleryState = {
-  galleryList: Gallery[];
+  favourites: Gallery;
+  recentlyViewed: Gallery;
   isLoading: boolean;
 };

@@ -129,6 +129,7 @@ export const initiateRegistration = createAsyncThunk(
       );
       localStorage.setItem('accessToken', res.data.accessToken);
       store.dispatch(createGallery('Favourites'));
+      store.dispatch(createGallery('Recently Viewed'));
       store.dispatch(getUser());
       return res.data;
     } catch (e) {

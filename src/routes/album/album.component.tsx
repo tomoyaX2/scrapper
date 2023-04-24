@@ -44,7 +44,8 @@ const Album = ({
   const albumImages = useAppSelector(state => state.album.images);
   const currentRate = useAppSelector(state => state.album.currentRate);
   const { data: user } = useAppSelector(state => state.user);
-  const { galleryList } = useAppSelector(state => state.galleries);
+  const { favourites } = useAppSelector(state => state.galleries);
+
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
@@ -70,13 +71,15 @@ const Album = ({
 
   useEffect(() => {
     const result = [];
-    for (const galleryItem of galleryList) {
-      if (galleryItem.albums.some(el => el.id === album.id)) {
-        result.push(galleryItem.id);
+    if (favourites?.albums) {
+      for (const galleryItem of favourites.albums) {
+        if (favourites.albums.some(el => el.id === album.id)) {
+          result.push(galleryItem.id);
+        }
       }
+      setIncludedIntoGalleries(result);
     }
-    setIncludedIntoGalleries(result);
-  }, [galleryList, album.id]);
+  }, [favourites?.albums, album.id]);
 
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
@@ -101,7 +104,7 @@ const Album = ({
     } else {
       setIncludedIntoGalleries([...includedIntoGalleries, galleryId]);
       void dispatch(
-        addToGallery({ albumId: album.id, galleryId: galleryList[0].id })
+        addToGallery({ albumId: album.id, galleryId: favourites?.id ?? '' })
       );
     }
     dispatch(showNotification(defaultSuccessMessage));
@@ -262,7 +265,7 @@ const Album = ({
                     trigger='click'
                     content={
                       <div className='flex flex-col items-center justify-center'>
-                        {galleryList.map(el => (
+                        {[favourites].map(el => (
                           <Checkbox
                             key={el.id}
                             checked={includedIntoGalleries.includes(el.id)}

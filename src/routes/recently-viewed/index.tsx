@@ -6,9 +6,11 @@ import ReactGA from 'react-ga4';
 import { getUser } from 'src/store/user';
 import { getGalleries } from 'src/store/galleries';
 
-const Favourites = (): JSX.Element => {
+const RecentlyViewed = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { favourites, isLoading } = useAppSelector(state => state.galleries);
+  const { recentlyViewed, isLoading } = useAppSelector(
+    state => state.galleries
+  );
 
   useEffect(() => {
     dispatch(
@@ -40,7 +42,7 @@ const Favourites = (): JSX.Element => {
                 ))}
             </div>
           </div>
-        ) : !favourites?.albums?.length ? (
+        ) : !recentlyViewed?.albums?.length ? (
           <div className='flex flex-col items-center justify-center w-full'>
             <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
               No albums here
@@ -49,7 +51,7 @@ const Favourites = (): JSX.Element => {
         ) : (
           <div className='flex flex-col items-center justify-center w-full'>
             <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
-              {favourites?.albums.map(album => (
+              {recentlyViewed?.albums.map(album => (
                 <Album album={album} key={album.id} />
               ))}
             </div>
@@ -62,4 +64,4 @@ const Favourites = (): JSX.Element => {
   return <div />;
 };
 
-export { Favourites };
+export { RecentlyViewed };
