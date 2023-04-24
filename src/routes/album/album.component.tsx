@@ -44,7 +44,9 @@ const Album = ({
   const albumImages = useAppSelector(state => state.album.images);
   const currentRate = useAppSelector(state => state.album.currentRate);
   const { data: user } = useAppSelector(state => state.user);
-  const { favourites } = useAppSelector(state => state.galleries);
+  const { favourites, recentlyViewed } = useAppSelector(
+    state => state.galleries
+  );
 
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
@@ -68,6 +70,14 @@ const Album = ({
     dispatch(getAlbumRate({ albumId: album.id }));
     ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, [router.query.id]);
+
+  useEffect(() => {
+    if (user?.id && recentlyViewed?.id) {
+      dispatch(
+        addToGallery({ galleryId: recentlyViewed.id, albumId: album?.id })
+      );
+    }
+  }, [user?.id, recentlyViewed?.id]);
 
   useEffect(() => {
     const result = [];

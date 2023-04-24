@@ -45,9 +45,10 @@ export const galleriesSlice = createSlice({
   extraReducers: builder =>
     builder.addCase(getGalleries.fulfilled, (state, action) => {
       state.favourites =
-        action.payload.find(el => el.name === 'Favourites') ?? null;
+        action.payload.find(el => el.name === 'Favourites') ?? initialGallery;
       state.recentlyViewed =
-        action.payload.find(el => el.name === 'Recently Viewed') ?? null;
+        action.payload.find(el => el.name === 'Recently Viewed') ??
+        initialGallery;
       state.isLoading = false;
     })
 });
