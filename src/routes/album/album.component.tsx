@@ -44,7 +44,10 @@ const Album = ({
   const albumImages = useAppSelector(state => state.album.images);
   const currentRate = useAppSelector(state => state.album.currentRate);
   const { data: user } = useAppSelector(state => state.user);
-  const { galleryList } = useAppSelector(state => state.galleries);
+  const { favourites, recentlyViewed } = useAppSelector(
+    state => state.galleries
+  );
+
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
@@ -69,14 +72,24 @@ const Album = ({
   }, [router.query.id]);
 
   useEffect(() => {
-    const result = [];
-    for (const galleryItem of galleryList) {
-      if (galleryItem.albums.some(el => el.id === album.id)) {
-        result.push(galleryItem.id);
-      }
+    if (user?.id && recentlyViewed?.id) {
+      dispatch(
+        addToGallery({ galleryId: recentlyViewed.id, albumId: album?.id })
+      );
     }
-    setIncludedIntoGalleries(result);
-  }, [galleryList, album.id]);
+  }, [user?.id, recentlyViewed?.id]);
+
+  useEffect(() => {
+    const result = [];
+    if (favourites?.albums) {
+      for (const galleryItem of favourites.albums) {
+        if (favourites.albums.some(el => el.id === album.id)) {
+          result.push(galleryItem.id);
+        }
+      }
+      setIncludedIntoGalleries(result);
+    }
+  }, [favourites?.albums, album.id]);
 
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
@@ -101,7 +114,7 @@ const Album = ({
     } else {
       setIncludedIntoGalleries([...includedIntoGalleries, galleryId]);
       void dispatch(
-        addToGallery({ albumId: album.id, galleryId: galleryList[0].id })
+        addToGallery({ albumId: album.id, galleryId: favourites?.id ?? '' })
       );
     }
     dispatch(showNotification(defaultSuccessMessage));
@@ -190,7 +203,21 @@ const Album = ({
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Authors:</span>
 
-                    <TagsList items={album.authors} />
+                    <div className='flex items-center flex-wrap'>
+                      {album.authors.map(el => (
+                        <Link
+                          href={`/?page=1&authors=${el.id}`}
+                          passHref
+                          key={el.id}
+                        >
+                          <a target='_blank'>
+                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                              {el.name}
+                            </Tag>
+                          </a>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 ) : null}
 
@@ -262,7 +289,7 @@ const Album = ({
                     trigger='click'
                     content={
                       <div className='flex flex-col items-center justify-center'>
-                        {galleryList.map(el => (
+                        {[favourites].map(el => (
                           <Checkbox
                             key={el.id}
                             checked={includedIntoGalleries.includes(el.id)}

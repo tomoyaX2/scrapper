@@ -100,6 +100,12 @@ const Header = (): JSX.Element => {
                   </div>
                 </Link>
 
+                <Link href='/recently-viewed' passHref>
+                  <div className='hover:bg-black-100 cursor-pointer w-full flex items-center justify-center rounded-md h-8'>
+                    <span>Viewed</span>
+                  </div>
+                </Link>
+
                 <Link href='/account' passHref>
                   <div className='cursor-pointer hover:bg-black-100 w-full flex items-center justify-center rounded-md h-8'>
                     <span>Account</span>
