@@ -12,8 +12,8 @@ export type AlbumState = {
   series?: { name: string; id: string }[];
   type?: { name: string; id: string };
   language?: { name: string; id: string };
-  tags?: { name: string; id: string }[];
-  authors?: { name: string; id: string }[];
+  tags?: { name: string; id: string; albumsCount: number }[];
+  authors?: { name: string; id: string; albumsCount: number }[];
   group?: { name: string; id: string };
   preview?: string;
   totalImages?: number;
@@ -22,4 +22,5 @@ export type AlbumState = {
   downloadPath: string;
   views?: number;
   rate?: number;
+  currentRate?: number;
 };

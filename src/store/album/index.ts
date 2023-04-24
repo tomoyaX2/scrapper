@@ -10,8 +10,31 @@ const initialState: AlbumState = {
   id: '',
   images: [],
   downloadPath: '',
-  title: ''
+  title: '',
+  currentRate: 0
 };
+
+export const getAlbumRate = createAsyncThunk(
+  'get rate',
+  async ({ albumId }: { albumId: string }) => {
+    try {
+      const res = await axios.get<{ rate: number }>(
+        `${backendUrl}/albums/${albumId}/rate`
+      );
+
+      return res.data;
+    } catch (e) {
+      return { rate: 0 };
+    }
+  }
+);
+
+export const rateAlbum = createAsyncThunk(
+  'rate album',
+  async ({ albumId, rate }: { albumId: string; rate: number }) => {
+    await axios.post(`${backendUrl}/albums/${albumId}/rate`, { rate });
+  }
+);
 
 export const downloadAlbum = async (album: AlbumState) => {
   const link = document.createElement('a');
@@ -90,6 +113,12 @@ export const albumsSlice = createSlice({
       getAlbumImages.fulfilled,
       (state, action: PayloadAction<Image[]>) => {
         state.images = action.payload;
+      }
+    );
+    builder.addCase(
+      getAlbumRate.fulfilled,
+      (state, action: PayloadAction<{ rate: number }>) => {
+        state.currentRate = action.payload.rate;
       }
     );
   }

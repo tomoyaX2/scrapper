@@ -57,8 +57,8 @@ const paginationChangeFactory =
   };
 
 const searchInputOptionsFactory = (
-  visibleItems: { value: string; label: string }[],
-  allItems: { value: string; label: string }[],
+  visibleItems: { value: string; label: string; albumsCount?: number }[],
+  allItems: { value: string; label: string; albumsCount?: number }[],
   activeIds?: string[]
 ) => {
   if (activeIds) {

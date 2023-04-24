@@ -114,8 +114,10 @@ export const SearchBar = (): JSX.Element => {
             onSearch={(value: string) => dispatch(onSearchTags(value))}
             onChange={onPaginationChangeFactory('tags')}
             searchable
-            renderMenuItem={label => (
-              <span className='font-normal text-base'>{label}</span>
+            renderMenuItem={(label, item) => (
+              <span className='font-normal text-base'>
+                {label} ({item.count})
+              </span>
             )}
             {...tagScrollMultiselectProps}
           />

@@ -1,4 +1,5 @@
 import { DefaultSeo as Seo } from 'next-seo';
+import { Rate } from 'rsuite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -6,7 +7,13 @@ import { Tag, Button } from 'rsuite';
 import { TITLE_SEO } from '@shared/config/seo';
 import { Download } from 'src/components/common/icons/download-icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { deleteAlbum, downloadAlbum, getAlbumImages } from 'src/store/album';
+import {
+  deleteAlbum,
+  downloadAlbum,
+  getAlbumImages,
+  rateAlbum,
+  getAlbumRate
+} from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
 import { TrashIcon } from 'src/components/common/icons/trash';
@@ -24,6 +31,8 @@ import {
   defaultSuccessMessage,
   showNotification
 } from 'src/store/notifications';
+import { StarIcon } from 'src/components/common/icons/star';
+import { TagsList } from 'src/components/common/tagsList';
 
 const Album = ({
   initialData: album
@@ -33,13 +42,12 @@ const Album = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const albumImages = useAppSelector(state => state.album.images);
+  const currentRate = useAppSelector(state => state.album.currentRate);
   const { data: user } = useAppSelector(state => state.user);
   const { galleryList } = useAppSelector(state => state.galleries);
-
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
-
   useEffect(() => {
     if (!album.id) {
       router.push('/');
@@ -56,6 +64,7 @@ const Album = ({
     );
     dispatch(getUser());
     dispatch(getGalleries());
+    dispatch(getAlbumRate({ albumId: album.id }));
     ReactGA.send({ hitType: 'pageview', page: window.location.href });
   }, [router.query.id]);
 
@@ -76,6 +85,10 @@ const Album = ({
   const onDeleteAlbum = () => {
     dispatch(deleteAlbum(album.id));
     router.push('/');
+  };
+
+  const onRateAlbum = (rate: number) => {
+    dispatch(rateAlbum({ albumId: album.id, rate }));
   };
 
   const onChangeAlbumGalleryStatus = (galleryId: string) => {
@@ -124,7 +137,15 @@ const Album = ({
 
             <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
               <div>
-                <h1 className='text-lg'>{album.title}</h1>
+                <div className='flex flex-col'>
+                  <h1 className='text-lg flex flex-row'>{album.title}</h1>
+
+                  <div className='flex flex-row items-center justify-start w-12'>
+                    <span>{album.rate?.toFixed(1)}</span>
+
+                    <StarIcon className='w-5 h-5 ml-2' fill='white' />
+                  </div>
+                </div>
 
                 {album.language?.name ? (
                   <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
@@ -161,21 +182,7 @@ const Album = ({
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Tags:</span>
 
-                    <div className='flex items-center flex-wrap max-w-tags'>
-                      {album.tags.map(el => (
-                        <Link
-                          href={`/?page=1&tags=${el.id}`}
-                          passHref
-                          key={el.id}
-                        >
-                          <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                              {el.name}
-                            </Tag>
-                          </a>
-                        </Link>
-                      ))}
-                    </div>
+                    <TagsList items={album.tags} />
                   </div>
                 ) : null}
 
@@ -183,21 +190,7 @@ const Album = ({
                   <div className='flex flex-row items-center justify-start w-full mt-4'>
                     <span className='text-sm mr-4 w-20'>Authors:</span>
 
-                    <div className='flex items-center flex-wrap'>
-                      {album.authors.map(el => (
-                        <Link
-                          href={`/?page=1&authors=${el.id}`}
-                          passHref
-                          key={el.id}
-                        >
-                          <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                              {el.name}
-                            </Tag>
-                          </a>
-                        </Link>
-                      ))}
-                    </div>
+                    <TagsList items={album.authors} />
                   </div>
                 ) : null}
 
@@ -303,6 +296,21 @@ const Album = ({
                   </PopoverWindow>
                 )}
               </div>
+
+              {user?.id && (
+                <div className='w-full flex items-center justify-start mt-1 mb-2 flex-row'>
+                  <span className='text-sm mr-4 w-20'>Rate this:</span>
+
+                  <div className='m-3'>
+                    <Rate
+                      size='xs'
+                      color='cyan'
+                      onChange={onRateAlbum}
+                      value={currentRate}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
