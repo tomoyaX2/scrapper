@@ -8,7 +8,7 @@ const UploadAvatar = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.user.data);
   const [isLoading, setLoading] = useState(false);
-  console.log(isLoading, '1231');
+
   return (
     <Uploader
       fileListVisible={false}

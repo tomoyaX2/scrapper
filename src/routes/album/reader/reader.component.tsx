@@ -39,8 +39,16 @@ const Reader = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    router.query.id && dispatch(getReaderImages(router.query.id as string));
-    router.query.id && dispatch(getAlbum(router));
+    router.query?.id && dispatch(getReaderImages(router.query.id as string));
+    router.query?.id &&
+      dispatch(
+        getAlbum({
+          albumId: Array.isArray(router.query?.id)
+            ? router.query.id[0]
+            : router.query.id,
+          onError: async () => router.push('/')
+        })
+      );
   }, [router.query.id]);
 
   useEffect(() => {

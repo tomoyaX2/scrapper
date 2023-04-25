@@ -47,6 +47,7 @@ const Album = ({
   const { favourites, recentlyViewed } = useAppSelector(
     state => state.galleries
   );
+  const freshRate = useAppSelector(state => state.album.rate);
 
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
@@ -61,8 +62,7 @@ const Album = ({
     dispatch(
       getAlbumImages({
         albumId: router.query.id as string,
-        page: 1,
-        redirectOnError: async () => router.push('/')
+        page: 1
       })
     );
     dispatch(getUser());
@@ -120,6 +120,8 @@ const Album = ({
     dispatch(showNotification(defaultSuccessMessage));
   };
 
+  const targetRate = freshRate ? freshRate : album?.rate;
+
   return (
     <>
       <Seo
@@ -154,7 +156,7 @@ const Album = ({
                   <h1 className='text-lg flex flex-row'>{album.title}</h1>
 
                   <div className='flex flex-row items-center justify-start w-12'>
-                    <span>{album.rate?.toFixed(1)}</span>
+                    <span>{targetRate?.toFixed(1)}</span>
 
                     <StarIcon className='w-5 h-5 ml-2' fill='white' />
                   </div>
