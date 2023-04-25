@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { backendUrl } from '@shared/api';
 import { keys } from '@shared/utils/keys';
 import axios from 'axios';
-import { NextRouter } from 'next/router';
 import { RootState } from '..';
 import { AlbumState, Image } from './types';
 
@@ -31,8 +30,10 @@ export const getAlbumRate = createAsyncThunk(
 
 export const rateAlbum = createAsyncThunk(
   'rate album',
-  async ({ albumId, rate }: { albumId: string; rate: number }) => {
+  async ({ albumId, rate }: { albumId: string; rate: number }, store) => {
     await axios.post(`${backendUrl}/albums/${albumId}/rate`, { rate });
+    store.dispatch(getAlbum({ albumId, preventReloadImages: true }));
+    store.dispatch(getAlbumRate({ albumId }));
   }
 );
 
@@ -46,22 +47,29 @@ export const downloadAlbum = async (album: AlbumState) => {
 
 export const getAlbum = createAsyncThunk(
   'get album',
-  async (router: NextRouter, store) => {
+  async (
+    {
+      albumId,
+      onError,
+      preventReloadImages
+    }: { albumId: string; onError?: () => void; preventReloadImages?: boolean },
+    store
+  ) => {
     try {
       const res = await axios.get<AlbumState>(
-        `${backendUrl}/albums/${router.query.id as string}`
+        `${backendUrl}/albums/${albumId}`
       );
-      store.dispatch(
-        getAlbumImages({
-          albumId: router.query.id as string,
-          page: 1,
-          redirectOnError: async () => router.push('/')
-        })
-      );
+      if (!preventReloadImages) {
+        store.dispatch(
+          getAlbumImages({
+            albumId: albumId,
+            page: 1
+          })
+        );
+      }
       return res.data;
     } catch (e) {
-      console.log('123131213');
-      router.push('/');
+      onError?.();
       return {};
     }
   }
@@ -76,21 +84,13 @@ export const deleteAlbum = createAsyncThunk(
 
 export const getAlbumImages = createAsyncThunk(
   'get images',
-  async ({
-    albumId,
-    redirectOnError
-  }: {
-    albumId: string;
-    page: number;
-    redirectOnError: () => {};
-  }) => {
+  async ({ albumId }: { albumId: string; page: number }) => {
     try {
       const res = await axios.get<{ data: Image[] }>(
         `${backendUrl}/image?albumId=${albumId}`
       );
       return res.data.data;
     } catch (e) {
-      redirectOnError();
       return [];
     }
   }
@@ -105,7 +105,10 @@ export const albumsSlice = createSlice({
       if (action.payload) {
         const fields = keys(action.payload);
         for (const field of fields) {
-          state[field] = action.payload[field];
+          if (field !== 'images') {
+            // image is comming in another request due to perfomance reasons
+            state[field] = action.payload[field];
+          }
         }
       }
     });

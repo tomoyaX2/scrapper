@@ -47,28 +47,30 @@ const Album = ({
   const { favourites, recentlyViewed } = useAppSelector(
     state => state.galleries
   );
+  const freshRate = useAppSelector(state => state.album.rate);
 
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
   useEffect(() => {
-    if (!album.id) {
+    if (!album?.id) {
       router.push('/');
     }
-  }, [album.id]);
+  }, [album?.id]);
 
   useEffect(() => {
-    dispatch(
-      getAlbumImages({
-        albumId: router.query.id as string,
-        page: 1,
-        redirectOnError: async () => router.push('/')
-      })
-    );
-    dispatch(getUser());
-    dispatch(getGalleries());
-    dispatch(getAlbumRate({ albumId: album.id }));
-    ReactGA.send({ hitType: 'pageview', page: window.location.href });
+    if (album?.id) {
+      dispatch(
+        getAlbumImages({
+          albumId: router.query.id as string,
+          page: 1
+        })
+      );
+      dispatch(getUser());
+      dispatch(getGalleries());
+      dispatch(getAlbumRate({ albumId: album.id }));
+      ReactGA.send({ hitType: 'pageview', page: window.location.href });
+    }
   }, [router.query.id]);
 
   useEffect(() => {
@@ -83,25 +85,25 @@ const Album = ({
     const result = [];
     if (favourites?.albums) {
       for (const galleryItem of favourites.albums) {
-        if (favourites.albums.some(el => el.id === album.id)) {
+        if (favourites.albums.some(el => el.id === album?.id)) {
           result.push(galleryItem.id);
         }
       }
       setIncludedIntoGalleries(result);
     }
-  }, [favourites?.albums, album.id]);
+  }, [favourites?.albums, album?.id]);
 
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
   };
 
   const onDeleteAlbum = () => {
-    dispatch(deleteAlbum(album.id));
+    dispatch(deleteAlbum(album?.id));
     router.push('/');
   };
 
   const onRateAlbum = (rate: number) => {
-    dispatch(rateAlbum({ albumId: album.id, rate }));
+    dispatch(rateAlbum({ albumId: album?.id, rate }));
   };
 
   const onChangeAlbumGalleryStatus = (galleryId: string) => {
@@ -110,15 +112,17 @@ const Album = ({
       setIncludedIntoGalleries(
         includedIntoGalleries.filter(id => id !== galleryId)
       );
-      dispatch(removeFromGallery({ galleryId, albumId: album.id }));
+      dispatch(removeFromGallery({ galleryId, albumId: album?.id }));
     } else {
       setIncludedIntoGalleries([...includedIntoGalleries, galleryId]);
       void dispatch(
-        addToGallery({ albumId: album.id, galleryId: favourites?.id ?? '' })
+        addToGallery({ albumId: album?.id, galleryId: favourites?.id ?? '' })
       );
     }
     dispatch(showNotification(defaultSuccessMessage));
   };
+
+  const targetRate = freshRate ? freshRate : album?.rate;
 
   return (
     <>
@@ -154,7 +158,7 @@ const Album = ({
                   <h1 className='text-lg flex flex-row'>{album.title}</h1>
 
                   <div className='flex flex-row items-center justify-start w-12'>
-                    <span>{album.rate?.toFixed(1)}</span>
+                    <span>{targetRate?.toFixed(1)}</span>
 
                     <StarIcon className='w-5 h-5 ml-2' fill='white' />
                   </div>

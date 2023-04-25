@@ -6,11 +6,11 @@ import {
 } from 'src/store/auth';
 import { cleanUser } from 'src/store/user';
 import { Button } from 'src/components/common/button';
-import { PersonIcon } from 'src/components/common/icons/person';
 import { Login } from 'src/components/layout/header/login/login.component';
 import { PopoverWindow } from 'src/components/common/menu';
 import { Registration } from 'src/components/layout/header/registration/registration.component';
 import { ForgotPassword } from './forgotPassword/forgotPassword.component';
+import { Avatar } from 'rsuite';
 
 const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -26,6 +26,7 @@ const Header = (): JSX.Element => {
   const onLogout = () => {
     dispatch(cleanUser());
   };
+  console.log(user, 'user');
 
   return (
     <header className='bg-primary flex items-center justify-between md:px-16 sm:px-2 xsm:px-2 py-4'>
@@ -130,8 +131,9 @@ const Header = (): JSX.Element => {
             }
             placement='bottom'
           >
-            <div className='cursor-pointer rounded-md w-6 h-6 flex items-center justify-center'>
-              <PersonIcon className='w-6 h-6' fill='white' />
+            <div className='cursor-pointer rounded-md flex items-center justify-center'>
+              <span>{user.data.name}</span>
+              <Avatar src={user.data?.avatarUrl} className='ml-4' />
             </div>
           </PopoverWindow>
         ) : (

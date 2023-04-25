@@ -39,8 +39,16 @@ const Reader = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    router.query.id && dispatch(getReaderImages(router.query.id as string));
-    router.query.id && dispatch(getAlbum(router));
+    router.query?.id && dispatch(getReaderImages(router.query.id as string));
+    router.query?.id &&
+      dispatch(
+        getAlbum({
+          albumId: Array.isArray(router.query?.id)
+            ? router.query.id[0]
+            : router.query.id,
+          onError: async () => router.push('/')
+        })
+      );
   }, [router.query.id]);
 
   useEffect(() => {
@@ -67,21 +75,9 @@ const Reader = (): JSX.Element => {
   const nextPage =
     currentPage < images.length - 1 ? currentPage + 1 : currentPage;
 
-  const onTouchEvent = onHandleTouch(
-    e =>
-      e &&
-      handleChangePage(
-        //@ts-expect-error cause of i want
-        e.target?.offsetWidth / 2 < e.touches[0].clientX ? nextPage : prevPage
-      )
-  );
+  const onTouchEvent = onHandleTouch(e => e && handleChangePage(nextPage));
 
-  const onClickEvent = onHandleTouch(e =>
-    handleChangePage(
-      //@ts-expect-error cause of i want
-      e.target?.offsetWidth / 2 < e.pageX ? nextPage : prevPage
-    )
-  );
+  const onClickEvent = onHandleTouch(e => handleChangePage(nextPage));
 
   const onTimerValueChange = (value: string) => {
     const testReg = /^\d+$/;
