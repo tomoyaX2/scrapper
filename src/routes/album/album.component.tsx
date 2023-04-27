@@ -33,6 +33,7 @@ import {
 } from 'src/store/notifications';
 import { StarIcon } from 'src/components/common/icons/star';
 import { TagsList } from 'src/components/common/tagsList';
+import { Comments } from './comments';
 
 const Album = ({
   initialData: album
@@ -123,7 +124,7 @@ const Album = ({
   };
 
   const targetRate = freshRate ? freshRate : album?.rate;
-
+  console.log(album, '12312');
   return (
     <>
       <Seo
@@ -139,235 +140,238 @@ const Album = ({
       />
 
       {!!albumImages?.length && (
-        <div className='flex flex-col items-center justify-start w-full'>
-          <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
-            <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full h-100'>
-              <Image
-                url={albumImages[0]?.url}
-                width={albumImages[0]?.width}
-                height={albumImages[0]?.height}
-                alt='preview'
-                horizontalSizes={{ height: 400, width: 600 }}
-                verticalSizes={{ height: 400, width: 320 }}
-              />
-            </div>
-
-            <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
-              <div>
-                <div className='flex flex-col'>
-                  <h1 className='text-lg flex flex-row'>{album.title}</h1>
-
-                  <div className='flex flex-row items-center justify-start w-12'>
-                    <span>{targetRate?.toFixed(1)}</span>
-
-                    <StarIcon className='w-5 h-5 ml-2' fill='white' />
-                  </div>
-                </div>
-
-                {album.language?.name ? (
-                  <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
-                    <span className='text-sm mr-4 w-20'>Language:</span>
-
-                    <Link
-                      href={`/?page=1&languages=${album.language.id}`}
-                      passHref
-                    >
-                      <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                          {album.language.name}
-                        </Tag>
-                      </a>
-                    </Link>
-                  </div>
-                ) : null}
-
-                {album.type?.name ? (
-                  <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
-                    <span className='text-sm mr-4 w-20'>Type:</span>
-
-                    <Link href={`/?page=1&types=${album.type.id}`} passHref>
-                      <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                          {album.type.name}
-                        </Tag>
-                      </a>
-                    </Link>
-                  </div>
-                ) : null}
-
-                {album.tags?.length ? (
-                  <div className='flex flex-row items-center justify-start w-full mt-4'>
-                    <span className='text-sm mr-4 w-20'>Tags:</span>
-
-                    <TagsList items={album.tags} />
-                  </div>
-                ) : null}
-
-                {album.authors?.length ? (
-                  <div className='flex flex-row items-center justify-start w-full mt-4'>
-                    <span className='text-sm mr-4 w-20'>Authors:</span>
-
-                    <div className='flex items-center flex-wrap'>
-                      {album.authors.map(el => (
-                        <Link
-                          href={`/?page=1&authors=${el.id}`}
-                          passHref
-                          key={el.id}
-                        >
-                          <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                              {el.name}
-                            </Tag>
-                          </a>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                {album.series?.length ? (
-                  <div className='flex flex-row items-center justify-start w-full mt-4'>
-                    <span className='text-sm mr-4 w-20'>Series:</span>
-
-                    <div className='flex items-center flex-wrap'>
-                      {album.series.map(el => (
-                        <Link
-                          href={`/?page=1&series=${el.id}`}
-                          passHref
-                          key={el.id}
-                        >
-                          <a target='_blank'>
-                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                              {el.name}
-                            </Tag>
-                          </a>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                {album.group?.name ? (
-                  <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 '>
-                    <span className='text-sm mr-4 w-20'>Group:</span>
-
-                    <Link href={`/?page=1&groups=${album.group.id}`} passHref>
-                      <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover '>
-                          {album.group?.name}
-                        </Tag>
-                      </a>
-                    </Link>
-                  </div>
-                ) : null}
-
-                <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
-                  <span className='text-sm mr-4 w-20'>Pages:</span>
-
-                  <span className='text-sm'>{albumImages.length}</span>
-                </div>
+        <div className='flex flex-row w-full justify-center'>
+          <div className='flex flex-col items-center justify-start'>
+            <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
+              <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full h-100'>
+                <Image
+                  url={albumImages[0]?.url}
+                  width={albumImages[0]?.width}
+                  height={albumImages[0]?.height}
+                  alt='preview'
+                  horizontalSizes={{ height: 400, width: 600 }}
+                  verticalSizes={{ height: 400, width: 320 }}
+                />
               </div>
 
-              <div className='w-full flex items-center justify-start mt-4 mb-2'>
-                <Button
-                  className='flex items-center px-2 -ml-2 '
-                  onClick={onDownloadAlbum}
-                >
-                  <Download fill='white' className='mr-2' />
-                  Download
-                </Button>
+              <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
+                <div>
+                  <div className='flex flex-col'>
+                    <h1 className='text-lg flex flex-row'>{album.title}</h1>
 
-                {user.isAdmin && (
-                  <Button
-                    className='flex items-center px-2'
-                    onClick={onDeleteAlbum}
-                  >
-                    <TrashIcon className='w-6 h-6 mt-1' fill='white' />
-                    Remove
-                  </Button>
-                )}
+                    <div className='flex flex-row items-center justify-start w-12'>
+                      <span>{targetRate?.toFixed(1)}</span>
 
-                {user.id ? (
-                  <PopoverWindow
-                    placement='right'
-                    trigger='click'
-                    content={
-                      <div className='flex flex-col items-center justify-center'>
-                        {[favourites].map(el => (
-                          <Checkbox
+                      <StarIcon className='w-5 h-5 ml-2' fill='white' />
+                    </div>
+                  </div>
+
+                  {album.language?.name ? (
+                    <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Language:</span>
+
+                      <Link
+                        href={`/?page=1&languages=${album.language.id}`}
+                        passHref
+                      >
+                        <a target='_blank'>
+                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                            {album.language.name}
+                          </Tag>
+                        </a>
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  {album.type?.name ? (
+                    <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Type:</span>
+
+                      <Link href={`/?page=1&types=${album.type.id}`} passHref>
+                        <a target='_blank'>
+                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                            {album.type.name}
+                          </Tag>
+                        </a>
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  {album.tags?.length ? (
+                    <div className='flex flex-row items-center justify-start w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Tags:</span>
+
+                      <TagsList items={album.tags} />
+                    </div>
+                  ) : null}
+
+                  {album.authors?.length ? (
+                    <div className='flex flex-row items-center justify-start w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Authors:</span>
+
+                      <div className='flex items-center flex-wrap'>
+                        {album.authors.map(el => (
+                          <Link
+                            href={`/?page=1&authors=${el.id}`}
+                            passHref
                             key={el.id}
-                            checked={includedIntoGalleries.includes(el.id)}
-                            onChange={() => onChangeAlbumGalleryStatus(el.id)}
                           >
-                            {el.name}
-                          </Checkbox>
+                            <a target='_blank'>
+                              <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                                {el.name}
+                              </Tag>
+                            </a>
+                          </Link>
                         ))}
                       </div>
-                    }
-                  >
-                    <Button className='flex items-center px-2'>
-                      <HeartIcon className='w-5 h-5 mr-2 mt-1' fill='white' />
-                      Add To -&gt;
-                    </Button>
-                  </PopoverWindow>
-                ) : (
-                  <PopoverWindow
-                    placement='top'
-                    trigger='hover'
-                    content={
-                      <span>
-                        You have to be logged it for saving this title
-                      </span>
-                    }
-                  >
-                    <Button className='flex items-center px-2'>
-                      <HeartIcon className='w-5 h-5 mr-2 mt-1' fill='white' />
-                      Add To Favourites
-                    </Button>
-                  </PopoverWindow>
-                )}
-              </div>
+                    </div>
+                  ) : null}
 
-              {user?.id && (
-                <div className='w-full flex items-center justify-start mt-1 mb-2 flex-row'>
-                  <span className='text-sm mr-4 w-20'>Rate this:</span>
+                  {album.series?.length ? (
+                    <div className='flex flex-row items-center justify-start w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Series:</span>
 
-                  <div className='m-3'>
-                    <Rate
-                      size='xs'
-                      color='cyan'
-                      onChange={onRateAlbum}
-                      value={currentRate}
-                    />
+                      <div className='flex items-center flex-wrap'>
+                        {album.series.map(el => (
+                          <Link
+                            href={`/?page=1&series=${el.id}`}
+                            passHref
+                            key={el.id}
+                          >
+                            <a target='_blank'>
+                              <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                                {el.name}
+                              </Tag>
+                            </a>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {album.group?.name ? (
+                    <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 '>
+                      <span className='text-sm mr-4 w-20'>Group:</span>
+
+                      <Link href={`/?page=1&groups=${album.group.id}`} passHref>
+                        <a target='_blank'>
+                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover '>
+                            {album.group?.name}
+                          </Tag>
+                        </a>
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                    <span className='text-sm mr-4 w-20'>Pages:</span>
+
+                    <span className='text-sm'>{albumImages.length}</span>
                   </div>
                 </div>
+
+                <div className='w-full flex items-center justify-start mt-4 mb-2'>
+                  <Button
+                    className='flex items-center px-2 -ml-2 '
+                    onClick={onDownloadAlbum}
+                  >
+                    <Download fill='white' className='mr-2' />
+                    Download
+                  </Button>
+
+                  {user.isAdmin && (
+                    <Button
+                      className='flex items-center px-2'
+                      onClick={onDeleteAlbum}
+                    >
+                      <TrashIcon className='w-6 h-6 mt-1' fill='white' />
+                      Remove
+                    </Button>
+                  )}
+
+                  {user.id ? (
+                    <PopoverWindow
+                      placement='right'
+                      trigger='click'
+                      content={
+                        <div className='flex flex-col items-center justify-center'>
+                          {[favourites].map(el => (
+                            <Checkbox
+                              key={el.id}
+                              checked={includedIntoGalleries.includes(el.id)}
+                              onChange={() => onChangeAlbumGalleryStatus(el.id)}
+                            >
+                              {el.name}
+                            </Checkbox>
+                          ))}
+                        </div>
+                      }
+                    >
+                      <Button className='flex items-center px-2'>
+                        <HeartIcon className='w-5 h-5 mr-2 mt-1' fill='white' />
+                        Add To -&gt;
+                      </Button>
+                    </PopoverWindow>
+                  ) : (
+                    <PopoverWindow
+                      placement='top'
+                      trigger='hover'
+                      content={
+                        <span>
+                          You have to be logged it for saving this title
+                        </span>
+                      }
+                    >
+                      <Button className='flex items-center px-2'>
+                        <HeartIcon className='w-5 h-5 mr-2 mt-1' fill='white' />
+                        Add To Favourites
+                      </Button>
+                    </PopoverWindow>
+                  )}
+                </div>
+
+                {user?.id && (
+                  <div className='w-full flex items-center justify-start mt-1 mb-2 flex-row'>
+                    <span className='text-sm mr-4 w-20'>Rate this:</span>
+
+                    <div className='m-3'>
+                      <Rate
+                        size='xs'
+                        color='cyan'
+                        onChange={onRateAlbum}
+                        value={currentRate}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className='flex flex-row flex-wrap items-center max-w-gallery justify-center bg-secondary mt-4'>
+              {albumImages.map(el =>
+                el ? (
+                  <Link
+                    href={`/album/${album.id}/reader/${el.id}`}
+                    passHref
+                    key={el.id}
+                  >
+                    <div className='px-4 py-2 cursor-pointer'>
+                      <Image
+                        url={el?.url}
+                        width={el.width}
+                        height={el.height}
+                        alt={`image-${el.id}`}
+                        horizontalSizes={{ height: 200, width: 450 }}
+                        verticalSizes={{ height: 300, width: 200 }}
+                        className='px-4 py-2'
+                      />
+                    </div>
+                  </Link>
+                ) : null
               )}
             </div>
           </div>
-
-          <div className='flex flex-row flex-wrap items-center max-w-gallery justify-center bg-secondary mt-4'>
-            {albumImages.map(el =>
-              el ? (
-                <Link
-                  href={`/album/${album.id}/reader/${el.id}`}
-                  passHref
-                  key={el.id}
-                >
-                  <div className='px-4 py-2 cursor-pointer'>
-                    <Image
-                      url={el?.url}
-                      width={el.width}
-                      height={el.height}
-                      alt={`image-${el.id}`}
-                      horizontalSizes={{ height: 200, width: 450 }}
-                      verticalSizes={{ height: 300, width: 200 }}
-                      className='px-4 py-2'
-                    />
-                  </div>
-                </Link>
-              ) : null
-            )}
-          </div>
+          <Comments />
         </div>
       )}
     </>

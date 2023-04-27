@@ -16,7 +16,6 @@
     "jsx": "preserve",
     "newLine": "lf",
     "incremental": true,
-    "keyofStringsOnly": true,
     "noImplicitAny": true,
     "allowUnreachableCode": false,
     "strictBindCallApply": true,

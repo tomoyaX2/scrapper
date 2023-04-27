@@ -3,7 +3,7 @@ import { backendUrl } from '@shared/api';
 import { keys } from '@shared/utils/keys';
 import axios from 'axios';
 import { RootState } from '..';
-import { AlbumState, Image } from './types';
+import { AlbumComment, AlbumState, Image } from './types';
 
 const initialState: AlbumState = {
   id: '',
@@ -96,6 +96,50 @@ export const getAlbumImages = createAsyncThunk(
   }
 );
 
+export const getComments = createAsyncThunk(
+  'get comments',
+  async ({ albumId }: { albumId: string }) => {
+    try {
+      const res = await axios.get<{ data: AlbumComment[] }>(
+        `${backendUrl}/comments?page=1&perPage=1000&albumId=${albumId}`
+      );
+      return res.data.data;
+    } catch (e) {
+      return [];
+    }
+  }
+);
+
+export const sendComment = createAsyncThunk(
+  'send comment',
+  async ({ albumId, text }: { albumId: string; text: string }, store) => {
+    try {
+      await axios.post(`${backendUrl}/comments`, {
+        albumId,
+        text
+      });
+      store.dispatch(getComments({ albumId }));
+    } catch (e) {
+      return [];
+    }
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  'delete comment',
+  async (
+    { albumId, commentId }: { albumId: string; commentId: string },
+    store
+  ) => {
+    try {
+      await axios.delete(`${backendUrl}/comments/${commentId}/${albumId}`);
+      store.dispatch(getComments({ albumId }));
+    } catch (e) {
+      return [];
+    }
+  }
+);
+
 export const albumsSlice = createSlice({
   name: 'albums',
   initialState,
@@ -122,6 +166,12 @@ export const albumsSlice = createSlice({
       getAlbumRate.fulfilled,
       (state, action: PayloadAction<{ rate: number }>) => {
         state.currentRate = action.payload.rate;
+      }
+    );
+    builder.addCase(
+      getComments.fulfilled,
+      (state, action: PayloadAction<AlbumComment[]>) => {
+        state.comments = action.payload;
       }
     );
   }

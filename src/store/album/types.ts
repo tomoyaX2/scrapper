@@ -1,3 +1,5 @@
+import { User } from '../user/types';
+
 export type Image = {
   id: string;
   name: string;
@@ -5,6 +7,12 @@ export type Image = {
   width: number;
   height: number;
 };
+
+export interface AlbumComment {
+  text: string;
+  id: string;
+  author: User;
+}
 
 export type AlbumState = {
   title: string;
@@ -23,4 +31,5 @@ export type AlbumState = {
   views?: number;
   rate?: number;
   currentRate?: number;
+  comments?: AlbumComment[];
 };
