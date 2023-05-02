@@ -31,6 +31,8 @@ const Home = (): JSX.Element => {
     ReactGA.send({ hitType: 'pageview' });
   }, []);
 
+  data.map(album => console.log(album));
+
   const router = useRouter();
   if (router.isReady) {
     return (

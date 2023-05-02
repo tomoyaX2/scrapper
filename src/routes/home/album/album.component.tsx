@@ -3,13 +3,13 @@ import React from 'react';
 import { cdnUrl } from '@shared/api';
 // import { EyeIcon } from '@shared/ui/atoms/icons/eye';
 import { ImageIcon } from 'src/components/common/icons/image';
-// import { StarIcon } from '@shared/ui/atoms/icons/star';
 import type { AlbumProps } from './album.props';
 import { resetAlbumState } from 'src/store/albums';
 import { Image } from 'src/components/common/image';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/store';
 import { EyeIcon } from 'src/components/common/icons/eye';
+import { StarIcon } from 'src/components/common/icons/star';
 
 const Album = ({
   album: {
@@ -21,7 +21,8 @@ const Album = ({
     totalImages,
     views,
     path,
-    previewOrientation
+    previewOrientation,
+    rate
   }
 }: AlbumProps): JSX.Element => {
   const dispatch = useDispatch();
@@ -71,11 +72,11 @@ const Album = ({
               <span>{totalImages}</span>
             </div>
 
-            {/* <div className='flex items-center justify-center ml-3'>
-            <StarIcon className='w-4 h-4 mr-2' fill='#ffb400' />
+            <div className='flex items-center justify-center ml-3'>
+              <StarIcon className='w-4 h-4 mr-2' fill='#ffb400' />
 
-            <span>{0}</span>
-          </div> */}
+              <span>{rate ?? 0}</span>
+            </div>
 
             {user.isAdmin && (
               <div className='flex items-center justify-center ml-3'>
