@@ -4,6 +4,7 @@ type AlbumProps = {
   album: Album;
   page?: number;
   perPage?: number;
+  galleryId?: string;
 };
 
 export type { AlbumProps };

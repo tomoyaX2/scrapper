@@ -40,7 +40,7 @@ const Favourites = (): JSX.Element => {
                 ))}
             </div>
           </div>
-        ) : !galleryList?.length ? (
+        ) : !galleryList?.[0].albums.length ? (
           <div className='flex flex-col items-center justify-center w-full'>
             <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
               No albums here
@@ -50,7 +50,11 @@ const Favourites = (): JSX.Element => {
           <div className='flex flex-col items-center justify-center w-full'>
             <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
               {galleryList[0]?.albums.map(album => (
-                <Album album={album} key={album.id} />
+                <Album
+                  album={album}
+                  key={album.id}
+                  galleryId={galleryList[0].id}
+                />
               ))}
             </div>
           </div>
