@@ -44,7 +44,7 @@ const Album = ({
   }, []);
 
   const onRemoveFromGallery = (albumId: string, galleryId: string) => {
-    dispatch(removeFromGallery({ albumId, galleryId }));
+    dispatch(removeFromGallery({ albumId: albumId, galleryId: galleryId }));
   };
 
   const onHover = (status: boolean) => () => {
@@ -55,7 +55,7 @@ const Album = ({
     setImagePath(`${cdnUrl}/images-new/${path.split('/')[1]}/10002.webp`);
   const isInreadableTitle = title?.substring(0, 30).endsWith('(');
   return (
-    //div since i should make a column direction
+    //div since i should make a column direction '
     <div className='flex flex-col'>
       <div className='bg-primary w-80 mt-12 mx-4 h-7 p-1 '>
         {galleryId && (
