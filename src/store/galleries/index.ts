@@ -33,8 +33,9 @@ export const addToGallery = createAsyncThunk(
 
 export const removeFromGallery = createAsyncThunk(
   'remove from gallery',
-  async (body: { galleryId: string; albumId: string }) => {
+  async (body: { galleryId: string; albumId: string }, store) => {
     await axios.patch(`${backendUrl}/gallery/remove-album`, body);
+    store.dispatch(getGalleries());
   }
 );
 
