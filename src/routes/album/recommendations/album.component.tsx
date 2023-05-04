@@ -1,19 +1,14 @@
 import Link from 'next/link';
 import React from 'react';
 import { cdnUrl } from '@shared/api';
-// import { EyeIcon } from '@shared/ui/atoms/icons/eye';
 import { ImageIcon } from 'src/components/common/icons/image';
-// import { StarIcon } from '@shared/ui/atoms/icons/star';
-import type { AlbumProps } from './album.props';
 import { resetAlbumState } from 'src/store/albums';
 import { Image } from 'src/components/common/image';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'src/store';
+import { AppDispatch, useAppSelector } from 'src/store';
 import { EyeIcon } from 'src/components/common/icons/eye';
-import { removeFromGallery } from 'src/store/galleries';
-import { Button } from 'rsuite';
-import { TrashIcon } from 'src/components/common/icons/trash';
 import { StarIcon } from 'src/components/common/icons/star';
+import { Album as AlbumType } from 'src/store/albums/types';
 
 const Album = ({
   album: {
@@ -27,10 +22,12 @@ const Album = ({
     views,
     path,
     previewOrientation
-  },
-  galleryId
-}: AlbumProps): JSX.Element => {
+  }
+}: {
+  album: AlbumType;
+}): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
+  const { data: user } = useAppSelector(state => state.user);
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const [imagePath, setImagePath] = React.useState(
     preview ? preview : `${cdnUrl}/images-new/${path?.split('/')[1]}/10001.webp`
@@ -42,10 +39,6 @@ const Album = ({
     };
   }, []);
 
-  const onRemoveFromGallery = (albumId: string, galleryId: string) => {
-    dispatch(removeFromGallery({ albumId, galleryId }));
-  };
-
   const onHover = (status: boolean) => () => {
     setHovered(status);
   };
@@ -56,17 +49,6 @@ const Album = ({
   return (
     //div since i should make a column direction
     <div className='flex flex-col'>
-      <div className='bg-primary w-80 mt-12 mx-4 h-7 p-1 '>
-        {galleryId && (
-          <Button
-            className='flex items-center px-2 h-5 float-right justify-center items-center'
-            onClick={() => onRemoveFromGallery(id, galleryId)}
-          >
-            <TrashIcon className='w-6 h-6 mt-1' fill='white' />
-            Remove
-          </Button>
-        )}
-      </div>
       <Link href={`/album/${id}`} passHref>
         <a target='_blank'>
           <div
@@ -99,11 +81,13 @@ const Album = ({
                 <span>{rate ?? 0}</span>
               </div>
 
-              <div className='flex items-center justify-center ml-3'>
-                <EyeIcon className='w-4 h-4 mr-2' fill='white' />
+              {user.isAdmin && (
+                <div className='flex items-center justify-center ml-3'>
+                  <EyeIcon className='w-4 h-4 mr-2' fill='white' />
 
-                <span>{views ?? 0}</span>
-              </div>
+                  <span>{views ?? 0}</span>
+                </div>
+              )}
             </div>
 
             <div className={isHovered ? 'z-50' : ''}>

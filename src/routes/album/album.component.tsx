@@ -12,7 +12,8 @@ import {
   downloadAlbum,
   getAlbumImages,
   rateAlbum,
-  getAlbumRate
+  getAlbumRate,
+  getRecommentdations
 } from 'src/store/album';
 import { Image } from 'src/components/common/image';
 import ReactGA from 'react-ga4';
@@ -34,6 +35,7 @@ import {
 import { StarIcon } from 'src/components/common/icons/star';
 import { TagsList } from 'src/components/common/tagsList';
 import { Comments } from './comments';
+import { Recommendations } from './recommendations';
 
 const Album = ({
   initialData: album
@@ -49,7 +51,7 @@ const Album = ({
     state => state.galleries
   );
   const freshRate = useAppSelector(state => state.album.rate);
-
+  const recommendations = useAppSelector(state => state.album.recommendations);
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
@@ -69,6 +71,7 @@ const Album = ({
       );
       dispatch(getUser());
       dispatch(getGalleries());
+      dispatch(getRecommentdations({ albumId: album.id }));
       dispatch(getAlbumRate({ albumId: album.id }));
       ReactGA.send({ hitType: 'pageview', page: window.location.href });
     }
@@ -124,7 +127,7 @@ const Album = ({
   };
 
   const targetRate = freshRate ? freshRate : album?.rate;
-  console.log(album, '12312');
+  console.log(recommendations, 'recommendations');
   return (
     <>
       <Seo
@@ -141,6 +144,26 @@ const Album = ({
 
       {!!albumImages?.length && (
         <div className='flex flex-row w-full justify-center'>
+          <div className='flex flex-col'>
+            {!!recommendations?.sameAuthor?.length && (
+              <Recommendations
+                items={recommendations.sameAuthor}
+                label='Same author'
+              />
+            )}
+            {!!recommendations?.sameGroups?.length && (
+              <Recommendations
+                items={recommendations.sameGroups}
+                label='Same groups'
+              />
+            )}
+            {!!recommendations?.sameSeries?.length && (
+              <Recommendations
+                items={recommendations.sameSeries}
+                label='Same series'
+              />
+            )}
+          </div>
           <div className='flex flex-col items-center justify-start'>
             <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
               <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full h-100'>

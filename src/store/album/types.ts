@@ -1,3 +1,4 @@
+import { Album } from '../albums/types';
 import { User } from '../user/types';
 
 export type Image = {
@@ -12,6 +13,12 @@ export interface AlbumComment {
   text: string;
   id: string;
   author: User;
+}
+
+export interface Recommendations {
+  sameAuthor?: Album[];
+  sameGroups?: Album[];
+  sameSeries?: Album[];
 }
 
 export type AlbumState = {
@@ -32,4 +39,5 @@ export type AlbumState = {
   rate?: number;
   currentRate?: number;
   comments?: AlbumComment[];
+  recommendations: Recommendations;
 };

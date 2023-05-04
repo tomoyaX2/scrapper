@@ -3,14 +3,15 @@ import { backendUrl } from '@shared/api';
 import { keys } from '@shared/utils/keys';
 import axios from 'axios';
 import { RootState } from '..';
-import { AlbumComment, AlbumState, Image } from './types';
+import { AlbumComment, AlbumState, Image, Recommendations } from './types';
 
 const initialState: AlbumState = {
   id: '',
   images: [],
   downloadPath: '',
   title: '',
-  currentRate: 0
+  currentRate: 0,
+  recommendations: {}
 };
 
 export const getAlbumRate = createAsyncThunk(
@@ -110,6 +111,20 @@ export const getComments = createAsyncThunk(
   }
 );
 
+export const getRecommentdations = createAsyncThunk(
+  'get recommendations',
+  async ({ albumId }: { albumId: string }) => {
+    try {
+      const res = await axios.get<{ data: Recommendations }>(
+        `${backendUrl}/albums/${albumId}/recommendations`
+      );
+      return res.data;
+    } catch (e) {
+      return {};
+    }
+  }
+);
+
 export const sendComment = createAsyncThunk(
   'send comment',
   async ({ albumId, text }: { albumId: string; text: string }, store) => {
@@ -172,6 +187,12 @@ export const albumsSlice = createSlice({
       getComments.fulfilled,
       (state, action: PayloadAction<AlbumComment[]>) => {
         state.comments = action.payload;
+      }
+    );
+    builder.addCase(
+      getRecommentdations.fulfilled,
+      (state, action: PayloadAction<Recommendations>) => {
+        state.recommendations = action.payload;
       }
     );
   }

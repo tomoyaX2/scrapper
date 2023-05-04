@@ -48,7 +48,7 @@ const Comments = () => {
   };
 
   return (
-    <div className='ml-4 flex flex-col w-80 xl:block xsm:hidden'>
+    <div className='ml-4 flex flex-col w-80 xl:block xsm:hidden mt-4'>
       <div
         className='flex flex-row items-center justify-start h-12 w-full bg-secondary px-4 cursor-pointer'
         onClick={changeExpandState}
@@ -88,13 +88,12 @@ const Comments = () => {
                   </span>
                   <span className=''>{el.text}</span>
                 </div>
-                {el.author.id === user.id ||
-                  (user.isAdmin && (
-                    <TrashIcon
-                      onClick={() => onDeleteComment(el.id)}
-                      className='w-8 h-8 cursor-pointer'
-                    />
-                  ))}
+                {(el.author.id === user.id || user.isAdmin) && (
+                  <TrashIcon
+                    onClick={() => onDeleteComment(el.id)}
+                    className='w-8 h-8 cursor-pointer'
+                  />
+                )}
               </div>
             ))}
           </div>

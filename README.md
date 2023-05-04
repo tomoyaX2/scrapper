@@ -15,3 +15,9 @@ There are some pre-made functionality you can take as an example or use it right
 ## Dev Mode
 
 ## Build
+
+# TODO LIST
+
+- [] Unify Album component
+- [] improve SEO ( investigated what may be improved, will add a plan later )
+- [] Split album page code
