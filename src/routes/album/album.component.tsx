@@ -353,7 +353,7 @@ const Album = ({
                   )}
                 </div>
 
-                {user?.id && (
+                {user?.id ? (
                   <div className='w-full flex items-center justify-start mt-1 mb-2 flex-row'>
                     <span className='text-sm mr-4 w-20'>Rate this:</span>
 
@@ -364,6 +364,24 @@ const Album = ({
                         onChange={onRateAlbum}
                         value={currentRate}
                       />
+                    </div>
+                  </div>
+                ) : (
+                  <div className='w-full flex items-center justify-start mt-1 mb-2 flex-row'>
+                    <span className='text-sm mr-4 w-20'>Rate this:</span>
+
+                    <div className='m-3'>
+                      <PopoverWindow
+                        placement='top'
+                        trigger='hover'
+                        content={
+                          <span>
+                            You have to be logged it for rate this title
+                          </span>
+                        }
+                      >
+                        <Rate size='xs' color='cyan' value={currentRate} />
+                      </PopoverWindow>
                     </div>
                   </div>
                 )}
