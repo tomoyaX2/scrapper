@@ -69,7 +69,7 @@ const Home = (): JSX.Element => {
             <div className='flex flex-col items-center justify-center w-full'>
               <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
                 {data.map(album => (
-                  <Album album={album} key={album.id} />
+                  <Album album={album} key={album.id} isHome />
                 ))}
               </div>
 

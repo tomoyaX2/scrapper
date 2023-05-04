@@ -5,6 +5,7 @@ type AlbumProps = {
   page?: number;
   perPage?: number;
   galleryId?: string;
+  isHome?: boolean;
 };
 
 export type { AlbumProps };

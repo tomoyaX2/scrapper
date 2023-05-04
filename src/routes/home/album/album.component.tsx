@@ -8,12 +8,13 @@ import type { AlbumProps } from './album.props';
 import { resetAlbumState } from 'src/store/albums';
 import { Image } from 'src/components/common/image';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'src/store';
+import { AppDispatch, useAppSelector } from 'src/store';
 import { EyeIcon } from 'src/components/common/icons/eye';
 import { removeFromGallery } from 'src/store/galleries';
 import { Button } from 'rsuite';
 import { TrashIcon } from 'src/components/common/icons/trash';
 import { StarIcon } from 'src/components/common/icons/star';
+import { deleteAlbum } from 'src/store/album';
 
 const Album = ({
   album: {
@@ -28,13 +29,15 @@ const Album = ({
     path,
     previewOrientation
   },
-  galleryId
+  galleryId,
+  isHome
 }: AlbumProps): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const [imagePath, setImagePath] = React.useState(
     preview ? preview : `${cdnUrl}/images-new/${path?.split('/')[1]}/10001.webp`
   );
+  const { data: user } = useAppSelector(state => state.user);
 
   React.useEffect(() => {
     () => {
@@ -42,8 +45,12 @@ const Album = ({
     };
   }, []);
 
-  const onRemoveFromGallery = (albumId: string, galleryId: string) => {
+  const onRemoveFromGallery = (albumId: string, galleryId = '') => {
     dispatch(removeFromGallery({ albumId, galleryId }));
+  };
+
+  const onDeleteFromHome = () => {
+    dispatch(deleteAlbum(id));
   };
 
   const onHover = (status: boolean) => () => {
@@ -57,10 +64,14 @@ const Album = ({
     //div since i should make a column direction
     <div className='flex flex-col'>
       <div className='bg-primary w-80 mt-12 mx-4 h-7 p-1 '>
-        {galleryId && (
+        {(galleryId || (isHome && user.isAdmin)) && (
           <Button
             className='flex items-center px-2 h-5 float-right justify-center items-center'
-            onClick={() => onRemoveFromGallery(id, galleryId)}
+            onClick={
+              isHome
+                ? () => onDeleteFromHome()
+                : () => onRemoveFromGallery(id, galleryId)
+            }
           >
             <TrashIcon className='w-6 h-6 mt-1' fill='white' />
             Remove

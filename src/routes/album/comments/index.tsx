@@ -6,6 +6,7 @@ import { Input, Button } from 'rsuite';
 import { deleteComment, getComments, sendComment } from 'src/store/album';
 import { useRouter } from 'next/router';
 import { TrashIcon } from 'src/components/common/icons/trash';
+import { PopoverWindow } from 'src/components/common/menu';
 
 const Comments = () => {
   const router = useRouter();
@@ -61,7 +62,7 @@ const Comments = () => {
       </div>
       {isExpanded && (
         <>
-          {user?.id && (
+          {user?.id ? (
             <div className='flex flex-col mt-2'>
               <Input
                 as='textarea'
@@ -74,6 +75,24 @@ const Comments = () => {
                 Send
               </Button>
             </div>
+          ) : (
+            <PopoverWindow
+              placement='top'
+              trigger='hover'
+              content={
+                <span>You have to be logged it for comment this title</span>
+              }
+            >
+              <div className='flex flex-col mt-2'>
+                <Input
+                  as='textarea'
+                  rows={3}
+                  placeholder='Your comment...'
+                  value={currentComment}
+                  onChange={handleChangeComment}
+                />
+              </div>
+            </PopoverWindow>
           )}
           <div className='flex flex-col items-center justify-start w-full text-white-300'>
             {comments?.map(el => (
