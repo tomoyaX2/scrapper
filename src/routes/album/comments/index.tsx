@@ -91,7 +91,6 @@ const Comments = () => {
                   value={currentComment}
                   onChange={handleChangeComment}
                 />
-                <Button className='bg-secondary mt-2'>Send</Button>
               </div>
             </PopoverWindow>
           )}
