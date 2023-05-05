@@ -36,3 +36,23 @@ a:active {
   text-decoration: none;
   color: inherit;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(23, 23, 23, 0.95);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(68, 68, 68, 0.95);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 37, 37, 0.95);
+}
