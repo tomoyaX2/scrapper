@@ -1,6 +1,6 @@
 import { Album } from './album.component';
 import { useState } from 'react';
-import { Arrow } from 'src/components/common/icons/arrow';
+import { Arrow } from 'src/components/common/icons/arrowRight';
 import { Album as AlbumType } from 'src/store/albums/types';
 
 const Recommendations = ({

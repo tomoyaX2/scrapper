@@ -36,6 +36,7 @@ import { StarIcon } from 'src/components/common/icons/star';
 import { TagsList } from 'src/components/common/tagsList';
 import { Comments } from './comments';
 import { Recommendations } from './recommendations';
+import { ScrollToUpArrow } from 'src/components/common/scrollArrow';
 
 const Album = ({
   initialData: album
@@ -55,6 +56,7 @@ const Album = ({
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
+
   useEffect(() => {
     if (!album?.id) {
       router.push('/');
@@ -387,7 +389,6 @@ const Album = ({
                 )}
               </div>
             </div>
-
             <div className='flex flex-row flex-wrap items-center max-w-gallery justify-center bg-secondary mt-4'>
               {albumImages.map(el =>
                 el ? (
@@ -413,6 +414,7 @@ const Album = ({
             </div>
           </div>
           <Comments />
+          <ScrollToUpArrow />
         </div>
       )}
     </>

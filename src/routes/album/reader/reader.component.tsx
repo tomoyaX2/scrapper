@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { SelectPicker, Input } from 'rsuite';
-import { Arrow } from 'src/components/common/icons/arrow';
+import { Arrow } from 'src/components/common/icons/arrowRight';
 import {
   switchPageTimeoutHandler,
   switchPageIndexTimeout

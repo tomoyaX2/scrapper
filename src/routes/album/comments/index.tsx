@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from 'rsuite';
-import { Arrow } from 'src/components/common/icons/arrow';
+import { Arrow } from 'src/components/common/icons/arrowRight';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { Input, Button } from 'rsuite';
 import { deleteComment, getComments, sendComment } from 'src/store/album';
