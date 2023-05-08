@@ -3,6 +3,7 @@ import { Album } from '../albums/types';
 export type Gallery = {
   id: string;
   name: string;
+  maxAmount: number;
   albums: Album[];
 };
 
