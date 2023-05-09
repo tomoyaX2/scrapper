@@ -5,13 +5,18 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import ReactGA from 'react-ga4';
 import { getUser } from 'src/store/user';
 import { getGalleries, setMaxAmount } from 'src/store/galleries';
-import { Input } from 'rsuite';
+import { SelectPicker } from 'rsuite';
 
 const RecentlyViewed = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { recentlyViewed, isLoading } = useAppSelector(
     state => state.galleries
   );
+  const selectData = [
+    { label: '20', value: '20' },
+    { label: '50', value: '50' },
+    { label: '100', value: '100' }
+  ];
 
   useEffect(() => {
     dispatch(
@@ -32,14 +37,14 @@ const RecentlyViewed = (): JSX.Element => {
   if (router.isReady) {
     return (
       <div className='flex flex-col'>
-        <div className='flex items-start justify-start mt-10 mx-20 '>
-          <Input
-            className='w-60'
-            onChange={maxAmount => onSetMaxAmount(recentlyViewed.id, maxAmount)}
-            type='number'
-            placeholder='Set Albums Max Amount'
-          />
-        </div>
+        <SelectPicker
+          data={selectData}
+          className='mx-20 mt-10 w-60'
+          placeholder='Albums Max Amount'
+          searchable={false}
+          onChange={maxAmount => onSetMaxAmount(recentlyViewed.id, maxAmount)}
+        />
+
         {isLoading ? (
           <div className='flex flex-col items-center justify-center w-full'>
             <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
