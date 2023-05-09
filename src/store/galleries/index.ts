@@ -3,7 +3,7 @@ import { backendUrl } from '@shared/api';
 import axios from 'axios';
 import { Gallery, GalleryState } from './types';
 
-const initialGallery = { id: '', name: '', albums: [] };
+const initialGallery = { id: '', name: '', maxAmount: 0, albums: [] };
 
 const initialState: GalleryState = {
   favourites: initialGallery,
@@ -35,6 +35,14 @@ export const removeFromGallery = createAsyncThunk(
   'remove from gallery',
   async (body: { galleryId: string; albumId: string }, store) => {
     await axios.patch(`${backendUrl}/gallery/remove-album`, body);
+    store.dispatch(getGalleries());
+  }
+);
+
+export const setMaxAmount = createAsyncThunk(
+  'set gallery max amount',
+  async (body: { galleryId: string; maxAmount: string }, store) => {
+    await axios.patch(`${backendUrl}/gallery/update-amount`, body);
     store.dispatch(getGalleries());
   }
 );
