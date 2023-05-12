@@ -61,7 +61,11 @@ const Comments = () => {
         <span className='ml-4 text-md font-semibold'> Comments</span>
       </div>
       {isExpanded && (
-        <>
+        <div
+          className={`block origin-top ${
+            isExpanded ? 'animate-growDown' : 'animate-growUp'
+          }`}
+        >
           {user?.id ? (
             <div className='flex flex-col mt-2'>
               <Input
@@ -116,7 +120,7 @@ const Comments = () => {
               </div>
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
