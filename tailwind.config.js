@@ -46,6 +46,20 @@ module.exports = {
         84: '21rem',
         100: ' 25rem',
         112: '28rem'
+      },
+      animation: {
+        growDown: 'growDown 300ms ease-in-out forwards',
+        growUp: 'growUp 300ms ease-in-out forwards'
+      },
+      keyframes: {
+        growDown: {
+          '0%': { transform: 'scaleY(0)' },
+          '100%': { transform: 'scaleY(1)' }
+        },
+        growUp: {
+          '0%': { transform: 'scaleY(1)' },
+          '100%': { transform: 'scaleY(0)' }
+        }
       }
     }
   },
