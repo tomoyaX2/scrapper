@@ -48,6 +48,12 @@ const Home = (): JSX.Element => {
         />
 
         <div className='flex flex-col'>
+          <div className='w-full bg-[#1a1d24] p-1 text-center text-xs'>
+            Welcome! Ads is a very annoying thing, so i&apos;m running this
+            website on my own efforts and this policy won&apos;t change in the
+            future. If you wanna to support me:
+            <a href='patreon.com/MangaMischief'> Patreon</a>
+          </div>
           <SearchBar />
 
           {isLoading ? (
