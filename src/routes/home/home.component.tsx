@@ -48,11 +48,13 @@ const Home = (): JSX.Element => {
         />
 
         <div className='flex flex-col'>
-          <div className='w-full bg-[#1a1d24] p-1 text-center text-xs'>
-            Welcome! Ads is a very annoying thing, so i&apos;m running this
-            website on my own efforts and this policy won&apos;t change in the
-            future. If you wanna to support me:
-            <a href='patreon.com/MangaMischief'> Patreon</a>
+          <div className='w-full bg-[#1a1d24] p-1'>
+            <span className='text-left text-xs ml-16'>
+              Welcome! This resource is ad-free and i want to leave it as as in
+              the future too. Also i&apos;m planning to add new features ( e.g.
+              anime, UI improvements ), so if you wanna to support me, you can
+              do it through (<a href='patreon.com/MangaMischief'> Patreon</a>)
+            </span>
           </div>
           <SearchBar />
 

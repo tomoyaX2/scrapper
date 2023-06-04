@@ -1,9 +1,9 @@
 export const Policy = (): JSX.Element => (
   <div className='flex w-full items-center justify-center'>
     <div className='w-1/2 p-3'>
-      <h1 className='text-4xl text-center'>Our Policy</h1>
+      <span className='flex left text-4xl text-center my-4'>Our Policy</span>
       <hr />
-      <h2 className='m-5 text-2xl'>Copyright Protection</h2>
+      <span className='flex left my-5 text-2xl'>Copyright Protection</span>
       We adhere to the Digital Millennium Copyright Act (DMCA) and other
       applicable copyright laws.
       <br />
@@ -14,12 +14,13 @@ export const Policy = (): JSX.Element => (
       intellectual property rights, including the webpage and/or internet
       address where such material is hosted, we promptly take necessary and
       sufficient measures to cease the infringement of intellectual property.
-      <h2 className='m-5 text-2xl'>Copyright Infringement Notice</h2>
+      <span className='flex left my-5 text-2xl '>
+        Copyright Infringement Notice
+      </span>
       If you believe that the material on the website mangamischief.com
       infringes your copyright, you may submit a notice of copyright
-      infringement to our agent at abuse@mangamischief.com, and
-      mangamischief.com will expeditiously block the listed materials as stated
-      in the notice.
+      infringement to our agent at xHentaisupp@gmail.com, and mangamischief.com
+      will expeditiously block the listed materials as stated in the notice.
       <br />
       <br />
       Part 512(c) of the Digital Millennium Copyright Act sets forth certain
@@ -62,7 +63,7 @@ export const Policy = (): JSX.Element => (
       <br />
       <br />
       Upon receipt of the above-mentioned copyright infringement notice,
-      xHentaisupp@gmail.com takes action within 3 (three) business days.
+      mangamischief.com takes action within 3 (three) business days.
       <br />
       <br />
       mangamischief.com reserves the right to terminate the services of account
