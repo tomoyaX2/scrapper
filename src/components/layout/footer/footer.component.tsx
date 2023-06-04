@@ -9,7 +9,9 @@ const Footer = (): JSX.Element => (
         Feel free to write for questions, bug reports or proposals
       </span>
       <span className='text-md'>
-        <Link href='/policy'>Our Policy</Link>
+        <u>
+          <Link href='/policy'>Our Policy</Link>
+        </u>
       </span>
     </div>
   </footer>

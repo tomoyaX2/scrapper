@@ -53,7 +53,10 @@ const Home = (): JSX.Element => {
               Welcome! This resource is ad-free and i want to leave it as as in
               the future too. Also i&apos;m planning to add new features ( e.g.
               anime, UI improvements ), so if you wanna to support me, you can
-              do it through (<a href='patreon.com/MangaMischief'> Patreon</a>)
+              do it through:{'  '}
+              <a href='https://www.patreon.com/MangaMischief'>
+                <u>Patreon</u>
+              </a>
             </span>
           </div>
           <SearchBar />
