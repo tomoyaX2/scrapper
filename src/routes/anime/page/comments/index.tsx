@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from 'rsuite';
-import { Arrow } from 'src/components/common/icons/arrow';
+import { Arrow } from 'src/components/common/icons/arrowRight';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { Input, Button } from 'rsuite';
-import { deleteComment, getComments, sendComment } from 'src/store/album';
 import { useRouter } from 'next/router';
 import { TrashIcon } from 'src/components/common/icons/trash';
 import { PopoverWindow } from 'src/components/common/menu';
+import {
+  deleteVideoComment,
+  getVideoComments,
+  sendVideoComment
+} from 'src/store/anime/item';
 
 const Comments = () => {
   const router = useRouter();
@@ -18,7 +22,7 @@ const Comments = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getComments({ albumId: router.query?.id as string }));
+    dispatch(getVideoComments({ videoId: router.query?.id as string }));
   }, []);
 
   const changeExpandState = () => {
@@ -32,8 +36,8 @@ const Comments = () => {
   const onSendComment = async () => {
     if (!!currentComment) {
       await dispatch(
-        sendComment({
-          albumId: (router.query?.id as string) ?? '',
+        sendVideoComment({
+          videoId: (router.query?.id as string) ?? '',
           text: currentComment
         })
       );
@@ -44,7 +48,10 @@ const Comments = () => {
 
   const onDeleteComment = (commentId: string) => {
     dispatch(
-      deleteComment({ albumId: (router.query?.id as string) ?? '', commentId })
+      deleteVideoComment({
+        albumId: (router.query?.id as string) ?? '',
+        commentId
+      })
     );
   };
 

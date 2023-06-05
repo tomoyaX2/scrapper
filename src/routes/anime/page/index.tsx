@@ -95,11 +95,9 @@ const AnimePage = ({
                     <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                       <span className='text-sm mr-4 w-20'>Language:</span>
 
-                      <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                          {video.language.name}
-                        </Tag>
-                      </a>
+                      <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                        {video.language.name}
+                      </Tag>
                     </div>
                   ) : null}
 
@@ -107,11 +105,9 @@ const AnimePage = ({
                     <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                       <span className='text-sm mr-4 w-20'>Type:</span>
 
-                      <a target='_blank'>
-                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                          {video.type.name}
-                        </Tag>
-                      </a>
+                      <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                        {video.type.name}
+                      </Tag>
                     </div>
                   ) : null}
 

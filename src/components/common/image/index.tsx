@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import NextImage from 'next/image';
 import type { ImageProps } from './props';
 import { handleImageOrientation } from '@shared/utils/albumOrientation';
+import { useOnScreen } from '@routes/album/reader/utils';
 
 const Image = ({
   url,
@@ -11,8 +12,36 @@ const Image = ({
   verticalSizes,
   alt = 'preview',
   className,
-  previewOrientation
+  previewOrientation,
+  allowIntersection,
+  activeUrl
 }: ImageProps) => {
+  const ref = useRef();
+  const isVisible = useOnScreen(ref);
+
+  useEffect(() => {
+    if (allowIntersection) {
+      console.log(activeUrl, url);
+      if (activeUrl === url) {
+        setTimeout(() => {
+          const top = ref?.current?.getBoundingClientRect()?.y;
+          if (top > 1000) {
+            window.scrollTo({ top });
+          }
+        }, 100);
+      }
+    }
+  }, [activeUrl]);
+
+  useEffect(() => {
+    if (allowIntersection && isVisible) {
+      const isTheSamepage = localStorage.getItem('saved-page') === url;
+      if (!isTheSamepage) {
+        localStorage.setItem('saved-page', url ?? '');
+      }
+    }
+  }, [isVisible]);
+
   const sizes = handleImageOrientation({
     width,
     height,
@@ -21,16 +50,17 @@ const Image = ({
     previewOrientation
   });
   return (
-    <NextImage
-      src={url}
-      loader={({ src, width }) => `${src}?w=${width}`}
-      alt={alt}
-      width={sizes.width}
-      height={sizes.height}
-      placeholder='blur'
-      blurDataURL={`${window.location.origin}/images/blur.png`}
-      className={className}
-    />
+    <div ref={ref}>
+      <NextImage
+        src={url}
+        alt={alt}
+        width={sizes.width}
+        height={sizes.height}
+        placeholder='blur'
+        blurDataURL={`${window.location.origin}/images/blur.png`}
+        className={className}
+      />
+    </div>
   );
 };
 

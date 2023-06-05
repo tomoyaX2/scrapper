@@ -37,6 +37,7 @@ import { TagsList } from 'src/components/common/tagsList';
 import { Comments } from './comments';
 import { Recommendations } from './recommendations';
 import { ScrollToUpArrow } from 'src/components/common/scrollArrow';
+import { changeReaderPage } from 'src/store/reader';
 
 const Album = ({
   initialData: album
@@ -129,7 +130,7 @@ const Album = ({
   };
 
   const targetRate = freshRate ? freshRate : album?.rate;
-  console.log(recommendations, 'recommendations');
+
   return (
     <>
       <Seo
@@ -198,12 +199,11 @@ const Album = ({
                       <Link
                         href={`/?page=1&languages=${album.language.id}`}
                         passHref
+                        target='_blank'
                       >
-                        <a target='_blank'>
-                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                            {album.language.name}
-                          </Tag>
-                        </a>
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                          {album.language.name}
+                        </Tag>
                       </Link>
                     </div>
                   ) : null}
@@ -212,12 +212,14 @@ const Album = ({
                     <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                       <span className='text-sm mr-4 w-20'>Type:</span>
 
-                      <Link href={`/?page=1&types=${album.type.id}`} passHref>
-                        <a target='_blank'>
-                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                            {album.type.name}
-                          </Tag>
-                        </a>
+                      <Link
+                        href={`/?page=1&types=${album.type.id}`}
+                        passHref
+                        target='_blank'
+                      >
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                          {album.type.name}
+                        </Tag>
                       </Link>
                     </div>
                   ) : null}
@@ -240,12 +242,11 @@ const Album = ({
                             href={`/?page=1&authors=${el.id}`}
                             passHref
                             key={el.id}
+                            target='_blank'
                           >
-                            <a target='_blank'>
-                              <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                                {el.name}
-                              </Tag>
-                            </a>
+                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                              {el.name}
+                            </Tag>
                           </Link>
                         ))}
                       </div>
@@ -262,12 +263,11 @@ const Album = ({
                             href={`/?page=1&series=${el.id}`}
                             passHref
                             key={el.id}
+                            target='_blank'
                           >
-                            <a target='_blank'>
-                              <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-                                {el.name}
-                              </Tag>
-                            </a>
+                            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                              {el.name}
+                            </Tag>
                           </Link>
                         ))}
                       </div>
@@ -278,12 +278,14 @@ const Album = ({
                     <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4 '>
                       <span className='text-sm mr-4 w-20'>Group:</span>
 
-                      <Link href={`/?page=1&groups=${album.group.id}`} passHref>
-                        <a target='_blank'>
-                          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover '>
-                            {album.group?.name}
-                          </Tag>
-                        </a>
+                      <Link
+                        href={`/?page=1&groups=${album.group.id}`}
+                        passHref
+                        target='_blank'
+                      >
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover '>
+                          {album.group?.name}
+                        </Tag>
                       </Link>
                     </div>
                   ) : null}
@@ -390,14 +392,13 @@ const Album = ({
               </div>
             </div>
             <div className='flex flex-row flex-wrap items-center max-w-gallery justify-center bg-secondary mt-4'>
-              {albumImages.map(el =>
+              {albumImages.map((el, index) =>
                 el ? (
-                  <Link
-                    href={`/album/${album.id}/reader/${el.id}`}
-                    passHref
-                    key={el.id}
-                  >
-                    <div className='px-4 py-2 cursor-pointer'>
+                  <Link href={`/album/${album.id}/reader`} passHref key={el.id}>
+                    <div
+                      className='px-4 py-2 cursor-pointer'
+                      onClick={() => dispatch(changeReaderPage(index))}
+                    >
                       <Image
                         url={el?.url}
                         width={el.width}

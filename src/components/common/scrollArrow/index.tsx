@@ -20,7 +20,7 @@ const ScrollToUpArrow = () => {
   };
 
   return (
-    <div className='fixed right-40 bottom-20  animate-bounce'>
+    <div className='fixed lg:right-20 md:right-4 xsm:right-1 bottom-20  animate-bounce'>
       {showScrollArrow && (
         <Button onClick={handleScrollToUp}>
           <ArrowTop />

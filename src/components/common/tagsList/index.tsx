@@ -14,13 +14,16 @@ export const TagsList = ({ items }: TagsListProps) => {
   return (
     <div className='flex items-center flex-wrap max-w-tags'>
       {itemsToRender.map(el => (
-        <Link href={`/?page=1&tags=${el.id}`} passHref key={el.id}>
-          <a target='_blank'>
-            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-              {el.name}
-              <span className='ml-1'>| {el.albumsCount}</span>
-            </Tag>
-          </a>
+        <Link
+          href={`/?page=1&tags=${el.id}`}
+          passHref
+          key={el.id}
+          target='_blank'
+        >
+          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+            {el.name}
+            <span className='ml-1'>| {el.albumsCount}</span>
+          </Tag>
         </Link>
       ))}
 
