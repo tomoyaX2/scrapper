@@ -1,6 +1,6 @@
 import { Album } from './album.component';
 import { useState } from 'react';
-import { Arrow } from 'src/components/common/icons/arrow';
+import { Arrow } from 'src/components/common/icons/arrowRight';
 import { Album as AlbumType } from 'src/store/albums/types';
 
 const Recommendations = ({
@@ -28,18 +28,21 @@ const Recommendations = ({
         />
         <span className='ml-4 text-md font-semibold'>{label}</span>
       </div>
-      {isExpanded && (
-        <div className='flex flex-col items-center justify-start w-full text-white-300'>
-          {items?.map(el => (
-            <div
-              className='flex flex-col items-center justify-start px-4 w-full mt-4 rounded'
-              key={el.id}
-            >
-              <Album album={el} />
-            </div>
-          ))}
-        </div>
-      )}
+
+      <div
+        className={`flex flex-col items-center justify-start w-full text-white-300 origin-top ${
+          isExpanded ? 'animate-growDown' : 'animate-growUp'
+        }`}
+      >
+        {items?.map(el => (
+          <div
+            className='flex flex-col items-center justify-start px-4 w-full mt-4 rounded'
+            key={el.id}
+          >
+            <Album album={el} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Avatar } from 'rsuite';
-import { Arrow } from 'src/components/common/icons/arrow';
+import { Arrow } from 'src/components/common/icons/arrowRight';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { Input, Button } from 'rsuite';
 import { deleteComment, getComments, sendComment } from 'src/store/album';
@@ -60,9 +60,33 @@ const Comments = () => {
         />
         <span className='ml-4 text-md font-semibold'> Comments</span>
       </div>
-      {isExpanded && (
-        <>
-          {user?.id ? (
+
+      <div
+        className={`block origin-top ${
+          isExpanded ? 'animate-growDown' : 'animate-growUp'
+        }`}
+      >
+        {user?.id ? (
+          <div className='flex flex-col mt-2'>
+            <Input
+              as='textarea'
+              rows={3}
+              placeholder='Your comment...'
+              value={currentComment}
+              onChange={handleChangeComment}
+            />
+            <Button onClick={onSendComment} className='bg-secondary mt-2'>
+              Send
+            </Button>
+          </div>
+        ) : (
+          <PopoverWindow
+            placement='top'
+            trigger='hover'
+            content={
+              <span>You have to be logged it for comment this title</span>
+            }
+          >
             <div className='flex flex-col mt-2'>
               <Input
                 as='textarea'
@@ -71,53 +95,32 @@ const Comments = () => {
                 value={currentComment}
                 onChange={handleChangeComment}
               />
-              <Button onClick={onSendComment} className='bg-secondary mt-2'>
-                Send
-              </Button>
             </div>
-          ) : (
-            <PopoverWindow
-              placement='top'
-              trigger='hover'
-              content={
-                <span>You have to be logged it for comment this title</span>
-              }
+          </PopoverWindow>
+        )}
+        <div className='flex flex-col items-center justify-start w-full text-white-300'>
+          {comments?.map(el => (
+            <div
+              className='flex flex-row items-center justify-start px-4 py-2 w-full mt-4 bg-secondary rounded'
+              key={el.id}
             >
-              <div className='flex flex-col mt-2'>
-                <Input
-                  as='textarea'
-                  rows={3}
-                  placeholder='Your comment...'
-                  value={currentComment}
-                  onChange={handleChangeComment}
+              <Avatar src={el?.author?.avatarUrl} />
+              <div className='flex flex-col w-full ml-4'>
+                <span className='text-lg font-semibold'>
+                  {el?.author?.login}
+                </span>
+                <span className=''>{el.text}</span>
+              </div>
+              {(el.author.id === user.id || user.isAdmin) && (
+                <TrashIcon
+                  onClick={() => onDeleteComment(el.id)}
+                  className='w-8 h-8 cursor-pointer'
                 />
-              </div>
-            </PopoverWindow>
-          )}
-          <div className='flex flex-col items-center justify-start w-full text-white-300'>
-            {comments?.map(el => (
-              <div
-                className='flex flex-row items-center justify-start px-4 py-2 w-full mt-4 bg-secondary rounded'
-                key={el.id}
-              >
-                <Avatar src={el?.author?.avatarUrl} />
-                <div className='flex flex-col w-full ml-4'>
-                  <span className='text-lg font-semibold'>
-                    {el?.author?.login}
-                  </span>
-                  <span className=''>{el.text}</span>
-                </div>
-                {(el.author.id === user.id || user.isAdmin) && (
-                  <TrashIcon
-                    onClick={() => onDeleteComment(el.id)}
-                    className='w-8 h-8 cursor-pointer'
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

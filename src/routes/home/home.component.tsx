@@ -48,6 +48,17 @@ const Home = (): JSX.Element => {
         />
 
         <div className='flex flex-col'>
+          <div className='w-full bg-[#1a1d24] p-1'>
+            <span className='text-left text-xs ml-16'>
+              Welcome! This resource is ad-free and i want to leave it as as in
+              the future too. Also i&apos;m planning to add new features ( e.g.
+              anime, UI improvements ), so if you wanna to support me, you can
+              do it through:{'  '}
+              <a href='https://www.patreon.com/MangaMischief'>
+                <u>Patreon</u>
+              </a>
+            </span>
+          </div>
           <SearchBar />
 
           {isLoading ? (
