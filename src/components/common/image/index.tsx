@@ -54,6 +54,7 @@ const Image = ({
       <NextImage
         src={url}
         alt={alt}
+        loader={({ src, width }) => `${src}?w=${width}`}
         width={sizes.width}
         height={sizes.height}
         placeholder='blur'
