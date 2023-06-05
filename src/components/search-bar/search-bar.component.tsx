@@ -93,7 +93,7 @@ export const SearchBar = (): JSX.Element => {
       }
     }, 800);
   };
-  console.log(tagsList, 'tags');
+
   return (
     <div className='flex flex-col items-center w-full py-4 flex-wrap px-12'>
       <div className='flex lg:flex-row md:flex-col sm:flex-col xsm:flex-col md:items-center sm:items-start xsm:items-start w-full flex-wrap'>

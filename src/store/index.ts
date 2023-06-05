@@ -17,6 +17,7 @@ import users from './users';
 import galleries from './galleries';
 import notifications from './notifications';
 import navigation from './navigation';
+import anime from './anime';
 
 import { Middleware } from 'redux';
 
@@ -35,7 +36,8 @@ const reducer = combineReducers({
   users,
   galleries,
   notifications,
-  navigation
+  navigation,
+  anime
 });
 
 const initToken = () => {

@@ -1,0 +1,190 @@
+import { DefaultSeo as Seo } from 'next-seo';
+import { Rate } from 'rsuite';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Tag, Button } from 'rsuite';
+import { TITLE_SEO } from '@shared/config/seo';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { Image } from 'src/components/common/image';
+import ReactGA from 'react-ga4';
+import { TrashIcon } from 'src/components/common/icons/trash';
+import { getUser } from 'src/store/user';
+import { PopoverWindow } from 'src/components/common/menu';
+import { StarIcon } from 'src/components/common/icons/star';
+import { TagsList } from 'src/components/common/tagsList';
+import { Comments } from './comments';
+import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
+import { VideoState } from 'src/store/anime/item/types';
+import { default as _ReactPlayer } from 'react-player/lazy';
+import { ReactPlayerProps } from 'react-player/types/lib';
+const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
+
+const AnimePage = ({
+  initialData: video
+}: {
+  initialData: VideoState;
+}): JSX.Element => {
+  const [activeUrl, setActiveUrl] = useState(video.episodes[0].url);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const currentRate = useAppSelector(state => state.anime.item.currentRate);
+  const { data: user } = useAppSelector(state => state.user);
+  const freshRate = useAppSelector(state => state.anime.item.rate);
+
+  useEffect(() => {
+    console.log(video, 'video');
+
+    if (!video?.id) {
+      router.push('/');
+    }
+  }, [video?.id]);
+
+  useEffect(() => {
+    if (video?.id) {
+      dispatch(getUser());
+      dispatch(getVideoRate({ videoId: video.id }));
+      ReactGA.send({ hitType: 'pageview', page: window.location.href });
+    }
+  }, [router.query.id]);
+
+  const onDeleteVideo = () => {
+    dispatch(deleteVideo(video?.id));
+    router.push('/');
+  };
+
+  const onRateVideo = (rate: number) => {
+    dispatch(rateVideo({ videoId: video?.id, rate }));
+  };
+
+  const targetRate = freshRate ? freshRate : video?.rate;
+  return (
+    <>
+      <Seo
+        {...TITLE_SEO({
+          title: `${video?.title}`,
+          language: video?.language?.name ?? ''
+        })}
+        canonical={window.location.href}
+      />
+      {video && (
+        <div className='flex flex-row w-full justify-center'>
+          <div className='flex flex-col items-center justify-start'>
+            <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
+              <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full h-100'>
+                <Image
+                  url={video.coverImageUrl ?? ''}
+                  width={600}
+                  height={600}
+                  alt='preview'
+                />
+              </div>
+
+              <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
+                <div>
+                  <div className='flex flex-col'>
+                    <h1 className='text-lg flex flex-row'>{video.title}</h1>
+
+                    <div className='flex flex-row items-center justify-start w-12'>
+                      <span>{targetRate?.toFixed(1)}</span>
+
+                      <StarIcon className='w-5 h-5 ml-2' fill='white' />
+                    </div>
+                  </div>
+
+                  {video.language?.name ? (
+                    <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Language:</span>
+
+                      <a target='_blank'>
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                          {video.language.name}
+                        </Tag>
+                      </a>
+                    </div>
+                  ) : null}
+
+                  {video.type?.name ? (
+                    <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Type:</span>
+
+                      <a target='_blank'>
+                        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                          {video.type.name}
+                        </Tag>
+                      </a>
+                    </div>
+                  ) : null}
+
+                  {video.tags?.length ? (
+                    <div className='flex flex-row items-center justify-start w-full mt-4'>
+                      <span className='text-sm mr-4 w-20'>Tags:</span>
+
+                      <TagsList items={video.tags} />
+                    </div>
+                  ) : null}
+
+                  <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
+                    <span className='text-sm mr-4 w-20'>Episodes count:</span>
+
+                    <span className='text-sm'>{video.episodes.length}</span>
+                  </div>
+                </div>
+
+                <div className='w-full flex items-center justify-start mt-4 mb-2'>
+                  {user.isAdmin && (
+                    <Button
+                      className='flex items-center px-2'
+                      onClick={onDeleteVideo}
+                    >
+                      <TrashIcon className='w-6 h-6 mt-1' fill='white' />
+                      Remove
+                    </Button>
+                  )}
+                </div>
+
+                {user?.id ? (
+                  <div className='w-full flex items-center justify-start mt-1 mb-2 flex-row'>
+                    <span className='text-sm mr-4 w-20'>Rate this:</span>
+
+                    <div className='m-3'>
+                      <Rate
+                        size='xs'
+                        color='cyan'
+                        onChange={onRateVideo}
+                        value={currentRate}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className='w-full flex items-center justify-start mt-1 mb-2 flex-row'>
+                    <span className='text-sm mr-4 w-20'>Rate this:</span>
+
+                    <div className='m-3'>
+                      <PopoverWindow
+                        placement='top'
+                        trigger='hover'
+                        content={
+                          <span>
+                            You have to be logged it for rate this title
+                          </span>
+                        }
+                      >
+                        <Rate size='xs' color='cyan' value={currentRate} />
+                      </PopoverWindow>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className='flex flex-row flex-wrap items-center max-w-gallery justify-center bg-secondary mt-4'>
+              <ReactPlayer url={activeUrl} controls />
+            </div>
+          </div>
+          <Comments />
+        </div>
+      )}
+    </>
+  );
+};
+
+export { AnimePage };

@@ -29,6 +29,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.3",
     "@types/react-redux": "^7.1.24",
+    "add": "^2.0.6",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "cookies": "^0.8.0",
@@ -45,9 +46,11 @@
     "react-device-detect": "^2.1.2",
     "react-ga4": "^1.4.1",
     "react-i18next": "^11.16.9",
+    "react-player": "^2.12.0",
     "react-redux": "^8.0.2",
     "reselect": "^4.1.6",
     "rsuite": "^5.14.0",
+    "yarn": "^1.22.19",
     "yup": "^0.32.11"
   },
   "devDependencies": {
