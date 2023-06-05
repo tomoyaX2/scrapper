@@ -8,4 +8,8 @@ export type ImageProps = {
   className?: string;
   onError?: () => void;
   previewOrientation?: 'horizontal' | 'vertical';
+  id?: string;
+  activeUrl?: string | null;
+  allowIntersection?: boolean;
+  onClick?: () => void;
 };

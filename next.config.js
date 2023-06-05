@@ -12,7 +12,16 @@ module.exports = {
   publicRuntimeConfig: {
     apiUrl
   },
-
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.xmanga.org',
+        port: '',
+        pathname: '/images/**'
+      }
+    ]
+  },
   // i18n,
 
   webpack: (config, { isServer }) => {

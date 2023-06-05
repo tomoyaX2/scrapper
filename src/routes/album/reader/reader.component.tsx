@@ -1,12 +1,7 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { SelectPicker, Input } from 'rsuite';
+import { Fragment, useEffect } from 'react';
+import { SelectPicker } from 'rsuite';
 import { Arrow } from 'src/components/common/icons/arrowRight';
-import {
-  switchPageTimeoutHandler,
-  switchPageIndexTimeout
-} from '@shared/utils/timeoutHandler';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { getReaderImages } from 'src/store/reader';
 import { changeReaderPage } from 'src/store/reader';
@@ -14,14 +9,7 @@ import { Image } from 'src/components/common/image';
 import { NextSeo } from 'next-seo';
 import { getAlbum } from 'src/store/album';
 import ReactGA from 'react-ga4';
-
-let clickTimeout = setTimeout(() => {});
-
-const onHandleTouch =
-  (callback: (event: TouchEvent) => void) => (event: TouchEvent) => {
-    clearTimeout(clickTimeout);
-    clickTimeout = setTimeout(() => callback(event), 200);
-  };
+import { ScrollToUpArrow } from 'src/components/common/scrollArrow';
 
 const Reader = (): JSX.Element => {
   const router = useRouter();
@@ -29,14 +17,17 @@ const Reader = (): JSX.Element => {
   const { images, currentPage, pagesList } = useAppSelector(
     state => state.reader
   );
-  const album = useAppSelector(state => state.album);
-  const [switchTimer, setSwitchTimer] = useState<number>(0);
 
   useEffect(() => {
-    ReactGA.send({ hitType: 'pageview', page: window.location.href });
-
-    return () => clearTimeout(switchPageIndexTimeout);
-  }, []);
+    if (!!images.length) {
+      ReactGA.send({ hitType: 'pageview', page: window.location.href });
+      const currentPageUrl = localStorage.getItem('saved-page');
+      const currentPageIndex = images.findIndex(
+        el => el.url === currentPageUrl
+      );
+      dispatch(changeReaderPage(currentPageIndex));
+    }
+  }, [!!images.length]);
 
   useEffect(() => {
     router.query?.id && dispatch(getReaderImages(router.query.id as string));
@@ -51,23 +42,11 @@ const Reader = (): JSX.Element => {
       );
   }, [router.query.id]);
 
-  useEffect(() => {
-    if (images?.length) {
-      const cuurentIndex = images?.findIndex(
-        el => el.id === router.query.readerId
-      );
-      if (cuurentIndex !== currentPage) {
-        handleChangePage(cuurentIndex);
-      }
-    }
-  }, [router.query.readerId, images]);
-
   if (!images.length) {
     return <div />;
   }
 
   const handleChangePage = (page: number) => {
-    router.push(`/album/${album.id}/reader/${images[page]?.id}`);
     dispatch(changeReaderPage(page));
   };
 
@@ -75,28 +54,6 @@ const Reader = (): JSX.Element => {
   const nextPage =
     currentPage < images.length - 1 ? currentPage + 1 : currentPage;
 
-  const onTouchEvent = onHandleTouch(e => e && handleChangePage(nextPage));
-
-  const onClickEvent = onHandleTouch(e => handleChangePage(nextPage));
-
-  const onTimerValueChange = (value: string) => {
-    const testReg = /^\d+$/;
-    if (typeof value === 'string' && !testReg.test(value) && !!value) {
-      return;
-    }
-    ReactGA.send({ hitType: 'autoread_interract' });
-
-    const result = parseInt(value);
-    const time = !value ? 0 : result;
-
-    switchPageTimeoutHandler({
-      time,
-      changeReaderPage: handleChangePage,
-      currentPage,
-      totalPages: images.length - 1
-    });
-    setSwitchTimer(time);
-  };
   return (
     <>
       <NextSeo noindex />
@@ -123,37 +80,25 @@ const Reader = (): JSX.Element => {
             className='cursor-pointer md:flex sm:hidden xsm:hidden'
             onClick={() => handleChangePage(nextPage)}
           />
-
-          <span className='text-sm text-white-300 ml-2 mr-2'>
-            Switch page every
-          </span>
-
-          <Input
-            onChange={onTimerValueChange}
-            value={switchTimer}
-            className='md:w-20 sm:w-12 xsm:w-12 h-19 '
-          />
-
-          <span className='text-sm text-white-300 ml-2'>sec</span>
         </div>
 
-        <div
-          className='flex items-center justify-center cursor-pointer mt-4'
-          //@ts-expect-error cause of i want
-          onTouchEnd={onTouchEvent}
-          //@ts-expect-error cause of i want
-          onClick={onClickEvent}
-        >
-          <Image
-            url={images[currentPage]?.url}
-            width={images[currentPage]?.width}
-            height={images[currentPage]?.height}
-            alt='preview'
-            horizontalSizes={{ height: 800, width: 1200 }}
-            verticalSizes={{ height: 900, width: 800 }}
-          />
+        <div className='flex items-center flex-col justify-center cursor-pointer mt-4'>
+          {images.map((el, index) => (
+            <Image
+              url={el?.url}
+              width={800}
+              height={1200}
+              alt='preview'
+              key={el.id}
+              id={el.id}
+              allowIntersection={index > 5}
+              activeUrl={images[currentPage]?.url}
+              className='mt-2'
+            />
+          ))}
         </div>
       </div>
+      <ScrollToUpArrow />
     </>
   );
 };
