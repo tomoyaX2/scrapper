@@ -24,7 +24,7 @@ const AnimePage = ({
 }: {
   initialData: VideoState;
 }): JSX.Element => {
-  const [activeUrl, setActiveUrl] = useState(video.episodes[0].url);
+  const [activeUrl] = useState(video.episodes[0].url);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const currentRate = useAppSelector(state => state.anime.item.currentRate);

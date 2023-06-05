@@ -17,7 +17,6 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'cdn.xmanga.org',
-        port: '',
         pathname: '/images/**'
       }
     ]

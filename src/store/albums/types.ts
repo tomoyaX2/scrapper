@@ -15,7 +15,7 @@ export type Search = {
   page: number;
   perPage: number;
   sortBy?: 'rate' | 'views' | 'totalImages';
-  shouldResetPage: boolean;
+  shouldResetPage?: boolean;
 };
 
 export type AlbumsState = {
