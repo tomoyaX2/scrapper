@@ -82,7 +82,7 @@ const Reader = (): JSX.Element => {
           />
         </div>
         <div className='flex items-center flex-col justify-center cursor-pointer mt-4'>
-          <div className='md:w-full sm:w-[550px] xsm:w-[320px]'>
+          <div className='md:w-full sm:w-[550px] xsm:w-[320px] flex items-center justify-center flex-col'>
             {images.map((el, index) => (
               <Image
                 url={el?.url}

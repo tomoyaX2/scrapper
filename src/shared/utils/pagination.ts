@@ -11,7 +11,7 @@ type Search = {
   page: number;
   perPage: number;
   sortBy?: 'rate' | 'views' | 'totalImages';
-  shouldResetPage: boolean;
+  shouldResetPage?: boolean;
 };
 
 const buildPaginationString = (search: Search) => {

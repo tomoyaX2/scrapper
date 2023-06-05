@@ -49,7 +49,7 @@ const Comments = () => {
   const onDeleteComment = (commentId: string) => {
     dispatch(
       deleteVideoComment({
-        albumId: (router.query?.id as string) ?? '',
+        videoId: (router.query?.id as string) ?? '',
         commentId
       })
     );

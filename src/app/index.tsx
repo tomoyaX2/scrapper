@@ -20,8 +20,6 @@ const App = ({ Component, pageProps }: AppProps) => {
     <CustomProvider theme='dark'>
       <Provider store={store}>
         <Layout>
-          {/* @ts-expect-error JSX typings */}
-
           <Component {...pageProps} />
         </Layout>
       </Provider>

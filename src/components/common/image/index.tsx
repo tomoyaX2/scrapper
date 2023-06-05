@@ -16,7 +16,7 @@ const Image = ({
   allowIntersection,
   activeUrl
 }: ImageProps) => {
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
   const isVisible = useOnScreen(ref);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const Image = ({
       if (activeUrl === url) {
         setTimeout(() => {
           const top = ref?.current?.getBoundingClientRect()?.y;
-          if (top > 1000) {
+          if ((top || 0) > 1000) {
             window.scrollTo({ top });
           }
         }, 100);

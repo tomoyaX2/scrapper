@@ -70,10 +70,10 @@ const Users = (): JSX.Element => {
             <HeaderCell>.</HeaderCell>
 
             <Cell>
-              {(row: User) => (
+              {(row: any) => (
                 <span
                   className='cursor-pointer'
-                  onClick={() => onDelete(row.id)}
+                  onClick={() => onDelete((row as User).id)}
                 >
                   Delete
                 </span>
@@ -85,12 +85,17 @@ const Users = (): JSX.Element => {
             <HeaderCell>.</HeaderCell>
 
             <Cell>
-              {(row: User) => (
+              {(row: any) => (
                 <span
-                  onClick={() => onChangeAdminStatus(row.id, !row.isAdmin)}
+                  onClick={() =>
+                    onChangeAdminStatus(
+                      (row as User).id,
+                      !(row as User).isAdmin
+                    )
+                  }
                   className='cursor-pointer'
                 >
-                  {row.isAdmin ? 'Remove Admin' : 'Make Admin'}
+                  {(row as User).isAdmin ? 'Remove Admin' : 'Make Admin'}
                 </span>
               )}
             </Cell>

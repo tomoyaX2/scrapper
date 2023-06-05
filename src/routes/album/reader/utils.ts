@@ -1,6 +1,6 @@
-import { useState, useMemo, MutableRefObject, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
-export const useOnScreen = (ref: MutableRefObject<any>) => {
+export const useOnScreen = (ref: React.RefObject<HTMLDivElement>) => {
   const [isIntersecting, setIntersecting] = useState(false);
 
   const observer = useMemo(
@@ -12,7 +12,8 @@ export const useOnScreen = (ref: MutableRefObject<any>) => {
   );
 
   useEffect(() => {
-    observer.observe(ref.current as any);
+    //@ts-expect-error i want
+    observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 

@@ -17,18 +17,7 @@ import { StarIcon } from 'src/components/common/icons/star';
 import { deleteAlbum } from 'src/store/album';
 
 const Album = ({
-  album: {
-    rate,
-    id,
-    language,
-    title,
-    type,
-    preview,
-    totalImages,
-    views,
-    path,
-    previewOrientation
-  },
+  album: { rate, id, language, title, type, preview, totalImages, views, path },
   galleryId,
   isHome
 }: AlbumProps): JSX.Element => {
