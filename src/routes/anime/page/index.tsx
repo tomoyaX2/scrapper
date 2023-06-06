@@ -15,9 +15,8 @@ import { TagsList } from 'src/components/common/tagsList';
 import { Comments } from './comments';
 import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
 import { VideoState } from 'src/store/anime/item/types';
-import { default as _ReactPlayer } from 'react-player/lazy';
-import { ReactPlayerProps } from 'react-player/types/lib';
-const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
+import { Icon } from 'rsuite';
+import { Video } from './video';
 
 const AnimePage = ({
   initialData: video
@@ -67,14 +66,14 @@ const AnimePage = ({
         canonical={window.location.href}
       />
       {video && (
-        <div className='flex flex-row w-full justify-center'>
-          <div className='flex flex-col items-center justify-start'>
+        <div className='flex flex-row w-full justify-center pb-4'>
+          <div className='flex flex-col items-center justify-start mt-4'>
             <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
-              <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full h-100'>
+              <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full'>
                 <Image
                   url={video.coverImageUrl ?? ''}
-                  width={600}
-                  height={600}
+                  width={400}
+                  height={400}
                   alt='preview'
                 />
               </div>
@@ -172,9 +171,7 @@ const AnimePage = ({
                 )}
               </div>
             </div>
-            <div className='flex flex-row flex-wrap items-center max-w-gallery justify-center bg-secondary mt-4'>
-              <ReactPlayer url={activeUrl} controls />
-            </div>
+            <Video activeUrl={activeUrl} />
           </div>
           <Comments />
         </div>
