@@ -48,8 +48,8 @@ const Home = (): JSX.Element => {
         />
 
         <div className='flex flex-col'>
-          <div className='w-full bg-[#1a1d24] p-1'>
-            <span className='text-left text-xs ml-16'>
+          <div className='w-full bg-[#1a1d24] p-1 flex justify-center'>
+            <span className='text-left text-xs px-4'>
               Welcome! This resource is ad-free and i want to leave it as as in
               the future too. Also i&apos;m planning to add new features ( e.g.
               anime, UI improvements ), so if you wanna to support me, you can
@@ -63,7 +63,7 @@ const Home = (): JSX.Element => {
 
           {isLoading ? (
             <div className='flex flex-col items-center justify-center w-full'>
-              <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
+              <div className='flex flex-row items-center justify-center flex-wrap xl:px-12 md:px-4 xsm:px-1 py-4'>
                 {new Array(25)
                   .map((_, index) => ({
                     id: `${index}`,
@@ -78,7 +78,7 @@ const Home = (): JSX.Element => {
             </div>
           ) : (
             <div className='flex flex-col items-center justify-center w-full'>
-              <div className='flex flex-row items-center justify-center flex-wrap px-12 py-4'>
+              <div className='flex flex-row items-center justify-center flex-wrap xl:px-12 md:px-4 xsm:px-1 py-4'>
                 {data.map(album => (
                   <Album album={album} key={album.id} isHome />
                 ))}

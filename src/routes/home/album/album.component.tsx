@@ -49,11 +49,12 @@ const Album = ({
   const onImageError = () =>
     setImagePath(`${cdnUrl}/images-new/${path.split('/')[1]}/10002.webp`);
   const isInreadableTitle = title?.substring(0, 30).endsWith('(');
+  const isVisibleControls = galleryId || (isHome && user.isAdmin);
   return (
     //div since i should make a column direction
     <div className='flex flex-col'>
-      <div className='bg-primary w-[400px] mt-12 mx-4 h-7 p-1 '>
-        {(galleryId || (isHome && user.isAdmin)) && (
+      {isVisibleControls && (
+        <div className='bg-primary lg:w-[400px] xsm:w-[300px] mt-12 mx-4 h-7 p-1 '>
           <Button
             className='flex items-center px-2 h-5 float-right justify-center items-center'
             onClick={
@@ -65,11 +66,13 @@ const Album = ({
             <TrashIcon className='w-6 h-6 mt-1' fill='white' />
             Remove
           </Button>
-        )}
-      </div>
+        </div>
+      )}
       <Link href={`/album/${id}`} passHref target='_blank'>
         <div
-          className='mx-4 flex flex-col items-center bg-primary cursor-pointer w-[400px] mb-12 pb-4'
+          className={`lg:mx-4 md:mx-2 xsm:mx-0 flex flex-col items-center bg-primary cursor-pointer lg:w-[400px] xsm:w-[300px] mb-12 pb-4 ${
+            isVisibleControls ? 'pt-0' : 'mt-12 pt-4'
+          }`}
           key={id}
           onMouseOver={onHover(true)}
           onMouseLeave={onHover(false)}
@@ -78,8 +81,8 @@ const Album = ({
             url={imagePath}
             onError={onImageError}
             alt='preview'
-            width={500}
-            height={500}
+            width={400}
+            height={400}
             className='h-[300px]'
           />
 
@@ -105,7 +108,7 @@ const Album = ({
 
           <div className={isHovered ? 'z-50' : ''}>
             <div
-              className={`absolute -ml-[200px] w-[400px] bg-primary flex flex-col ${
+              className={`absolute lg:-ml-[200px] xsm:-ml-[150px] lg:w-[400px] xsm:w-[300px] bg-primary flex flex-col ${
                 isHovered && title?.length > 30 ? 'h-24' : 'h-16'
               }`}
             >
