@@ -10,9 +10,10 @@ interface ControlsState {
   quality: string;
 }
 
-interface TimelineState {
-  currentPlayTime: number;
-}
+// interface TimelineState {
+//   currentPlayTime: number;
+//   duration: number;
+// }
 
 const handleLeadZero = Intl.NumberFormat(undefined, {
   minimumIntegerDigits: 2
@@ -29,9 +30,8 @@ const formatDuration = (duration: number) => {
       )}`;
 };
 
-let playTimeout = setTimeout(() => {});
-
 const Video = ({ activeUrl }: { activeUrl: string }): JSX.Element => {
+  const sliderRef = useRef();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [controlsState, setControlsState] = useState<ControlsState>({
     isVisible: false,
@@ -39,12 +39,10 @@ const Video = ({ activeUrl }: { activeUrl: string }): JSX.Element => {
     playbackSpeed: 1,
     quality: '720p'
   });
-  const duration = videoRef.current?.duration ?? 0;
 
-  const [timelineState, setTimelineState] = useState<TimelineState>({
-    currentPlayTime: 0
-  });
-
+  const [timeline, setTimeline] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  // const [previewTime, setPreviewTime] = useState(0);
   const changeVisibility = (isVisible: boolean) => () => {
     setControlsState({ ...controlsState, isVisible });
   };
@@ -56,17 +54,21 @@ const Video = ({ activeUrl }: { activeUrl: string }): JSX.Element => {
 
   useEffect(() => {
     const timeListenner = () => {
-      setTimelineState({
-        ...timelineState,
-        currentPlayTime: videoRef?.current?.currentTime ?? 0
-      });
+      setTimeline(videoRef?.current?.currentTime ?? 0);
+    };
+    const loadedListenner = () => {
+      setDuration(videoRef?.current?.duration ?? 0);
     };
     videoRef.current?.addEventListener('timeupdate', timeListenner);
+    videoRef.current?.addEventListener('loadeddata', loadedListenner);
 
     return () => {
       videoRef.current?.removeEventListener('timeupdate', timeListenner);
+      videoRef.current?.removeEventListener('loadeddata', timeListenner);
     };
   }, [activeUrl]);
+
+  console.log(sliderRef, 'timelineState');
 
   return (
     <div
@@ -83,18 +85,30 @@ const Video = ({ activeUrl }: { activeUrl: string }): JSX.Element => {
       {(controlsState.isVisible || controlsState.paused) && (
         <>
           <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full' />
-          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full'>
+          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full px-4'>
+            {/* <Whisper
+              followCursor
+              placement='top'
+              speaker={
+                <Tooltip>
+                  <TimelineTooltip src={activeUrl} time={previewTime} />
+                </Tooltip>
+              }
+            > */}
             <Slider
               progress
               max={duration}
+              ref={sliderRef}
               min={0}
-              value={timelineState.currentPlayTime}
+              value={timeline}
+              tooltip={false}
               onChange={currentPlayTime => {
                 (videoRef.current ?? { currentTime: 0 }).currentTime =
                   currentPlayTime;
-                setTimelineState({ ...timelineState, currentPlayTime });
+                setTimeline(currentPlayTime);
               }}
             />
+            {/* </Whisper> */}
             <div className=' flex h-12 w-full flex items-center justify-start px-4'>
               <div
                 className='cursor-pointer w-6 h-6'
@@ -107,8 +121,7 @@ const Video = ({ activeUrl }: { activeUrl: string }): JSX.Element => {
               {!isNaN(duration) && (
                 <div className='flex flex-row items-center ml-2'>
                   <span className='text-white text-xs'>
-                    {formatDuration(timelineState.currentPlayTime)} \{' '}
-                    {formatDuration(duration)}
+                    {formatDuration(timeline)} \ {formatDuration(duration)}
                   </span>
                 </div>
               )}

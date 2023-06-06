@@ -15,7 +15,6 @@ import { TagsList } from 'src/components/common/tagsList';
 import { Comments } from './comments';
 import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
 import { VideoState } from 'src/store/anime/item/types';
-import { Icon } from 'rsuite';
 import { Video } from './video';
 
 const AnimePage = ({
