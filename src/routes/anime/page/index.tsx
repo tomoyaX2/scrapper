@@ -12,7 +12,6 @@ import { getUser } from 'src/store/user';
 import { PopoverWindow } from 'src/components/common/menu';
 import { StarIcon } from 'src/components/common/icons/star';
 import { TagsList } from 'src/components/common/tagsList';
-import { Comments } from './comments';
 import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
 import { VideoState } from 'src/store/anime/item/types';
 import { Video } from './video';
@@ -22,7 +21,7 @@ const AnimePage = ({
 }: {
   initialData: VideoState;
 }): JSX.Element => {
-  const [activeUrl] = useState(video.episodes[0].url);
+  const [activeEpisode] = useState(video.episodes[0]);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const currentRate = useAppSelector(state => state.anime.item.currentRate);
@@ -30,8 +29,6 @@ const AnimePage = ({
   const freshRate = useAppSelector(state => state.anime.item.rate);
 
   useEffect(() => {
-    console.log(video, 'video');
-
     if (!video?.id) {
       router.push('/');
     }
@@ -53,7 +50,6 @@ const AnimePage = ({
   const onRateVideo = (rate: number) => {
     dispatch(rateVideo({ videoId: video?.id, rate }));
   };
-
   const targetRate = freshRate ? freshRate : video?.rate;
   return (
     <>
@@ -74,6 +70,7 @@ const AnimePage = ({
                   width={400}
                   height={400}
                   alt='preview'
+                  className='h-[400px]'
                 />
               </div>
 
@@ -170,9 +167,8 @@ const AnimePage = ({
                 )}
               </div>
             </div>
-            <Video activeUrl={activeUrl} />
+            <Video activeEpisode={activeEpisode} />
           </div>
-          <Comments />
         </div>
       )}
     </>

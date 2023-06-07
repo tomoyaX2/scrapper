@@ -39,6 +39,11 @@
     }
   },
 
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/components/common/slider/Graduated.js"
+  ],
   "exclude": ["node_modules"]
 }

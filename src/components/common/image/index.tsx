@@ -21,7 +21,6 @@ const Image = ({
 
   useEffect(() => {
     if (allowIntersection) {
-      console.log(activeUrl, url);
       if (activeUrl === url) {
         setTimeout(() => {
           const top = ref?.current?.getBoundingClientRect()?.y;

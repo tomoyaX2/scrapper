@@ -1,7 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
-import { Slider } from 'rsuite';
+import {
+  faPlay,
+  faPause,
+  faExpand,
+  faGear
+} from '@fortawesome/free-solid-svg-icons';
+import Slider from 'src/components/common/Slider';
+import { Whisper, Tooltip, Dropdown } from 'rsuite';
+import { TimelineTooltip } from './tooltip';
+import screenfull from 'screenfull';
+import { Episode } from 'src/store/anime/item/types';
 
 interface ControlsState {
   isVisible: boolean;
@@ -9,11 +18,6 @@ interface ControlsState {
   playbackSpeed: number;
   quality: string;
 }
-
-// interface TimelineState {
-//   currentPlayTime: number;
-//   duration: number;
-// }
 
 const handleLeadZero = Intl.NumberFormat(undefined, {
   minimumIntegerDigits: 2
@@ -29,20 +33,28 @@ const formatDuration = (duration: number) => {
         seconds
       )}`;
 };
+let fullScreenMouseMoveTimeout = setTimeout(() => {});
 
-const Video = ({ activeUrl }: { activeUrl: string }): JSX.Element => {
+const playbackOptions = [0.5, 1, 1.5, 2];
+
+const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
   const sliderRef = useRef();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [controlsState, setControlsState] = useState<ControlsState>({
     isVisible: false,
     paused: true,
     playbackSpeed: 1,
-    quality: '720p'
+    quality: 'Original'
   });
 
   const [timeline, setTimeline] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  // const [previewTime, setPreviewTime] = useState(0);
+  const [previewTime, setPreviewTime] = useState(0);
+  const isFullscreen = useMemo(
+    () => !!document.fullscreenElement,
+    [!document.fullscreenElement]
+  );
+
   const changeVisibility = (isVisible: boolean) => () => {
     setControlsState({ ...controlsState, isVisible });
   };
@@ -66,65 +78,173 @@ const Video = ({ activeUrl }: { activeUrl: string }): JSX.Element => {
       videoRef.current?.removeEventListener('timeupdate', timeListenner);
       videoRef.current?.removeEventListener('loadeddata', timeListenner);
     };
-  }, [activeUrl]);
+  }, [activeEpisode.url]);
 
-  console.log(sliderRef, 'timelineState');
+  const checkIfMouseMoved = useCallback(() => {
+    if (isFullscreen) {
+      setControlsState(prevState => ({
+        ...prevState,
+        isVisible: true
+      }));
+      clearTimeout(fullScreenMouseMoveTimeout);
+      fullScreenMouseMoveTimeout = setTimeout(() => {
+        setControlsState(prevState => ({
+          ...prevState,
+          isVisible: false
+        }));
+      }, 2000);
+    }
+  }, [isFullscreen]);
+
+  const changeFullScreen = () => {
+    screenfull.toggle();
+  };
+
+  const fullScreenStyle =
+    'fixed w-screen h-screen mt-0 top-0 left-0 object-fill';
+  const isVisibleControls = controlsState.isVisible || controlsState.paused;
 
   return (
     <div
-      className='flex flex-row flex-wrap items-center w-[75rem] justify-center bg-secondary mt-4 relative'
+      className={`flex flex-row flex-wrap items-center  justify-center bg-secondary z-10  ${
+        isFullscreen ? fullScreenStyle : 'relative mt-4 w-[75rem]'
+      }`}
       onMouseEnter={changeVisibility(true)}
       onMouseLeave={changeVisibility(false)}
     >
       <video
-        src={activeUrl}
+        src={activeEpisode.url}
         onClick={changePausedState(!controlsState.paused)}
         ref={videoRef}
-        className='w-[75rem]'
+        className={`aspect-video object-fill ${
+          isFullscreen ? fullScreenStyle : 'w-[75rem]'
+        }`}
+        onMouseMove={checkIfMouseMoved}
       />
-      {(controlsState.isVisible || controlsState.paused) && (
+      {isVisibleControls && (
         <>
           <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full' />
-          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full px-4'>
-            {/* <Whisper
+          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full'>
+            <Whisper
               followCursor
               placement='top'
               speaker={
                 <Tooltip>
-                  <TimelineTooltip src={activeUrl} time={previewTime} />
+                  <TimelineTooltip
+                    src={activeEpisode.url}
+                    time={previewTime}
+                    formattedTime={formatDuration(previewTime)}
+                  />
                 </Tooltip>
               }
-            > */}
-            <Slider
-              progress
-              max={duration}
-              ref={sliderRef}
-              min={0}
-              value={timeline}
-              tooltip={false}
-              onChange={currentPlayTime => {
-                (videoRef.current ?? { currentTime: 0 }).currentTime =
-                  currentPlayTime;
-                setTimeline(currentPlayTime);
-              }}
-            />
-            {/* </Whisper> */}
-            <div className=' flex h-12 w-full flex items-center justify-start px-4'>
-              <div
-                className='cursor-pointer w-6 h-6'
-                onClick={changePausedState(!controlsState.paused)}
-              >
-                <FontAwesomeIcon
-                  icon={controlsState.paused ? faPlay : faPause}
+            >
+              <div className='px-4'>
+                <Slider
+                  progress
+                  max={duration}
+                  ref={sliderRef}
+                  min={0}
+                  value={timeline}
+                  tooltip={false}
+                  onMouseMoveDataHandler={(time: number) => {
+                    setPreviewTime(time);
+                  }}
+                  onChange={(currentPlayTime: number) => {
+                    (videoRef.current ?? { currentTime: 0 }).currentTime =
+                      currentPlayTime;
+                    setTimeline(currentPlayTime);
+                  }}
                 />
               </div>
-              {!isNaN(duration) && (
-                <div className='flex flex-row items-center ml-2'>
-                  <span className='text-white text-xs'>
-                    {formatDuration(timeline)} \ {formatDuration(duration)}
-                  </span>
+            </Whisper>
+            <div className='flex h-12 w-full flex justify-between items-center justify-start'>
+              <div className='flex flex-row'>
+                <div
+                  className='cursor-pointer w-8 h-8 hover:bg-black-100 rounded-md flex items-center justify-center'
+                  onClick={changePausedState(!controlsState.paused)}
+                >
+                  <FontAwesomeIcon
+                    icon={controlsState.paused ? faPlay : faPause}
+                  />
                 </div>
-              )}
+                {!isNaN(duration) && (
+                  <div className='flex flex-row items-center ml-2'>
+                    <span className='text-white text-xs'>
+                      {formatDuration(timeline)} \ {formatDuration(duration)}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div className='flex flex-row items-center justify-center'>
+                <Dropdown
+                  placement='topEnd'
+                  activeKey={controlsState.quality}
+                  renderToggle={props => (
+                    <div
+                      {...props}
+                      className='mr-2 hover:bg-black-100 w-8 h-8 flex items-center justify-center rounded-md mr-3'
+                    >
+                      <FontAwesomeIcon icon={faGear} />
+                    </div>
+                  )}
+                  onSelect={(quality: string) => {
+                    setControlsState({ ...controlsState, quality });
+                  }}
+                >
+                  {!activeEpisode.qualities?.length && (
+                    <Dropdown.Item
+                      eventKey='Original'
+                      active
+                      className='bg-black-100'
+                    >
+                      Original
+                    </Dropdown.Item>
+                  )}
+                  {activeEpisode.qualities?.map(el => (
+                    <Dropdown.Item
+                      eventKey={el}
+                      key={el}
+                      active={el === controlsState.quality}
+                    >
+                      {el}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown>
+
+                <Dropdown
+                  placement='topEnd'
+                  activeKey={controlsState.playbackSpeed}
+                  onSelect={(playbackSpeed: number) => {
+                    setControlsState({ ...controlsState, playbackSpeed });
+                    (videoRef.current ?? { playbackRate: 1 }).playbackRate =
+                      playbackSpeed;
+                  }}
+                  renderToggle={props => (
+                    <span
+                      {...props}
+                      className='mr-1 hover:bg-black-100 h-8 flex items-center justify-center rounded-md px-2 mr-3'
+                    >
+                      {controlsState.playbackSpeed} x
+                    </span>
+                  )}
+                >
+                  {playbackOptions.map(el => (
+                    <Dropdown.Item
+                      eventKey={el}
+                      key={el}
+                      active={el === controlsState.playbackSpeed}
+                    >
+                      {el}x
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown>
+                <div
+                  className='cursor-pointer px-2 h-8 flex items-center justify-center hover:bg-black-100 rounded-md mr-3'
+                  onClick={changeFullScreen}
+                >
+                  <FontAwesomeIcon icon={faExpand} />
+                </div>
+              </div>
             </div>
           </div>
         </>

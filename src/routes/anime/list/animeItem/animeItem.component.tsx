@@ -27,7 +27,7 @@ const AnimeItem = ({
   const isInreadableTitle = title?.substring(0, 30).endsWith('(');
   return (
     //div since i should make a column direction
-    <div className='flex flex-col'>
+    <div className='flex flex-col mt-4'>
       <Link href={`/anime/${id}`} passHref>
         <div
           className='mx-4 flex flex-col items-center bg-primary cursor-pointer w-80 mb-12 pb-4'

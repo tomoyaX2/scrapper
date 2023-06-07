@@ -2,7 +2,6 @@
 import { DefaultSeo as Seo } from 'next-seo';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { PageList } from '@routes/home/pagination/ui';
 import { DEFAULT_SEO } from '@shared/config/seo';
 import { AnimeItem } from '@routes/anime/list/animeItem';
 import { useAppDispatch, useAppSelector } from 'src/store';
@@ -11,14 +10,18 @@ import { getUser } from 'src/store/user';
 import { getVideoTags } from 'src/store/anime/tags';
 import { getVideoTypes } from 'src/store/anime/types';
 import { getVideoLanguages } from 'src/store/anime/languages';
-import { getAnimeList } from 'src/store/anime/list';
+import { PageList } from './pagination/ui';
+import { changeSearchState, getAnimeList } from 'src/store/anime/list';
+import { searchTimeoutHandler } from '@shared/utils/timeoutHandler';
+import { buildSearchState } from '@shared/utils/pagination';
 
 const Anime = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { data, isLoading } = useAppSelector(state => state.anime.list);
+  const router = useRouter();
+
+  const { data, isLoading, search } = useAppSelector(state => state.anime.list);
 
   useEffect(() => {
-    dispatch(getAnimeList({ page: 1, perPage: 20 }));
     dispatch(getVideoTags());
     dispatch(getVideoTypes());
     dispatch(getVideoLanguages());
@@ -26,7 +29,15 @@ const Anime = (): JSX.Element => {
     ReactGA.send({ hitType: 'pageview' });
   }, []);
 
-  const router = useRouter();
+  useEffect(() => {
+    const searchData = buildSearchState(router, search.perPage);
+    dispatch(changeSearchState(searchData));
+    const callback = () => {
+      dispatch(getAnimeList(searchData));
+    };
+    searchTimeoutHandler(callback);
+  }, [router.query]);
+
   if (router.isReady) {
     return (
       <>

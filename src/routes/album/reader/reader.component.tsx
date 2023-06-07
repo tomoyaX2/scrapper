@@ -59,7 +59,7 @@ const Reader = (): JSX.Element => {
       <NextSeo noindex />
 
       <div className='w-full'>
-        <div className='flex flex-row bg-primary w-full h-16 items-center md:ustify-center sm:justify-center xsm:justify-start'>
+        <div className='flex flex-row bg-primary w-full h-16 items-center md:justify-center sm:justify-center xsm:justify-center'>
           <Arrow
             fill={!!currentPage ? 'white' : 'gray'}
             className='rotate-180 md:flex sm:hidden xsm:hidden'
@@ -82,7 +82,7 @@ const Reader = (): JSX.Element => {
           />
         </div>
         <div className='flex items-center flex-col justify-center cursor-pointer mt-4'>
-          <div className='md:w-full sm:w-[800px] xsm:w-[500px] flex items-center justify-center flex-col'>
+          <div className='md:w-full object-fill flex items-center justify-center flex-col'>
             {images.map((el, index) => (
               <Image
                 url={el?.url}
