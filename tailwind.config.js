@@ -23,6 +23,7 @@ module.exports = {
         third: '#4d4d4d',
         ['third-hover']: '#666',
         title: '#d9d9d9',
+        announcement: '#1a1d24',
         white: {
           300: '#f2f2f2'
         }

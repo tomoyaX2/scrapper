@@ -30,17 +30,30 @@ const AnimeItem = ({
     <div className='flex flex-col'>
       <Link href={`/anime/${id}`} passHref>
         <div
-          className='mx-4 flex flex-col items-center bg-primary cursor-pointer w-80 mb-12 pb-4'
+          className='mx-4 my-2 p-2 flex flex-col items-center bg-primary cursor-pointer w-80 mb-12 pb-4'
           key={id}
           onMouseOver={onHover(true)}
           onMouseLeave={onHover(false)}
         >
-          <Image
-            url={coverImageUrl ?? ''}
-            alt='preview'
-            width={300}
-            height={300}
-          />
+          <div className='relative inline-block w-full h-full text-title'>
+            <Image
+              url={coverImageUrl ?? ''}
+              alt='preview'
+              width={300}
+              height={300}
+            />
+
+            <span className='absolute left-5 top-5 bg-black-400 rounded-xl px-1'>
+              {`${
+                language?.name
+                  ? `${language.name.slice(0, 3).toLocaleUpperCase()}`
+                  : ''
+              }`}
+            </span>
+            <span className='absolute right-1 bottom-0 px-1 bg-black-400 rounded-tl-lg'>
+              {`${type?.name ? `${type.name}` : ''}`}
+            </span>
+          </div>
 
           <div className='flex items-center justify-start w-full mt-1 px-4'>
             <div className='flex items-center justify-center'>
@@ -63,10 +76,6 @@ const AnimeItem = ({
               }`}
             >
               <h2 className='text-sm text-title text-left py-1 px-4'>
-                {`${language?.name ? `[${language.name}]` : ''}  ${
-                  type?.name ? `[${type.name}]` : ''
-                }`}
-
                 {`  ${
                   isHovered
                     ? title

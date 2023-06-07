@@ -48,7 +48,7 @@ const Home = (): JSX.Element => {
         />
 
         <div className='flex flex-col'>
-          <div className='w-full bg-[#1a1d24] p-1'>
+          <div className='w-full bg-announcement p-1'>
             <span className='text-left text-xs ml-16'>
               Welcome! This resource is ad-free and i want to leave it as as in
               the future too. Also i&apos;m planning to add new features ( e.g.
