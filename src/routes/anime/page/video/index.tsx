@@ -4,7 +4,9 @@ import {
   faPlay,
   faPause,
   faExpand,
-  faGear
+  faGear,
+  faVolumeXmark,
+  faVolumeHigh
 } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'src/components/common/Slider';
 import { Whisper, Tooltip, Dropdown } from 'rsuite';
@@ -17,6 +19,7 @@ interface ControlsState {
   paused: boolean;
   playbackSpeed: number;
   quality: string;
+  muted: boolean;
 }
 
 const handleLeadZero = Intl.NumberFormat(undefined, {
@@ -37,6 +40,10 @@ let fullScreenMouseMoveTimeout = setTimeout(() => {});
 
 const playbackOptions = [0.5, 1, 1.5, 2];
 
+const leftArrowIndex = 'ArrowLeft';
+const rightArrowIndex = 'ArrowRight';
+const spaceIndex = 'Space';
+
 const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
   const sliderRef = useRef();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -44,9 +51,10 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
     isVisible: false,
     paused: true,
     playbackSpeed: 1,
-    quality: 'Original'
+    quality: 'Original',
+    muted: false
   });
-
+  const [preloadPercent, setPreloadPercent] = useState(0);
   const [timeline, setTimeline] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [previewTime, setPreviewTime] = useState(0);
@@ -65,20 +73,61 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
   };
 
   useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const keyIndex = event.code;
+      if (keyIndex === rightArrowIndex) {
+        setTimeline(prevState => {
+          (videoRef.current ?? { currentTime: 0 }).currentTime = prevState + 10;
+
+          return prevState + 10;
+        });
+      }
+      if (keyIndex === leftArrowIndex) {
+        setTimeline(prevState => {
+          (videoRef.current ?? { currentTime: 0 }).currentTime = prevState - 10;
+          return prevState - 10;
+        });
+      }
+      if (keyIndex === spaceIndex) {
+        setControlsState(prevState => {
+          prevState.paused
+            ? videoRef.current?.play()
+            : videoRef.current?.pause();
+          return { ...prevState, paused: !prevState.paused };
+        });
+      }
+    };
     const timeListenner = () => {
       setTimeline(videoRef?.current?.currentTime ?? 0);
     };
     const loadedListenner = () => {
       setDuration(videoRef?.current?.duration ?? 0);
     };
+
     videoRef.current?.addEventListener('timeupdate', timeListenner);
     videoRef.current?.addEventListener('loadeddata', loadedListenner);
+    document?.addEventListener('keydown', handleKeyPress);
 
     return () => {
       videoRef.current?.removeEventListener('timeupdate', timeListenner);
       videoRef.current?.removeEventListener('loadeddata', timeListenner);
+      document?.removeEventListener('keydown', handleKeyPress);
     };
   }, [activeEpisode.url]);
+
+  useEffect(() => {
+    if (videoRef.current?.buffered) {
+      try {
+        const end = videoRef.current?.buffered?.length - 1;
+        const result = videoRef.current?.buffered?.end(end);
+        if (result !== preloadPercent) {
+          setPreloadPercent(result);
+        }
+      } catch (e) {
+        console.log('error', e);
+      }
+    }
+  }, [timeline]);
 
   const checkIfMouseMoved = useCallback(() => {
     if (isFullscreen) {
@@ -98,6 +147,11 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
 
   const changeFullScreen = () => {
     screenfull.toggle();
+  };
+
+  const changeMuted = (muted: boolean) => () => {
+    setControlsState({ ...controlsState, muted });
+    (videoRef.current ?? { muted: false }).muted = muted;
   };
 
   const fullScreenStyle =
@@ -143,6 +197,7 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
                   progress
                   max={duration}
                   ref={sliderRef}
+                  prefill={preloadPercent}
                   min={0}
                   value={timeline}
                   tooltip={false}
@@ -178,11 +233,46 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
               <div className='flex flex-row items-center justify-center'>
                 <Dropdown
                   placement='topEnd'
+                  activeKey={controlsState.playbackSpeed}
+                  onSelect={(playbackSpeed: number) => {
+                    setControlsState({ ...controlsState, playbackSpeed });
+                    (videoRef.current ?? { playbackRate: 1 }).playbackRate =
+                      playbackSpeed;
+                  }}
+                  renderToggle={props => (
+                    <span
+                      {...props}
+                      className='mr-2 hover:bg-black-100 h-8 flex items-center justify-center rounded-md px-2'
+                    >
+                      {controlsState.playbackSpeed} x
+                    </span>
+                  )}
+                >
+                  {playbackOptions.map(el => (
+                    <Dropdown.Item
+                      eventKey={el}
+                      key={el}
+                      active={el === controlsState.playbackSpeed}
+                    >
+                      {el}x
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown>
+                <div
+                  className='cursor-pointer w-8 h-8 hover:bg-black-100 rounded-md flex items-center justify-center mr-2  py-3 mt-1'
+                  onClick={changeMuted(!controlsState.muted)}
+                >
+                  <FontAwesomeIcon
+                    icon={controlsState.muted ? faVolumeXmark : faVolumeHigh}
+                  />
+                </div>
+                <Dropdown
+                  placement='topEnd'
                   activeKey={controlsState.quality}
                   renderToggle={props => (
                     <div
                       {...props}
-                      className='mr-2 hover:bg-black-100 w-8 h-8 flex items-center justify-center rounded-md mr-3'
+                      className='hover:bg-black-100 w-8 h-8 flex items-center justify-center rounded-md mr-2 py-3 mt-1'
                     >
                       <FontAwesomeIcon icon={faGear} />
                     </div>
@@ -210,36 +300,8 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
                     </Dropdown.Item>
                   ))}
                 </Dropdown>
-
-                <Dropdown
-                  placement='topEnd'
-                  activeKey={controlsState.playbackSpeed}
-                  onSelect={(playbackSpeed: number) => {
-                    setControlsState({ ...controlsState, playbackSpeed });
-                    (videoRef.current ?? { playbackRate: 1 }).playbackRate =
-                      playbackSpeed;
-                  }}
-                  renderToggle={props => (
-                    <span
-                      {...props}
-                      className='mr-1 hover:bg-black-100 h-8 flex items-center justify-center rounded-md px-2 mr-3'
-                    >
-                      {controlsState.playbackSpeed} x
-                    </span>
-                  )}
-                >
-                  {playbackOptions.map(el => (
-                    <Dropdown.Item
-                      eventKey={el}
-                      key={el}
-                      active={el === controlsState.playbackSpeed}
-                    >
-                      {el}x
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
                 <div
-                  className='cursor-pointer px-2 h-8 flex items-center justify-center hover:bg-black-100 rounded-md mr-3'
+                  className='cursor-pointer px-2 h-8 flex items-center justify-center hover:bg-black-100 rounded-md mr-3 mt-1'
                   onClick={changeFullScreen}
                 >
                   <FontAwesomeIcon icon={faExpand} />

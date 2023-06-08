@@ -109,7 +109,6 @@ const Handle = React.forwardRef((props: any, ref) => {
   );
 
   const handleMouseEnter = useCallback(() => {
-    console.log('123123123');
     setTooltipPosition();
   }, [setTooltipPosition]);
 

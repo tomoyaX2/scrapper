@@ -19,7 +19,7 @@ interface VideoState {
   id: string;
   type?: { name: string; id: string };
   language?: { name: string; id: string };
-  tags?: { name: string; id: string; albumsCount: number }[];
+  tags?: { name: string; id: string; videosCount: number }[];
   coverImageUrl?: string;
   views?: number;
   rate?: number;
