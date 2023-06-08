@@ -56,3 +56,7 @@ a:active {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(37, 37, 37, 0.95);
 }
+
+.rs-slider-handle:before {
+  z-index: 10;
+}

@@ -47,6 +47,7 @@ const Slider = React.forwardRef((props: any, ref) => {
     onChangeCommitted,
     onMouseMoveDataHandler,
     onMouseLeaveDataHandler,
+    prefill,
     ...rest
   } = props;
 
@@ -233,9 +234,21 @@ const Slider = React.forwardRef((props: any, ref) => {
           <ProgressBar
             rtl={rtl}
             vertical={vertical}
+            className='z-10'
             start={0}
             end={((value - min) / (max - min)) * 100}
           />
+        )}
+        {prefill ? (
+          <ProgressBar
+            rtl={rtl}
+            vertical={vertical}
+            className='bg-gray-600'
+            start={0}
+            end={((prefill - min) / (max - min)) * 100}
+          />
+        ) : (
+          ''
         )}
         {graduated && (
           <Graduated

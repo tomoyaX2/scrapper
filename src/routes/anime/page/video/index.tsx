@@ -4,7 +4,9 @@ import {
   faPlay,
   faPause,
   faExpand,
-  faGear
+  faGear,
+  faVolumeXmark,
+  faVolumeHigh
 } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'src/components/common/Slider';
 import { Whisper, Tooltip, Dropdown, SelectPicker } from 'rsuite';
@@ -17,6 +19,7 @@ interface ControlsState {
   paused: boolean;
   playbackSpeed: number;
   quality: string;
+  muted: boolean;
 }
 
 const handleLeadZero = Intl.NumberFormat(undefined, {
@@ -48,7 +51,8 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
     isVisible: false,
     paused: true,
     playbackSpeed: 1,
-    quality: 'Original'
+    quality: 'Original',
+    muted: false
   });
   const [activeEpisodeId, setActiveEpisodeId] = useState(episodes[0].id);
   const activeEpisode = useMemo(
@@ -56,6 +60,7 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
     [episodes, activeEpisodeId]
   );
 
+  const [preloadPercent, setPreloadPercent] = useState(0);
   const [timeline, setTimeline] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [previewTime, setPreviewTime] = useState(0);
@@ -104,6 +109,7 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
     const loadedListenner = () => {
       setDuration(videoRef?.current?.duration ?? 0);
     };
+
     videoRef.current?.addEventListener('timeupdate', timeListenner);
     videoRef.current?.addEventListener('loadeddata', loadedListenner);
     document?.addEventListener('keydown', handleKeyPress);
@@ -114,6 +120,20 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
       document?.removeEventListener('keydown', handleKeyPress);
     };
   }, [activeEpisode?.url]);
+
+  useEffect(() => {
+    if (videoRef.current?.buffered) {
+      try {
+        const end = videoRef.current?.buffered?.length - 1;
+        const result = videoRef.current?.buffered?.end(end);
+        if (result !== preloadPercent) {
+          setPreloadPercent(result);
+        }
+      } catch (e) {
+        console.log('error', e);
+      }
+    }
+  }, [timeline]);
 
   const checkIfMouseMoved = useCallback(() => {
     if (isFullscreen) {
@@ -133,6 +153,11 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
 
   const changeFullScreen = () => {
     screenfull.toggle();
+  };
+
+  const changeMuted = (muted: boolean) => () => {
+    setControlsState({ ...controlsState, muted });
+    (videoRef.current ?? { muted: false }).muted = muted;
   };
 
   const fullScreenStyle =
@@ -190,6 +215,7 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
                   progress
                   max={duration}
                   ref={sliderRef}
+                  prefill={preloadPercent}
                   min={0}
                   value={timeline}
                   tooltip={false}
@@ -225,11 +251,46 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
               <div className='flex flex-row items-center justify-center'>
                 <Dropdown
                   placement='topEnd'
+                  activeKey={controlsState.playbackSpeed}
+                  onSelect={(playbackSpeed: number) => {
+                    setControlsState({ ...controlsState, playbackSpeed });
+                    (videoRef.current ?? { playbackRate: 1 }).playbackRate =
+                      playbackSpeed;
+                  }}
+                  renderToggle={props => (
+                    <span
+                      {...props}
+                      className='mr-2 hover:bg-black-100 h-8 flex items-center justify-center rounded-md px-2'
+                    >
+                      {controlsState.playbackSpeed} x
+                    </span>
+                  )}
+                >
+                  {playbackOptions.map(el => (
+                    <Dropdown.Item
+                      eventKey={el}
+                      key={el}
+                      active={el === controlsState.playbackSpeed}
+                    >
+                      {el}x
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown>
+                <div
+                  className='cursor-pointer w-8 h-8 hover:bg-black-100 rounded-md flex items-center justify-center mr-2  py-3 mt-1'
+                  onClick={changeMuted(!controlsState.muted)}
+                >
+                  <FontAwesomeIcon
+                    icon={controlsState.muted ? faVolumeXmark : faVolumeHigh}
+                  />
+                </div>
+                <Dropdown
+                  placement='topEnd'
                   activeKey={controlsState.quality}
                   renderToggle={props => (
                     <div
                       {...props}
-                      className=' hover:bg-black-100 w-8 h-8 flex items-center justify-center rounded-md mr-3'
+                      className='hover:bg-black-100 w-8 h-8 flex items-center justify-center rounded-md mr-2 py-3 mt-1'
                     >
                       <FontAwesomeIcon icon={faGear} />
                     </div>
@@ -286,7 +347,7 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
                   ))}
                 </Dropdown>
                 <div
-                  className='cursor-pointer px-2 h-8 flex items-center justify-center hover:bg-black-100 rounded-md mr-3'
+                  className='cursor-pointer px-2 h-8 flex items-center justify-center hover:bg-black-100 rounded-md mr-3 mt-1'
                   onClick={changeFullScreen}
                 >
                   <FontAwesomeIcon icon={faExpand} />
