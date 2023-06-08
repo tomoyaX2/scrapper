@@ -21,7 +21,8 @@ const AnimePage = ({
 }: {
   initialData: VideoState;
 }): JSX.Element => {
-  const [activeEpisode] = useState(video.episodes[0]);
+  const [episodes] = useState(video.episodes);
+  // const [activeEpisode] = useState(video.episodes[0]);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const currentRate = useAppSelector(state => state.anime.item.currentRate);
@@ -167,7 +168,7 @@ const AnimePage = ({
                 )}
               </div>
             </div>
-            <Video activeEpisode={activeEpisode} />
+            <Video episodes={episodes} />
           </div>
         </div>
       )}
