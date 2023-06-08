@@ -37,6 +37,10 @@ let fullScreenMouseMoveTimeout = setTimeout(() => {});
 
 const playbackOptions = [0.5, 1, 1.5, 2];
 
+const leftArrowIndex = 'ArrowLeft';
+const rightArrowIndex = 'ArrowRight';
+const spaceIndex = 'Space';
+
 const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
   const sliderRef = useRef();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -65,6 +69,30 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
   };
 
   useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const keyIndex = event.code;
+      if (keyIndex === rightArrowIndex) {
+        setTimeline(prevState => {
+          (videoRef.current ?? { currentTime: 0 }).currentTime = prevState + 10;
+
+          return prevState + 10;
+        });
+      }
+      if (keyIndex === leftArrowIndex) {
+        setTimeline(prevState => {
+          (videoRef.current ?? { currentTime: 0 }).currentTime = prevState - 10;
+          return prevState - 10;
+        });
+      }
+      if (keyIndex === spaceIndex) {
+        setControlsState(prevState => {
+          prevState.paused
+            ? videoRef.current?.play()
+            : videoRef.current?.pause();
+          return { ...prevState, paused: !prevState.paused };
+        });
+      }
+    };
     const timeListenner = () => {
       setTimeline(videoRef?.current?.currentTime ?? 0);
     };
@@ -73,10 +101,12 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
     };
     videoRef.current?.addEventListener('timeupdate', timeListenner);
     videoRef.current?.addEventListener('loadeddata', loadedListenner);
+    document?.addEventListener('keydown', handleKeyPress);
 
     return () => {
       videoRef.current?.removeEventListener('timeupdate', timeListenner);
       videoRef.current?.removeEventListener('loadeddata', timeListenner);
+      document?.removeEventListener('keydown', handleKeyPress);
     };
   }, [activeEpisode.url]);
 

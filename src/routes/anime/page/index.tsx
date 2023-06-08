@@ -107,10 +107,10 @@ const AnimePage = ({
                   ) : null}
 
                   {video.tags?.length ? (
-                    <div className='flex flex-row items-center justify-start w-full mt-4'>
-                      <span className='text-sm mr-4 w-20'>Tags:</span>
+                    <div className='flex flex-row items-center justify-start w-full mt-4 '>
+                      <span className='text-sm mr-4 w-20 flex-none'>Tags:</span>
 
-                      <TagsList items={video.tags} />
+                      <TagsList items={video.tags} allowRedirect={false} />
                     </div>
                   ) : null}
 
@@ -124,7 +124,7 @@ const AnimePage = ({
                 <div className='w-full flex items-center justify-start mt-4 mb-2'>
                   {user.isAdmin && (
                     <Button
-                      className='flex items-center px-2'
+                      className='flex items-center'
                       onClick={onDeleteVideo}
                     >
                       <TrashIcon className='w-6 h-6 mt-1' fill='white' />
