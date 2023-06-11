@@ -49,7 +49,7 @@ const Comments = () => {
   };
 
   return (
-    <div className='ml-4 flex flex-col w-80 xl:block xsm:hidden mt-4'>
+    <div className='mb-4 flex flex-col w-full xl:block xsm:hidden mt-4'>
       <div
         className='flex flex-row items-center justify-start h-12 w-full bg-secondary px-4 cursor-pointer'
         onClick={changeExpandState}
