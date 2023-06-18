@@ -56,7 +56,7 @@ const Album = ({
       {isVisibleControls && (
         <div className='bg-primary lg:w-[400px] xsm:w-[300px] mt-12 mx-4 h-7 p-1 '>
           <Button
-            className='flex items-center px-2 h-5 float-right justify-center items-center'
+            className='flex items-center px-2 h-5 float-right justify-center '
             onClick={
               isHome
                 ? () => onDeleteFromHome()

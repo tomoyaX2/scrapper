@@ -26,7 +26,6 @@ const Header = (): JSX.Element => {
   const onLogout = () => {
     dispatch(cleanUser());
   };
-  console.log(user, 'user');
 
   return (
     <header className='bg-primary flex items-center justify-between md:px-16 sm:px-2 xsm:px-2 py-4'>

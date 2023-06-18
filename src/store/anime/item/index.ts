@@ -68,7 +68,7 @@ export const getVideo = createAsyncThunk(
 export const deleteVideo = createAsyncThunk(
   'delete video',
   async (videoId: string) => {
-    await axios.delete(`${backendUrl}/video/${videoId}`);
+    await axios.delete(`${backendUrl}/videos/${videoId}`);
   }
 );
 
