@@ -9,9 +9,20 @@ const rangeStyles: React.CSSProperties = {
 };
 
 const Input = React.forwardRef(
-  (props: React.InputHTMLAttributes<HTMLInputElement>, ref: React.Ref<HTMLInputElement>) => {
+  (
+    props: React.InputHTMLAttributes<HTMLInputElement>,
+    ref: React.Ref<HTMLInputElement>
+  ) => {
     const { style, ...rest } = props;
-    return <input type="range" readOnly ref={ref} style={{ ...rangeStyles, ...style }} {...rest} />;
+    return (
+      <input
+        type='range'
+        readOnly
+        ref={ref}
+        style={{ ...rangeStyles, ...style }}
+        {...rest}
+      />
+    );
   }
 );
 

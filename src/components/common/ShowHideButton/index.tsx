@@ -11,12 +11,15 @@ const ShowMoreButton = ({
     return null;
   }
   return active ? (
-    <Button className={'rs-tag-md ' + className} onClick={() => action(false)}>
+    <Button
+      className={`rs-tag-md ${className ? className : ''}`}
+      onClick={() => action(false)}
+    >
       Hide
     </Button>
   ) : (
     <Button
-      className={'rs-tag-md underline ' + className}
+      className={`rs-tag-md underline ${className ? className : ''}`}
       onClick={() => action(true)}
     >
       Show more
