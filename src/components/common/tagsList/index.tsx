@@ -27,7 +27,10 @@ export const TagsList = ({ items, allowRedirect }: TagsListProps) => {
             </Tag>
           </Link>
         ) : (
-          <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+          <Tag
+            className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '
+            key={el.id}
+          >
             {el.name}
             <span className='ml-1'>| {el.albumsCount ?? el.videosCount}</span>
           </Tag>

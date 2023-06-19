@@ -110,6 +110,8 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
       setDuration(videoRef?.current?.duration ?? 0);
     };
 
+    setControlsState({ ...controlsState, paused: true });
+
     videoRef.current?.addEventListener('timeupdate', timeListenner);
     videoRef.current?.addEventListener('loadeddata', loadedListenner);
     document?.addEventListener('keydown', handleKeyPress);
@@ -193,7 +195,9 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
             searchable={false}
             value={activeEpisodeId}
             cleanable={false}
-            onChange={value => setActiveEpisodeId(value)}
+            onChange={value => {
+              setActiveEpisodeId(value);
+            }}
           />
           <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full' />
           <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full'>

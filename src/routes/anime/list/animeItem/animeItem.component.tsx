@@ -6,15 +6,17 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from 'src/store';
 import { EyeIcon } from 'src/components/common/icons/eye';
 import { StarIcon } from 'src/components/common/icons/star';
-import { resetAnimeState } from 'src/store/anime/list';
+import { getAnimeList, resetAnimeState } from 'src/store/anime/list';
 import { Button } from 'src/components/common/button';
 import { TrashIcon } from 'src/components/common/icons/trash';
 import { deleteVideo } from 'src/store/anime/item';
+import { useRouter } from 'next/router';
 
 const AnimeItem = ({
   anime: { rate, id, language, title, type, views, coverImageUrl }
 }: AnimeProps): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const [isHovered, setHovered] = React.useState<boolean>(false);
   const { data: user } = useAppSelector(state => state.user);
 
@@ -26,6 +28,12 @@ const AnimeItem = ({
 
   const onDeleteVideo = () => {
     dispatch(deleteVideo(id));
+    dispatch(
+      getAnimeList({
+        page: router.query.page as unknown as number,
+        perPage: 20
+      })
+    );
   };
 
   const onHover = (status: boolean) => () => {
