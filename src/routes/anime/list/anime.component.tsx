@@ -36,7 +36,7 @@ const Anime = (): JSX.Element => {
       dispatch(getAnimeList(searchData));
     };
     searchTimeoutHandler(callback);
-  }, [router.query, data]);
+  }, [router.query]);
 
   if (router.isReady) {
     return (
