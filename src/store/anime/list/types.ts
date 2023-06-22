@@ -7,6 +7,9 @@ export type Image = {
 export type Search = {
   page: number;
   perPage: number;
+  sortBy?: 'rate' | 'views' | 'totalImages';
+  shouldResetPage?: boolean;
+  title?: string;
 };
 
 export type AnimeState = {
@@ -30,4 +33,4 @@ export type Anime = {
   // preview: string[] will be done later
 };
 
-export type AlbumResponse = { data: Anime[]; total: string };
+export type AnimeResponse = { data: Anime[]; total: string };

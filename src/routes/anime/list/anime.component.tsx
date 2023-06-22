@@ -14,12 +14,14 @@ import { PageList } from './pagination/ui';
 import { changeSearchState, getAnimeList } from 'src/store/anime/list';
 import { searchTimeoutHandler } from '@shared/utils/timeoutHandler';
 import { buildSearchState } from '@shared/utils/pagination';
+import { SearchAnimeBar } from 'src/components/search-anime-bar/search-anime-bar.component';
 
 const Anime = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const { data, isLoading, search } = useAppSelector(state => state.anime.list);
+  console.log(data);
 
   useEffect(() => {
     dispatch(getVideoTags());
@@ -32,11 +34,14 @@ const Anime = (): JSX.Element => {
   useEffect(() => {
     const searchData = buildSearchState(router, search.perPage);
     dispatch(changeSearchState(searchData));
+
     const callback = () => {
       dispatch(getAnimeList(searchData));
+      console.log(dispatch(getAnimeList(searchData)));
     };
+
     searchTimeoutHandler(callback);
-  }, [router.query, data]);
+  }, [router.query]);
 
   if (router.isReady) {
     return (
@@ -52,7 +57,7 @@ const Anime = (): JSX.Element => {
           ]}
           canonical='https://mangamischief.com'
         />
-
+        <SearchAnimeBar />
         <div className='flex flex-col'>
           {isLoading ? (
             <div className='flex flex-col items-center justify-center w-full'>
