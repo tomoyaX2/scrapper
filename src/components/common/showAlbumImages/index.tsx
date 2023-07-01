@@ -16,7 +16,7 @@ export const ShowAlbumImages = ({
   const dispatch = useAppDispatch();
   const [showMoreItems, setShowMoreItems] = useState<boolean>(false);
   const itemsToRender = useMemo(
-    () => (showMoreItems ? items : items.slice(0, 10)),
+    () => (showMoreItems ? items : items.slice(0, 20)),
     [showMoreItems, items]
   );
   return (
@@ -47,7 +47,7 @@ export const ShowAlbumImages = ({
         <ShowMoreButton
           action={() => setShowMoreItems(!showMoreItems)}
           active={showMoreItems}
-          isVisible={items.length > 10}
+          isVisible={items.length > 20}
           className='text-base'
         />
       </div>
