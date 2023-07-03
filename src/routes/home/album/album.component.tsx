@@ -54,7 +54,7 @@ const Album = ({
     //div since i should make a column direction
     <div className='flex flex-col'>
       {isVisibleControls && (
-        <div className='bg-primary lg:w-[400px] xsm:w-[300px] mt-12 mx-4 h-7 p-1 '>
+        <div className='bg-primary lg:w-[400px] xsm:w-[300px] mt-12 lg:mx-4 md:mx-2 xsm:mx-0 h-8 p-1 '>
           <Button
             className='flex items-center px-2 h-5 float-right justify-center '
             onClick={
@@ -83,7 +83,7 @@ const Album = ({
             alt='preview'
             width={400}
             height={400}
-            className='h-[300px]'
+            className='lg:h-[400px] md:h-[300] xsm:p-2'
           />
 
           <div className='flex items-center justify-start w-full mt-1 px-4'>

@@ -176,7 +176,7 @@ const Album = ({
                   height={albumImages[0]?.height}
                   alt='preview'
                   horizontalSizes={{ height: 400, width: 600 }}
-                  verticalSizes={{ height: 400, width: 320 }}
+                  verticalSizes={{ height: 320, width: 280 }}
                 />
               </div>
 

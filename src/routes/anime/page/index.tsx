@@ -71,7 +71,7 @@ const AnimePage = ({
                   width={400}
                   height={400}
                   alt='preview'
-                  className='h-[400px]'
+                  className='lg:h-[400px] xsm:h-[300]'
                 />
               </div>
 

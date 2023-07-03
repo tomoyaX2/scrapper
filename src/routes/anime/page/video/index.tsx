@@ -169,7 +169,9 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
   return (
     <div
       className={`flex flex-row flex-wrap items-center  justify-center bg-secondary z-10  ${
-        isFullscreen ? fullScreenStyle : 'relative mt-4 w-[75rem]'
+        isFullscreen
+          ? fullScreenStyle
+          : 'relative mt-4 lg:w-[75rem] xsm:w-[22rem]'
       }`}
       onMouseEnter={changeVisibility(true)}
       onMouseLeave={changeVisibility(false)}
@@ -179,7 +181,7 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
         onClick={changePausedState(!controlsState.paused)}
         ref={videoRef}
         className={`aspect-video object-fill ${
-          isFullscreen ? fullScreenStyle : 'w-[75rem]'
+          isFullscreen ? fullScreenStyle : 'lg:w-[75rem] xsm:w-[22rem]'
         }`}
         onMouseMove={checkIfMouseMoved}
       />
@@ -253,33 +255,6 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
                 )}
               </div>
               <div className='flex flex-row items-center justify-center'>
-                <Dropdown
-                  placement='topEnd'
-                  activeKey={controlsState.playbackSpeed}
-                  onSelect={(playbackSpeed: number) => {
-                    setControlsState({ ...controlsState, playbackSpeed });
-                    (videoRef.current ?? { playbackRate: 1 }).playbackRate =
-                      playbackSpeed;
-                  }}
-                  renderToggle={props => (
-                    <span
-                      {...props}
-                      className='mr-2 hover:bg-black-100 h-8 flex items-center justify-center rounded-md px-2'
-                    >
-                      {controlsState.playbackSpeed} x
-                    </span>
-                  )}
-                >
-                  {playbackOptions.map(el => (
-                    <Dropdown.Item
-                      eventKey={el}
-                      key={el}
-                      active={el === controlsState.playbackSpeed}
-                    >
-                      {el}x
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
                 <div
                   className='cursor-pointer w-8 h-8 hover:bg-black-100 rounded-md flex items-center justify-center mr-2  py-3 mt-1'
                   onClick={changeMuted(!controlsState.muted)}
