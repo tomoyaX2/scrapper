@@ -234,7 +234,7 @@ const Slider = React.forwardRef((props: any, ref) => {
           <ProgressBar
             rtl={rtl}
             vertical={vertical}
-            className='z-10'
+            className={`z-10 h-full bg-white-300`}
             start={0}
             end={((value - min) / (max - min)) * 100}
           />
@@ -243,7 +243,7 @@ const Slider = React.forwardRef((props: any, ref) => {
           <ProgressBar
             rtl={rtl}
             vertical={vertical}
-            className='bg-gray-600'
+            className='bg-gray-600 h-full'
             start={0}
             end={((prefill - min) / (max - min)) * 100}
           />
@@ -267,7 +267,6 @@ const Slider = React.forwardRef((props: any, ref) => {
           className={handleClassName}
           style={handleStyle}
           disabled={disabled}
-          vertical={vertical}
           tooltip={tooltip}
           rtl={rtl}
           value={value}

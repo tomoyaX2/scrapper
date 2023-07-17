@@ -1,5 +1,5 @@
 import { DefaultSeo as Seo } from 'next-seo';
-import { Rate } from 'rsuite';
+import { Rate, SelectPicker } from 'rsuite';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Tag, Button } from 'rsuite';
@@ -13,7 +13,7 @@ import { PopoverWindow } from 'src/components/common/menu';
 import { StarIcon } from 'src/components/common/icons/star';
 import { TagsList } from 'src/components/common/tagsList';
 import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
-import { VideoState } from 'src/store/anime/item/types';
+import { Episode, VideoState } from 'src/store/anime/item/types';
 import { Video } from './video';
 
 const AnimePage = ({
@@ -22,7 +22,9 @@ const AnimePage = ({
   initialData: VideoState;
 }): JSX.Element => {
   const [episodes] = useState(video.episodes);
-  // const [activeEpisode] = useState(video.episodes[0]);
+  const [activeEpisode, setActiveEpisode] = useState<Episode | undefined>(
+    episodes[0]
+  );
   const router = useRouter();
   const dispatch = useAppDispatch();
   const currentRate = useAppSelector(state => state.anime.item.currentRate);
@@ -43,6 +45,10 @@ const AnimePage = ({
     }
   }, [router.query.id]);
 
+  const onSelectEpisode = (episodeId: string) => {
+    setActiveEpisode(episodes?.find(episode => episode.id == episodeId));
+  };
+
   const onDeleteVideo = () => {
     dispatch(deleteVideo(video?.id));
     router.push('/');
@@ -62,23 +68,38 @@ const AnimePage = ({
         canonical={window.location.href}
       />
       {video && (
-        <div className='flex flex-row w-full justify-center pb-4'>
-          <div className='flex flex-col items-center justify-start mt-4'>
-            <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
+        <div className='flex flex-row w-full justify-center pb-4 '>
+          <div className='flex flex-col items-center justify-start mt-4 w-full'>
+            {activeEpisode ? <Video activeEpisode={activeEpisode} /> : null}
+            <div className='flex mt-12 md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
               <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full'>
                 <Image
                   url={video.coverImageUrl ?? ''}
                   width={400}
                   height={400}
                   alt='preview'
-                  className='lg:h-[400px] xsm:h-[300]'
+                  className='lg:h-[400px] lg:w-[300px] xsm:h-[300px] xsm:w-[250px] max-w-full'
                 />
               </div>
-
               <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
                 <div>
                   <div className='flex flex-col'>
-                    <h1 className='text-lg flex flex-row'>{video.title}</h1>
+                    <h1 className='text-lg flex flex-row items-center justify-center'>
+                      {video.title}
+                      <SelectPicker
+                        appearance='subtle'
+                        size='md'
+                        className='ml-2 '
+                        searchable={false}
+                        cleanable={false}
+                        onChange={value => onSelectEpisode(value)}
+                        data={episodes.map(episode => ({
+                          label: `${episode.name}`,
+                          value: `${episode.id}`
+                        }))}
+                        defaultValue={activeEpisode?.id}
+                      />
+                    </h1>
 
                     <div className='flex flex-row items-center justify-start w-12'>
                       <span>{targetRate?.toFixed(1)}</span>
@@ -168,7 +189,6 @@ const AnimePage = ({
                 )}
               </div>
             </div>
-            <Video episodes={episodes} />
           </div>
         </div>
       )}

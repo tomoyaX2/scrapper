@@ -9,7 +9,7 @@ import {
   faVolumeHigh
 } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'src/components/common/Slider';
-import { Whisper, Tooltip, Dropdown, SelectPicker } from 'rsuite';
+import { Whisper, Tooltip, Dropdown } from 'rsuite';
 import { TimelineTooltip } from './tooltip';
 import screenfull from 'screenfull';
 import { Episode } from 'src/store/anime/item/types';
@@ -44,7 +44,7 @@ const leftArrowIndex = 'ArrowLeft';
 const rightArrowIndex = 'ArrowRight';
 const spaceIndex = 'Space';
 
-const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
+const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
   const sliderRef = useRef();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [controlsState, setControlsState] = useState<ControlsState>({
@@ -54,11 +54,6 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
     quality: 'Original',
     muted: false
   });
-  const [activeEpisodeId, setActiveEpisodeId] = useState(episodes[0].id);
-  const activeEpisode = useMemo(
-    () => episodes.find(episode => episode.id === activeEpisodeId),
-    [episodes, activeEpisodeId]
-  );
 
   const [preloadPercent, setPreloadPercent] = useState(0);
   const [timeline, setTimeline] = useState<number>(0);
@@ -187,20 +182,6 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
       />
       {isVisibleControls && (
         <>
-          <SelectPicker
-            data={episodes.map(e => ({
-              label: e.name,
-              value: e.id
-            }))}
-            className='absolute left-2 top-0 w-32 mr-4 my-2 '
-            menuClassName='z-10'
-            searchable={false}
-            value={activeEpisodeId}
-            cleanable={false}
-            onChange={value => {
-              setActiveEpisodeId(value);
-            }}
-          />
           <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full' />
           <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full'>
             <Whisper
@@ -219,6 +200,8 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
               <div className='px-4'>
                 <Slider
                   progress
+                  className='h-1'
+                  barClassName='h-full'
                   max={duration}
                   ref={sliderRef}
                   prefill={preloadPercent}
