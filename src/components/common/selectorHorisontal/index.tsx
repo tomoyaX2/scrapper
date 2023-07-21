@@ -25,17 +25,17 @@ export const HorisontalScrollSelector = ({
   };
 
   return (
-    <div className='lg:w-[75rem] xsm:w-[22rem] border-primary border-4'>
+    <div className=' lg:w-[75rem] xsm:w-[22rem] border-primary border-4'>
       <div className='flex bg-primary p-2 text-lg'>{name}</div>
       <div className='flex flex-row  py-1 '>
         <Button
-          className='flex items-center justify-center w-6 hover:bg-secondary'
+          className='flex items-center justify-center w-8 hover:bg-secondary'
           onClick={scrollLeft}
         >
           <Arrow className='rotate-180 cursor-pointer' fill='white' />
         </Button>
         <div
-          className='flex flex-row overflow-hidden scroll-smooth'
+          className='flex flex-row flex-grow overflow-hidden scroll-smooth'
           ref={selectorRef}
         >
           {data
@@ -54,7 +54,7 @@ export const HorisontalScrollSelector = ({
             ))}
         </div>
         <Button
-          className='flex items-center justify-center w-6 hover:bg-secondary'
+          className='flex items-center justify-center w-8 hover:bg-secondary'
           onClick={scrollRight}
         >
           <Arrow className=' cursor-pointer' fill='white' />
