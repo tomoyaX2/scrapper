@@ -1,5 +1,5 @@
 import { DefaultSeo as Seo } from 'next-seo';
-import { Rate, SelectPicker } from 'rsuite';
+import { Rate } from 'rsuite';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Tag, Button } from 'rsuite';
@@ -15,6 +15,7 @@ import { TagsList } from 'src/components/common/tagsList';
 import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
 import { Episode, VideoState } from 'src/store/anime/item/types';
 import { Video } from './video';
+import { HorisontalScrollSelector } from 'src/components/common/selectorHorisontal';
 
 const AnimePage = ({
   initialData: video
@@ -70,7 +71,16 @@ const AnimePage = ({
       {video && (
         <div className='flex flex-row w-full justify-center pb-4 '>
           <div className='flex flex-col items-center justify-start mt-4 w-full'>
-            {activeEpisode ? <Video activeEpisode={activeEpisode} /> : null}
+            <div>
+              <HorisontalScrollSelector
+                name='Select Episode'
+                data={episodes}
+                callback={(episodeId: string) => onSelectEpisode(episodeId)}
+                activeEpisode={activeEpisode}
+              />
+              {activeEpisode ? <Video activeEpisode={activeEpisode} /> : null}
+            </div>
+
             <div className='flex mt-12 md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
               <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full'>
                 <Image
@@ -78,7 +88,7 @@ const AnimePage = ({
                   width={400}
                   height={400}
                   alt='preview'
-                  className='lg:h-[400px] lg:w-[300px] xsm:h-[300px] xsm:w-[250px] max-w-full'
+                  className='lg:h-[400px] lg:w-auto xsm:h-[300px] xsm:w-[250px] max-w-full'
                 />
               </div>
               <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
@@ -86,7 +96,7 @@ const AnimePage = ({
                   <div className='flex flex-col'>
                     <h1 className='text-lg flex flex-row items-center justify-center'>
                       {video.title}
-                      <SelectPicker
+                      {/* <SelectPicker
                         appearance='subtle'
                         size='md'
                         className='ml-2 '
@@ -98,7 +108,7 @@ const AnimePage = ({
                           value: `${episode.id}`
                         }))}
                         defaultValue={activeEpisode?.id}
-                      />
+                      /> */}
                     </h1>
 
                     <div className='flex flex-row items-center justify-start w-12'>
