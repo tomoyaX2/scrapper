@@ -94,6 +94,17 @@ const AnimePage = ({
       {video && (
         <div className='flex flex-row w-full justify-center pb-4 '>
           <div className='flex flex-col items-center justify-start mt-4 w-full'>
+            {user.isAdmin && (
+              <Button
+                className='w-[40rem] h-[20rem]'
+                onClick={() => {
+                  navigator.clipboard.writeText(video.id);
+                }}
+              >
+                COPY ANIME ID <br />
+                You are gay if clicked it
+              </Button>
+            )}
             <div>
               <HorisontalScrollSelector
                 name='Select Episode'
