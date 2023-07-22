@@ -12,6 +12,7 @@ interface Episode {
   name: string;
   qualities: string[];
   availableQuality: string[];
+  coverUrl: string;
 }
 
 interface VideoState {
