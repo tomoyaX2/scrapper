@@ -12,10 +12,17 @@ import { getUser } from 'src/store/user';
 import { PopoverWindow } from 'src/components/common/menu';
 import { StarIcon } from 'src/components/common/icons/star';
 import { TagsList } from 'src/components/common/tagsList';
-import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
+import {
+  changeVideoTitle,
+  deleteVideo,
+  getVideoRate,
+  rateVideo
+} from 'src/store/anime/item';
 import { Episode, VideoState } from 'src/store/anime/item/types';
 import { Video } from './video';
 import { HorisontalScrollSelector } from 'src/components/common/selectorHorisontal';
+import { Redactor } from 'src/components/common/icons/redactor';
+import { Input } from 'src/components/common/input/input';
 
 const AnimePage = ({
   initialData: video
@@ -31,6 +38,8 @@ const AnimePage = ({
   const currentRate = useAppSelector(state => state.anime.item.currentRate);
   const { data: user } = useAppSelector(state => state.user);
   const freshRate = useAppSelector(state => state.anime.item.rate);
+  const [redactorMode, setRedactorMode] = useState(false);
+  const [newTitle, setNewTitle] = useState(video.title);
 
   useEffect(() => {
     if (!video?.id) {
@@ -45,6 +54,20 @@ const AnimePage = ({
       ReactGA.send({ hitType: 'pageview', page: window.location.href });
     }
   }, [router.query.id]);
+
+  const handleChangeRedactorMode = () => {
+    setRedactorMode(!redactorMode);
+  };
+
+  const onChangeVideoTitle = ({
+    title,
+    videoId
+  }: {
+    title: string;
+    videoId: string;
+  }) => {
+    dispatch(changeVideoTitle({ title, videoId }));
+  };
 
   const onSelectEpisode = (episodeId: string) => {
     setActiveEpisode(episodes?.find(episode => episode.id == episodeId));
@@ -93,23 +116,38 @@ const AnimePage = ({
               </div>
               <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
                 <div>
+                  {user.isAdmin && (
+                    <Button
+                      className='float-right ml-3'
+                      onClick={handleChangeRedactorMode}
+                    >
+                      <Redactor fill='white' />
+                    </Button>
+                  )}
                   <div className='flex flex-col'>
-                    <h1 className='text-lg flex flex-row items-center justify-center'>
-                      {video.title}
-                      {/* <SelectPicker
-                        appearance='subtle'
-                        size='md'
-                        className='ml-2 '
-                        searchable={false}
-                        cleanable={false}
-                        onChange={value => onSelectEpisode(value)}
-                        data={episodes.map(episode => ({
-                          label: `${episode.name}`,
-                          value: `${episode.id}`
-                        }))}
-                        defaultValue={activeEpisode?.id}
-                      /> */}
-                    </h1>
+                    {redactorMode ? (
+                      <div className='flex flex-row'>
+                        <Input
+                          containerClassName='w-[28rem]'
+                          inputClassName='text-lg'
+                          value={newTitle}
+                          onChange={value => setNewTitle(value)}
+                        />
+                        <Button
+                          className='w-24'
+                          onClick={() =>
+                            onChangeVideoTitle({
+                              videoId: video.id,
+                              title: newTitle
+                            })
+                          }
+                        >
+                          Confirm
+                        </Button>
+                      </div>
+                    ) : (
+                      <h1 className='text-lg flex flex-row'>{newTitle}</h1>
+                    )}
 
                     <div className='flex flex-row items-center justify-start w-12'>
                       <span>{targetRate?.toFixed(1)}</span>
@@ -142,7 +180,11 @@ const AnimePage = ({
                     <div className='flex flex-row items-center justify-start w-full mt-4 '>
                       <span className='text-sm mr-4 w-20 flex-none'>Tags:</span>
 
-                      <TagsList items={video.tags} allowRedirect={false} />
+                      <TagsList
+                        items={video.tags}
+                        allowRedirect={false}
+                        redactorMode={redactorMode}
+                      />
                     </div>
                   ) : null}
 

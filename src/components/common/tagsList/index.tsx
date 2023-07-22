@@ -4,28 +4,66 @@ import { TagsListProps } from './types';
 import { Tag } from 'rsuite';
 import { ShowMoreButton } from '../ShowHideButton';
 
-export const TagsList = ({ items, allowRedirect }: TagsListProps) => {
+export const TagsList = ({
+  items,
+  allowRedirect,
+  redactorMode
+}: TagsListProps) => {
   const [showMoreItems, setShowMoreItems] = useState<boolean>(false);
   const itemsToRender = useMemo(
     () => (showMoreItems ? items : items.slice(0, 10)),
     [showMoreItems, items]
   );
+  const onChangeTagsList = (id: string) => {
+    console.log(id);
+  };
 
   return (
     <div className='flex items-center flex-wrap max-w-tags'>
       {itemsToRender.map(el =>
         allowRedirect ? (
-          <Link
-            href={`/?page=1&tags=${el.id}`}
-            passHref
+          redactorMode ? (
+            <Link
+              href={`/?page=1&tags=${el.id}`}
+              passHref
+              key={el.id}
+              target='_blank'
+            >
+              <Tag
+                className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '
+                closable
+              >
+                {el.name}
+                <span className='ml-1'>
+                  | {el.albumsCount ?? el.videosCount}
+                </span>
+              </Tag>
+            </Link>
+          ) : (
+            <Link
+              href={`/?page=1&tags=${el.id}`}
+              passHref
+              key={el.id}
+              target='_blank'
+            >
+              <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+                {el.name}
+                <span className='ml-1'>
+                  | {el.albumsCount ?? el.videosCount}
+                </span>
+              </Tag>
+            </Link>
+          )
+        ) : redactorMode ? (
+          <Tag
+            className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '
             key={el.id}
-            target='_blank'
+            closable
+            onClose={() => onChangeTagsList(el.id)}
           >
-            <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
-              {el.name}
-              <span className='ml-1'>| {el.albumsCount ?? el.videosCount}</span>
-            </Tag>
-          </Link>
+            {el.name}
+            <span className='ml-1'>| {el.albumsCount ?? el.videosCount}</span>
+          </Tag>
         ) : (
           <Tag
             className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '
@@ -35,6 +73,11 @@ export const TagsList = ({ items, allowRedirect }: TagsListProps) => {
             <span className='ml-1'>| {el.albumsCount ?? el.videosCount}</span>
           </Tag>
         )
+      )}
+      {redactorMode && (
+        <Tag className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '>
+          + Add new
+        </Tag>
       )}
 
       <ShowMoreButton

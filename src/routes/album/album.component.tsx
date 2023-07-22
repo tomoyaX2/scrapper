@@ -245,7 +245,10 @@ const Album = ({
                     <div className='flex flex-row items-center justify-start w-full mt-4'>
                       <span className='text-sm mr-4 w-20'>Tags:</span>
 
-                      <TagsList items={album.tags} />
+                      <TagsList
+                        items={album.tags}
+                        redactorMode={redactorMode}
+                      />
                     </div>
                   ) : null}
 

@@ -6,6 +6,7 @@ type TagsListProps = {
     videosCount?: number;
   }[];
   allowRedirect?: boolean;
+  redactorMode: boolean;
 };
 
 export type { TagsListProps };

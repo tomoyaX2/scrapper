@@ -72,6 +72,18 @@ export const deleteVideo = createAsyncThunk(
   }
 );
 
+export const changeVideoTitle = createAsyncThunk(
+  'change video title',
+  async ({ videoId, title }: { videoId: string; title: string }) => {
+    try {
+      await axios.patch(`${backendUrl}/videos/${videoId}`, { title });
+      // store.dispatch(getVideo({ videoId }));
+    } catch (e) {
+      return [];
+    }
+  }
+);
+
 export const getVideoComments = createAsyncThunk(
   'get video comments',
   async ({ videoId }: { videoId: string }) => {
