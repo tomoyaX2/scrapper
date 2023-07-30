@@ -102,7 +102,7 @@ const AnimePage = ({
                 }}
               >
                 COPY ANIME ID <br />
-                You are gay if clicked it
+                You are gay if clicked it (updated)
               </Button>
             )}
             <div>

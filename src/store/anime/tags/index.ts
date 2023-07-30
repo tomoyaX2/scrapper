@@ -19,7 +19,7 @@ export const getVideoTags = createAsyncThunk('get video tags', async () => {
   return tags.data.data.map(el => ({
     label: el.name,
     value: el.id,
-    count: el.albumsCount || el.videosCount
+    count: el.albumsCount ?? el.videosCount
   }));
 });
 
