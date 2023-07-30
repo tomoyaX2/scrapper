@@ -187,14 +187,15 @@ const AnimePage = ({
                     </div>
                   ) : null}
 
-                  {video.tags?.length ? (
+                  {video.tags?.length || user.isAdmin ? (
                     <div className='flex flex-row items-center justify-start w-full mt-4 '>
                       <span className='text-sm mr-4 w-20 flex-none'>Tags:</span>
 
                       <TagsList
-                        items={video.tags}
+                        items={video.tags ?? []}
                         allowRedirect={false}
                         redactorMode={redactorMode}
+                        videoId={video.id}
                       />
                     </div>
                   ) : null}

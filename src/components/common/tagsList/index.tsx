@@ -7,17 +7,18 @@ import { searchInputOptionsFactory } from '@shared/utils/pagination';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { useMultiselectScrollPropsFactory } from '@shared/utils/selectScrollLoadItems';
 import { optionsAnimeSelector } from 'src/components/search-anime-bar/selectors';
-import { getVideoTags } from 'src/store/anime/tags';
+import { getVideoTags, changeVideoTags } from 'src/store/anime/tags';
 
 export const TagsList = ({
   items,
   allowRedirect,
-  redactorMode
+  redactorMode,
+  videoId
 }: TagsListProps) => {
   const dispatch = useAppDispatch();
   const { tagsSelector } = useAppSelector(optionsAnimeSelector);
   const { visibleTags, tagsList } = tagsSelector;
-  const [tagsToAdd, setTagsToAdd] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(items.map(el => el.id));
 
   const { tagScrollMultiselectProps } =
     useMultiselectScrollPropsFactory(dispatch);
@@ -32,9 +33,10 @@ export const TagsList = ({
     [showMoreItems, items]
   );
   const onAddTags = () => {
-    console.log(tagsToAdd);
-    setTagsToAdd([]);
+    console.log(tags);
+    dispatch(changeVideoTags({ videoId, tags }));
   };
+
   const onDeleteTag = (name: string) => {
     console.log(name);
   };
@@ -81,7 +83,10 @@ export const TagsList = ({
             className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '
             key={el.id}
             closable
-            onClose={() => onDeleteTag(el.id)}
+            onClose={() => {
+              setTags(tags.filter(e => e != el.id));
+              console.log(tags);
+            }}
           >
             {el.name}
             <span className='ml-1'>| {el.albumsCount ?? el.videosCount}</span>
@@ -109,9 +114,9 @@ export const TagsList = ({
             className='min-w-searchInput mr-4 my-2 w-20 '
             menuClassName=''
             placeholder='Add Tag...'
-            value={tagsToAdd}
+            value={tags}
             onChange={(value: string[]) => {
-              setTagsToAdd(value);
+              setTags(value);
             }}
             searchable
             renderMenuItem={(label, item) => (

@@ -11,6 +11,21 @@ const initialState: TagsState = {
   visibleTags: []
 };
 
+export const changeVideoTags = createAsyncThunk(
+  'change video tags',
+
+  async ({ videoId, tags }: { videoId: string; tags: string[] }) => {
+    try {
+      await axios.patch(`${backendUrl}/videos/${videoId}/update-tags`, {
+        tags
+      });
+      // store.dispatch(getVideo({ videoId }));
+    } catch (e) {
+      return [];
+    }
+  }
+);
+
 export const getVideoTags = createAsyncThunk('get video tags', async () => {
   const tags = await axios.get<PaginatedResponse<TagModel>>(
     `${backendUrl}/video-tags`
