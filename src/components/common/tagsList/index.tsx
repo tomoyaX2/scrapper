@@ -8,17 +8,19 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { useMultiselectScrollPropsFactory } from '@shared/utils/selectScrollLoadItems';
 import { optionsAnimeSelector } from 'src/components/search-anime-bar/selectors';
 import { getVideoTags, changeVideoTags } from 'src/store/anime/tags';
+import { changeAlbumTags } from 'src/store/album';
 
 export const TagsList = ({
   items,
   allowRedirect,
   redactorMode,
-  videoId
+  videoId,
+  albumId
 }: TagsListProps) => {
   const dispatch = useAppDispatch();
   const { tagsSelector } = useAppSelector(optionsAnimeSelector);
   const { visibleTags, tagsList } = tagsSelector;
-  const [tags, setTags] = useState<string[]>(items.map(el => el.id));
+  const [tagIds, setTagIds] = useState<string[]>(items.map(el => el.id));
 
   const { tagScrollMultiselectProps } =
     useMultiselectScrollPropsFactory(dispatch);
@@ -32,13 +34,13 @@ export const TagsList = ({
     () => (showMoreItems ? items : items.slice(0, 10)),
     [showMoreItems, items]
   );
-  const onAddTags = () => {
-    console.log(tags);
-    dispatch(changeVideoTags({ videoId, tags }));
+  const onAddAnimeTags = () => {
+    console.log(tagIds);
+    dispatch(changeVideoTags({ videoId, tags: tagIds }));
   };
-
-  const onDeleteTag = (name: string) => {
-    console.log(name);
+  const onAddAlbumTags = () => {
+    console.log(tagIds);
+    dispatch(changeAlbumTags({ albumId, tagIds }));
   };
 
   return (
@@ -55,7 +57,6 @@ export const TagsList = ({
               <Tag
                 className='cursor-pointer mr-1 bg-third hover:bg-third-hover capitalize !ml-0 my-1 '
                 closable
-                onClose={() => onDeleteTag(el.id)}
               >
                 {el.name}
                 <span className='ml-1'>
@@ -84,8 +85,8 @@ export const TagsList = ({
             key={el.id}
             closable
             onClose={() => {
-              setTags(tags.filter(e => e != el.id));
-              console.log(tags);
+              setTagIds(tagIds.filter(e => e != el.id));
+              console.log(tagIds);
             }}
           >
             {el.name}
@@ -114,9 +115,9 @@ export const TagsList = ({
             className='min-w-searchInput mr-4 my-2 w-20 '
             menuClassName=''
             placeholder='Add Tag...'
-            value={tags}
+            value={tagIds}
             onChange={(value: string[]) => {
-              setTags(value);
+              setTagIds(value);
             }}
             searchable
             renderMenuItem={(label, item) => (
@@ -126,7 +127,14 @@ export const TagsList = ({
             )}
             {...tagScrollMultiselectProps}
           />
-          <Button onClick={() => onAddTags()}>Add</Button>
+
+          <Button
+            onClick={() => {
+              albumId ? onAddAlbumTags() : onAddAnimeTags();
+            }}
+          >
+            Add
+          </Button>
         </>
       )}
     </div>

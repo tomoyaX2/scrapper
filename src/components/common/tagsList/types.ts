@@ -7,7 +7,8 @@ type TagsListProps = {
   }[];
   allowRedirect?: boolean;
   redactorMode: boolean;
-  videoId: string;
+  videoId?: string;
+  albumId?: string;
 };
 
 export type { TagsListProps };
