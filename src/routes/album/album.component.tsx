@@ -248,7 +248,8 @@ const Album = ({
                       <TagsList
                         items={album.tags}
                         redactorMode={redactorMode}
-                        albumId={album.id}
+                        sourceId={album.id}
+                        source='album'
                       />
                     </div>
                   ) : null}

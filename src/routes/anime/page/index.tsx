@@ -195,7 +195,8 @@ const AnimePage = ({
                         items={video.tags ?? []}
                         allowRedirect={false}
                         redactorMode={redactorMode}
-                        videoId={video.id}
+                        sourceId={video.id}
+                        source='video'
                       />
                     </div>
                   ) : null}

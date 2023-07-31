@@ -14,8 +14,8 @@ export const TagsList = ({
   items,
   allowRedirect,
   redactorMode,
-  videoId,
-  albumId
+  source,
+  sourceId
 }: TagsListProps) => {
   const dispatch = useAppDispatch();
   const { tagsSelector } = useAppSelector(optionsAnimeSelector);
@@ -36,11 +36,11 @@ export const TagsList = ({
   );
   const onAddAnimeTags = () => {
     console.log(tagIds);
-    dispatch(changeVideoTags({ videoId, tags: tagIds }));
+    dispatch(changeVideoTags({ videoId: sourceId, tags: tagIds }));
   };
   const onAddAlbumTags = () => {
     console.log(tagIds);
-    dispatch(changeAlbumTags({ albumId, tagIds }));
+    dispatch(changeAlbumTags({ albumId: sourceId, tagIds }));
   };
 
   return (
@@ -130,7 +130,7 @@ export const TagsList = ({
 
           <Button
             onClick={() => {
-              albumId ? onAddAlbumTags() : onAddAnimeTags();
+              source == 'album' ? onAddAlbumTags() : onAddAnimeTags();
             }}
           >
             Add
