@@ -30,8 +30,11 @@ const AnimePage = ({
   initialData: VideoState;
 }): JSX.Element => {
   const [episodes] = useState(video.episodes);
+  const sortedEpisodes = episodes.sort((a, b) =>
+    a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+  );
   const [activeEpisode, setActiveEpisode] = useState<Episode | undefined>(
-    episodes[0]
+    sortedEpisodes[0]
   );
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -94,7 +97,7 @@ const AnimePage = ({
       {video && (
         <div className='flex flex-row w-full justify-center pb-4 '>
           <div className='flex flex-col items-center justify-start mt-4 w-full'>
-            {user.isAdmin && (
+            {/* {user.isAdmin && (
               <Button
                 className='w-[40rem] h-[20rem]'
                 onClick={() => {
@@ -104,11 +107,11 @@ const AnimePage = ({
                 COPY ANIME ID <br />
                 You are gay if clicked it (updated)
               </Button>
-            )}
+            )} */}
             <div>
               <HorisontalScrollSelector
                 name='Select Episode'
-                data={episodes}
+                data={sortedEpisodes}
                 callback={(episodeId: string) => onSelectEpisode(episodeId)}
                 activeEpisode={activeEpisode}
               />
@@ -146,12 +149,13 @@ const AnimePage = ({
                         />
                         <Button
                           className='w-24'
-                          onClick={() =>
+                          onClick={() => {
                             onChangeVideoTitle({
                               videoId: video.id,
                               title: newTitle
-                            })
-                          }
+                            });
+                            setRedactorMode(false);
+                          }}
                         >
                           Confirm
                         </Button>

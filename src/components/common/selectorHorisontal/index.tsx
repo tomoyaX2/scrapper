@@ -48,7 +48,7 @@ export const HorisontalScrollSelector = ({
           ref={selectorRef}
         >
           {data
-            .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+            // .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
             .map(episode => (
               <div key={episode.id} className='mx-1'>
                 {user.isAdmin && (

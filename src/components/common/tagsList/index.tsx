@@ -36,11 +36,15 @@ export const TagsList = ({
   );
   const onAddAnimeTags = () => {
     console.log(tagIds);
-    dispatch(changeVideoTags({ videoId: sourceId, tags: tagIds }));
+    dispatch(
+      changeVideoTags({ videoId: sourceId, tags: tagIds ? tagIds : [''] })
+    );
   };
   const onAddAlbumTags = () => {
     console.log(tagIds);
-    dispatch(changeAlbumTags({ albumId: sourceId, tagIds }));
+    dispatch(
+      changeAlbumTags({ albumId: sourceId, tagIds: tagIds ? tagIds : [''] })
+    );
   };
 
   return (
