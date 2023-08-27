@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Image } from 'src/components/common/image';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { deleteEpisode } from 'src/store/anime/item';
@@ -16,6 +16,16 @@ export const HorisontalScrollSelector = ({
   const selectorRef = useRef() as MutableRefObject<HTMLDivElement>;
   const { data: user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
+
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    if (selectorRef.current) {
+      const hasOverflow =
+        selectorRef.current.scrollWidth > selectorRef.current.clientWidth;
+      setIsOverflowing(hasOverflow);
+    }
+  }, []);
 
   const handleClick = (id: string) => {
     // Invoke the callback function passed from the parent component
@@ -35,14 +45,16 @@ export const HorisontalScrollSelector = ({
 
   return (
     <div className=' lg:w-[75rem] xsm:w-[22rem] border-primary border-4'>
-      <div className='flex bg-primary p-2 text-lg'>{name}</div>
-      <div className='flex flex-row  py-1 '>
-        <Button
-          className='flex items-center justify-center w-8 hover:bg-secondary'
-          onClick={scrollLeft}
-        >
-          <Arrow className='rotate-180 cursor-pointer' fill='white' />
-        </Button>
+      <div className='flex bg-primary py-2 px-9 text-lg'>{name}</div>
+      <div className={`flex flex-row  py-1 ${!isOverflowing ? 'px-8' : ''}`}>
+        {isOverflowing && (
+          <Button
+            className='flex items-center justify-center w-8 hover:bg-secondary'
+            onClick={scrollLeft}
+          >
+            <Arrow className='rotate-180 cursor-pointer' fill='white' />
+          </Button>
+        )}
         <div
           className='flex flex-row flex-grow overflow-hidden scroll-smooth'
           ref={selectorRef}
@@ -79,12 +91,14 @@ export const HorisontalScrollSelector = ({
               </div>
             ))}
         </div>
-        <Button
-          className='flex items-center justify-center w-8 hover:bg-secondary'
-          onClick={scrollRight}
-        >
-          <Arrow className=' cursor-pointer' fill='white' />
-        </Button>
+        {isOverflowing && (
+          <Button
+            className='flex items-center justify-center w-8 hover:bg-secondary'
+            onClick={scrollRight}
+          >
+            <Arrow className=' cursor-pointer' fill='white' />
+          </Button>
+        )}
       </div>
     </div>
   );

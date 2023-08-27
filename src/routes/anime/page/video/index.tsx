@@ -173,6 +173,7 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
     >
       <video
         src={activeEpisode?.url}
+        poster='https://lh3.googleusercontent.com/AYsWiXH9FBaEDY96FbpGWMWd2TR_CRnToi9hShRnzMyO49-b_dfpkCaU18oTTaTlFL0W08YV_IXuSuRPC_MSh9apOqxUTZJB7rQrL3gw'
         onClick={changePausedState(!controlsState.paused)}
         ref={videoRef}
         className={`aspect-video object-fill ${
@@ -182,8 +183,8 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
       />
       {isVisibleControls && (
         <>
-          <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full' />
-          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full'>
+          <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full ' />
+          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full '>
             <Whisper
               followCursor
               placement='top'
@@ -197,11 +198,11 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
                 </Tooltip>
               }
             >
-              <div className='px-4'>
+              <div className='mx-4'>
                 <Slider
                   progress
-                  className='h-1'
-                  barClassName='h-full'
+                  className='h-[5px]'
+                  barClassName='h-full '
                   max={duration}
                   ref={sliderRef}
                   prefill={preloadPercent}
@@ -219,7 +220,7 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
                 />
               </div>
             </Whisper>
-            <div className='flex h-12 w-full  justify-between items-center '>
+            <div className='flex h-12 w-full  justify-between items-center mx-1'>
               <div className='flex flex-row'>
                 <div
                   className='cursor-pointer w-8 h-8 hover:bg-black-100 rounded-md flex items-center justify-center'
