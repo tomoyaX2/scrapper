@@ -27,6 +27,8 @@ export const HorisontalScrollSelector = ({
     }
   }, []);
 
+  console.log(isOverflowing);
+
   const handleClick = (id: string) => {
     // Invoke the callback function passed from the parent component
     callback ? callback(id) : null;
@@ -45,8 +47,8 @@ export const HorisontalScrollSelector = ({
 
   return (
     <div className=' lg:w-[75rem] xsm:w-[22rem] border-primary border-4'>
-      <div className='flex bg-primary py-2 px-9 text-lg'>{name}</div>
-      <div className={`flex flex-row  py-1 ${!isOverflowing ? 'px-8' : ''}`}>
+      <div className='flex bg-primary p-2 px-4 text-lg'>{name}</div>
+      <div className={`flex flex-row  py-1 ${isOverflowing ? '' : 'px-8'}`}>
         {isOverflowing && (
           <Button
             className='flex items-center justify-center w-8 hover:bg-secondary'

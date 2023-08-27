@@ -188,8 +188,9 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
             <Whisper
               followCursor
               placement='top'
+              preventOverflow
               speaker={
-                <Tooltip>
+                <Tooltip arrow={false}>
                   <TimelineTooltip
                     src={activeEpisode?.url ?? ''}
                     time={previewTime}
