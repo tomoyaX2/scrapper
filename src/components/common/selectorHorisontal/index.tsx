@@ -49,7 +49,7 @@ export const HorisontalScrollSelector = ({
     <div className=' lg:w-[75rem] xsm:w-[22rem] border-primary border-4'>
       <div className='flex bg-primary p-2 px-4 text-lg'>{name}</div>
       <div className={`flex flex-row  py-1 ${isOverflowing ? '' : 'px-8'}`}>
-        {isOverflowing && (
+        {isOverflowing ?? (
           <Button
             className='flex items-center justify-center w-8 hover:bg-secondary'
             onClick={scrollLeft}
@@ -93,7 +93,7 @@ export const HorisontalScrollSelector = ({
               </div>
             ))}
         </div>
-        {isOverflowing && (
+        {isOverflowing ?? (
           <Button
             className='flex items-center justify-center w-8 hover:bg-secondary'
             onClick={scrollRight}
