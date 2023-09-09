@@ -83,7 +83,7 @@ export const HorisontalScrollSelector = ({
                   onClick={() => handleClick(episode.id)}
                 >
                   <Image
-                    url={episode.coverUrl ?? data[0].coverUrl}
+                    url={episode.coverUrl ?? data[0].coverUrl ?? ''}
                     alt='episode preview'
                     width={150}
                     height={170}
