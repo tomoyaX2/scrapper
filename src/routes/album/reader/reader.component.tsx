@@ -93,6 +93,9 @@ const Reader = (): JSX.Element => {
                 id={el.id}
                 allowIntersection={index > 5}
                 activeUrl={images[currentPage]?.url}
+                // fetchpriority={`${
+                //   images[currentPage]?.url === el?.url ? 'high' : 'medium'
+                // }`}
                 className='mt-2'
                 index={index}
               />

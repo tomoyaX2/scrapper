@@ -173,7 +173,7 @@ const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
     >
       <video
         src={activeEpisode?.url}
-        poster='https://lh3.googleusercontent.com/AYsWiXH9FBaEDY96FbpGWMWd2TR_CRnToi9hShRnzMyO49-b_dfpkCaU18oTTaTlFL0W08YV_IXuSuRPC_MSh9apOqxUTZJB7rQrL3gw'
+        poster='https://cdn.xmanga.org/images/cover.jpg'
         onClick={changePausedState(!controlsState.paused)}
         ref={videoRef}
         className={`aspect-video object-fill ${
