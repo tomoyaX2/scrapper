@@ -34,11 +34,17 @@ const Header = (): JSX.Element => {
       <Login />
 
       <ForgotPassword />
-
       <div className='flex flex-row'>
-        <Link href='/' passHref>
-          <h1 className='italic text-xl cursor-pointer p-2'>Home</h1>
-        </Link>
+        <div className='flex mr-12 flex-row'>
+          <Link href='/' passHref>
+            <h1 className='italic text-xl cursor-pointer p-2'>Manga</h1>
+          </Link>
+        </div>
+        <div className='flex flex-row'>
+          <Link href='/anime/' passHref>
+            <h1 className='italic text-xl cursor-pointer p-2'>Anime</h1>
+          </Link>
+        </div>
       </div>
 
       <div className='flex flex-row items-center'>

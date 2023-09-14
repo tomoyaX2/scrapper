@@ -249,6 +249,7 @@ const Album = ({
                         items={album.tags}
                         redactorMode={redactorMode}
                         sourceId={album.id}
+                        allowRedirect
                         source='album'
                       />
                     </div>
