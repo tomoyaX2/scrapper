@@ -23,7 +23,7 @@ export const Input = ({
       name={name}
       id='floating_first_name'
       className={cn(
-        'block pt-2 pb-1 px-0 w-full text-sm text-white-300 bg-transparent border-0 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white-300 peer',
+        'block pt-2 pb-1 px-0 w-full text-white-300 bg-transparent border-0 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white-300 peer',
         inputClassName
       )}
       onChange={e => onChange(e.target.value)}

@@ -65,10 +65,29 @@ export const getVideo = createAsyncThunk(
   }
 );
 
+export const deleteEpisode = createAsyncThunk(
+  'delete episode',
+  async (episodeId: string) => {
+    await axios.delete(`${backendUrl}/episodes?episodeIds=${episodeId}`);
+  }
+);
+
 export const deleteVideo = createAsyncThunk(
   'delete video',
   async (videoId: string) => {
     await axios.delete(`${backendUrl}/videos/${videoId}`);
+  }
+);
+
+export const changeVideoTitle = createAsyncThunk(
+  'change video title',
+  async ({ videoId, title }: { videoId: string; title: string }) => {
+    try {
+      await axios.patch(`${backendUrl}/videos/${videoId}`, { title });
+      // store.dispatch(getVideo({ videoId }));
+    } catch (e) {
+      return [];
+    }
   }
 );
 

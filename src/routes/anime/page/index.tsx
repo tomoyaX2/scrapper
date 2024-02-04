@@ -12,9 +12,17 @@ import { getUser } from 'src/store/user';
 import { PopoverWindow } from 'src/components/common/menu';
 import { StarIcon } from 'src/components/common/icons/star';
 import { TagsList } from 'src/components/common/tagsList';
-import { deleteVideo, getVideoRate, rateVideo } from 'src/store/anime/item';
-import { VideoState } from 'src/store/anime/item/types';
+import {
+  changeVideoTitle,
+  deleteVideo,
+  getVideoRate,
+  rateVideo
+} from 'src/store/anime/item';
+import { Episode, VideoState } from 'src/store/anime/item/types';
 import { Video } from './video';
+import { HorisontalScrollSelector } from 'src/components/common/selectorHorisontal';
+import { Redactor } from 'src/components/common/icons/redactor';
+import { Input } from 'src/components/common/input/input';
 
 const AnimePage = ({
   initialData: video
@@ -22,12 +30,19 @@ const AnimePage = ({
   initialData: VideoState;
 }): JSX.Element => {
   const [episodes] = useState(video.episodes);
-  // const [activeEpisode] = useState(video.episodes[0]);
+  const sortedEpisodes = episodes.sort((a, b) =>
+    a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+  );
+  const [activeEpisode, setActiveEpisode] = useState<Episode | undefined>(
+    sortedEpisodes[0]
+  );
   const router = useRouter();
   const dispatch = useAppDispatch();
   const currentRate = useAppSelector(state => state.anime.item.currentRate);
   const { data: user } = useAppSelector(state => state.user);
   const freshRate = useAppSelector(state => state.anime.item.rate);
+  const [redactorMode, setRedactorMode] = useState(false);
+  const [newTitle, setNewTitle] = useState(video.title);
 
   useEffect(() => {
     if (!video?.id) {
@@ -42,6 +57,24 @@ const AnimePage = ({
       ReactGA.send({ hitType: 'pageview', page: window.location.href });
     }
   }, [router.query.id]);
+
+  const handleChangeRedactorMode = () => {
+    setRedactorMode(!redactorMode);
+  };
+
+  const onChangeVideoTitle = ({
+    title,
+    videoId
+  }: {
+    title: string;
+    videoId: string;
+  }) => {
+    dispatch(changeVideoTitle({ title, videoId }));
+  };
+
+  const onSelectEpisode = (episodeId: string) => {
+    setActiveEpisode(episodes?.find(episode => episode.id == episodeId));
+  };
 
   const onDeleteVideo = () => {
     dispatch(deleteVideo(video?.id));
@@ -62,23 +95,74 @@ const AnimePage = ({
         canonical={window.location.href}
       />
       {video && (
-        <div className='flex flex-row w-full justify-center pb-4'>
-          <div className='flex flex-col items-center justify-start mt-4'>
-            <div className='flex md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
+        <div className='flex flex-row w-full justify-center pb-4 '>
+          <div className='flex flex-col items-center justify-start mt-4 w-full'>
+            {/* {user.isAdmin && (
+              <Button
+                className='w-[40rem] h-[20rem]'
+                onClick={() => {
+                  navigator.clipboard.writeText(video.id);
+                }}
+              >
+                COPY ANIME ID <br />
+                You are gay if clicked it (updated)
+              </Button>
+            )} */}
+            <div>
+              <HorisontalScrollSelector
+                name='Select Episode'
+                data={sortedEpisodes}
+                callback={(episodeId: string) => onSelectEpisode(episodeId)}
+                activeEpisode={activeEpisode}
+              />
+              {activeEpisode ? <Video activeEpisode={activeEpisode} /> : null}
+            </div>
+
+            <div className='flex mt-12 md:flex-row sm:flex-col xsm:flex-col sm:px-4 xsm:px-4 lg:px-24 md:px-4 py-4 bg-secondary lg:max-w-gallery md:max-w-unset sm:max-w-unset xs:max-w-unset md:w-full sm:w-full xsm:w-full'>
               <div className='flex items-center justify-center lg:w-112 md:w-full sm:w-full xsm:w-full'>
                 <Image
                   url={video.coverImageUrl ?? ''}
                   width={400}
                   height={400}
                   alt='preview'
-                  className='h-[400px]'
+                  className='lg:h-[400px] lg:w-auto xsm:h-[300px] xsm:w-[250px] max-w-full'
                 />
               </div>
-
               <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
                 <div>
+                  {user.isAdmin && (
+                    <Button
+                      className='float-right ml-3'
+                      onClick={handleChangeRedactorMode}
+                    >
+                      <Redactor fill='white' />
+                    </Button>
+                  )}
                   <div className='flex flex-col'>
-                    <h1 className='text-lg flex flex-row'>{video.title}</h1>
+                    {redactorMode ? (
+                      <div className='flex flex-row'>
+                        <Input
+                          containerClassName='w-[28rem]'
+                          inputClassName='text-lg'
+                          value={newTitle}
+                          onChange={value => setNewTitle(value)}
+                        />
+                        <Button
+                          className='w-24'
+                          onClick={() => {
+                            onChangeVideoTitle({
+                              videoId: video.id,
+                              title: newTitle
+                            });
+                            setRedactorMode(false);
+                          }}
+                        >
+                          Confirm
+                        </Button>
+                      </div>
+                    ) : (
+                      <h1 className='text-lg flex flex-row'>{newTitle}</h1>
+                    )}
 
                     <div className='flex flex-row items-center justify-start w-12'>
                       <span>{targetRate?.toFixed(1)}</span>
@@ -107,11 +191,17 @@ const AnimePage = ({
                     </div>
                   ) : null}
 
-                  {video.tags?.length ? (
+                  {video.tags?.length || user.isAdmin ? (
                     <div className='flex flex-row items-center justify-start w-full mt-4 '>
                       <span className='text-sm mr-4 w-20 flex-none'>Tags:</span>
 
-                      <TagsList items={video.tags} allowRedirect={false} />
+                      <TagsList
+                        items={video.tags ?? []}
+                        allowRedirect={false}
+                        redactorMode={redactorMode}
+                        sourceId={video.id}
+                        source='video'
+                      />
                     </div>
                   ) : null}
 
@@ -168,7 +258,6 @@ const AnimePage = ({
                 )}
               </div>
             </div>
-            <Video episodes={episodes} />
           </div>
         </div>
       )}

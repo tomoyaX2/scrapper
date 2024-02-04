@@ -87,6 +87,7 @@ export const SearchBar = (): JSX.Element => {
     clearTimeout(inputTimeout);
     inputTimeout = setTimeout(() => {
       if (value) {
+        // onPaginationChangeFactory('title')(value);
         dispatch(getAlbums({ title: value, page: 1, perPage: 50 }));
       } else {
         dispatch(getAlbums({ page: 1, perPage: 20 }));

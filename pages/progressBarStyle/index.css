@@ -1,0 +1,10 @@
+.rs-slider-handle {
+  &::before {
+    border: 2px solid white !important;
+    height: 10px;
+    width: 10px;
+  }
+}
+.rs-slider-handle {
+  top: -60%;
+}

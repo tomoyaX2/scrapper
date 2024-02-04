@@ -6,6 +6,9 @@ type TagsListProps = {
     videosCount?: number;
   }[];
   allowRedirect?: boolean;
+  redactorMode: boolean;
+  sourceId: string;
+  source: 'album' | 'video';
 };
 
 export type { TagsListProps };

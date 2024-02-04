@@ -29,6 +29,21 @@ export const getAlbumRate = createAsyncThunk(
   }
 );
 
+export const changeAlbumTags = createAsyncThunk(
+  'change album tags',
+
+  async ({ albumId, tagIds }: { albumId: string; tagIds: string[] }) => {
+    try {
+      await axios.patch(`${backendUrl}/albums/${albumId}/tags`, {
+        tagIds
+      });
+      // store.dispatch(getVideo({ videoId }));
+    } catch (e) {
+      return [];
+    }
+  }
+);
+
 export const rateAlbum = createAsyncThunk(
   'rate album',
   async ({ albumId, rate }: { albumId: string; rate: number }, store) => {

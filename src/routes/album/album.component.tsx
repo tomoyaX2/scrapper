@@ -38,6 +38,7 @@ import { Comments } from './comments';
 import { Recommendations } from './recommendations';
 import { ScrollToUpArrow } from 'src/components/common/scrollArrow';
 import { ShowAlbumImages } from 'src/components/common/showAlbumImages';
+import { Redactor } from 'src/components/common/icons/redactor';
 
 const Album = ({
   initialData: album
@@ -54,6 +55,7 @@ const Album = ({
   );
   const freshRate = useAppSelector(state => state.album.rate);
   const recommendations = useAppSelector(state => state.album.recommendations);
+  const [redactorMode, setRedactorMode] = useState(false);
   const [includedIntoGalleries, setIncludedIntoGalleries] = useState<string[]>(
     []
   );
@@ -102,6 +104,10 @@ const Album = ({
 
   const onDownloadAlbum = () => {
     album && downloadAlbum(album);
+  };
+
+  const handleChangeRedactorMode = () => {
+    setRedactorMode(!redactorMode);
   };
 
   const onDeleteAlbum = () => {
@@ -176,22 +182,33 @@ const Album = ({
                   height={albumImages[0]?.height}
                   alt='preview'
                   horizontalSizes={{ height: 400, width: 600 }}
-                  verticalSizes={{ height: 400, width: 320 }}
+                  verticalSizes={{ height: 320, width: 280 }}
                 />
               </div>
 
               <div className='flex flex-col items-start justify-between sm:px-1 xsm:px-1 lg:pl-32 ms:px-4 xsm:ml-4 sm:ml-4 lg:ml-0 lg:mt-0 md:mt-2 sm:mt-4 xsm:mt-4'>
                 <div>
+                  {user.isAdmin && (
+                    <Button
+                      className='float-right'
+                      onClick={handleChangeRedactorMode}
+                    >
+                      <Redactor fill='white' />
+                    </Button>
+                  )}
                   <div className='flex flex-col'>
+                    {/* {redactorMode ? (
+                      <Input value={album.title} onChange={}/>
+                    ) : (
+                      <h1 className='text-lg flex flex-row'>{album.title}</h1>
+                    )} */}
                     <h1 className='text-lg flex flex-row'>{album.title}</h1>
-
                     <div className='flex flex-row items-center justify-start w-12'>
                       <span>{targetRate?.toFixed(1)}</span>
 
                       <StarIcon className='w-5 h-5 ml-2' fill='white' />
                     </div>
                   </div>
-
                   {album.language?.name ? (
                     <div className='flex flex-row items-center justify-start flex-wrap w-full mt-4'>
                       <span className='text-sm mr-4 w-20'>Language:</span>
@@ -228,7 +245,13 @@ const Album = ({
                     <div className='flex flex-row items-center justify-start w-full mt-4'>
                       <span className='text-sm mr-4 w-20'>Tags:</span>
 
-                      <TagsList items={album.tags} />
+                      <TagsList
+                        items={album.tags}
+                        redactorMode={redactorMode}
+                        sourceId={album.id}
+                        allowRedirect
+                        source='album'
+                      />
                     </div>
                   ) : null}
 

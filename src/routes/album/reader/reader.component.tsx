@@ -69,7 +69,7 @@ const Reader = (): JSX.Element => {
           <SelectPicker
             data={pagesList}
             value={currentPage}
-            className=' md:w-32 sm:w-20 xsm:w-24 px-4'
+            className=' md:w-32 sm:w-30 xsm:w-34 px-4'
             menuClassName=''
             cleanable={false}
             onChange={handleChangePage}
@@ -81,7 +81,7 @@ const Reader = (): JSX.Element => {
             onClick={() => handleChangePage(nextPage)}
           />
         </div>
-        <div className='flex items-center flex-col justify-center cursor-pointer mt-4'>
+        <div className='flex items-center flex-col justify-center cursor-pointer mt-4 p-1'>
           <div className='md:w-full object-fill flex items-center justify-center flex-col'>
             {images.map((el, index) => (
               <Image
@@ -93,6 +93,9 @@ const Reader = (): JSX.Element => {
                 id={el.id}
                 allowIntersection={index > 5}
                 activeUrl={images[currentPage]?.url}
+                // fetchpriority={`${
+                //   images[currentPage]?.url === el?.url ? 'high' : 'medium'
+                // }`}
                 className='mt-2'
                 index={index}
               />

@@ -5,6 +5,7 @@ export type ImageProps = {
   horizontalSizes?: { width: number; height: number };
   verticalSizes?: { width: number; height: number };
   alt?: string;
+
   className?: string;
   onError?: () => void;
   previewOrientation?: 'horizontal' | 'vertical';
@@ -13,4 +14,5 @@ export type ImageProps = {
   allowIntersection?: boolean;
   onClick?: () => void;
   index?: number;
+  fetchpriority?: 'low' | 'medium' | 'high';
 };

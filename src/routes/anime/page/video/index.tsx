@@ -9,7 +9,7 @@ import {
   faVolumeHigh
 } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'src/components/common/Slider';
-import { Whisper, Tooltip, Dropdown, SelectPicker } from 'rsuite';
+import { Whisper, Tooltip, Dropdown } from 'rsuite';
 import { TimelineTooltip } from './tooltip';
 import screenfull from 'screenfull';
 import { Episode } from 'src/store/anime/item/types';
@@ -44,7 +44,7 @@ const leftArrowIndex = 'ArrowLeft';
 const rightArrowIndex = 'ArrowRight';
 const spaceIndex = 'Space';
 
-const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
+const Video = ({ activeEpisode }: { activeEpisode: Episode }): JSX.Element => {
   const sliderRef = useRef();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [controlsState, setControlsState] = useState<ControlsState>({
@@ -54,11 +54,6 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
     quality: 'Original',
     muted: false
   });
-  const [activeEpisodeId, setActiveEpisodeId] = useState(episodes[0].id);
-  const activeEpisode = useMemo(
-    () => episodes.find(episode => episode.id === activeEpisodeId),
-    [episodes, activeEpisodeId]
-  );
 
   const [preloadPercent, setPreloadPercent] = useState(0);
   const [timeline, setTimeline] = useState<number>(0);
@@ -169,43 +164,33 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
   return (
     <div
       className={`flex flex-row flex-wrap items-center  justify-center bg-secondary z-10  ${
-        isFullscreen ? fullScreenStyle : 'relative mt-4 w-[75rem]'
+        isFullscreen
+          ? fullScreenStyle
+          : 'relative mt-4 lg:w-[75rem] xsm:w-[22rem]'
       }`}
       onMouseEnter={changeVisibility(true)}
       onMouseLeave={changeVisibility(false)}
     >
       <video
         src={activeEpisode?.url}
+        poster='https://cdn.xmanga.org/images/cover.jpg'
         onClick={changePausedState(!controlsState.paused)}
         ref={videoRef}
         className={`aspect-video object-fill ${
-          isFullscreen ? fullScreenStyle : 'w-[75rem]'
+          isFullscreen ? fullScreenStyle : 'lg:w-[75rem] xsm:w-[22rem]'
         }`}
         onMouseMove={checkIfMouseMoved}
       />
       {isVisibleControls && (
         <>
-          <SelectPicker
-            data={episodes.map(e => ({
-              label: e.name,
-              value: e.id
-            }))}
-            className='absolute left-2 top-0 w-32 mr-4 my-2 '
-            menuClassName='z-10'
-            searchable={false}
-            value={activeEpisodeId}
-            cleanable={false}
-            onChange={value => {
-              setActiveEpisodeId(value);
-            }}
-          />
-          <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full' />
-          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full'>
+          <div className='absolute left-0 bottom-0 opacity-10 bg-third z-2 flex h-12 w-full ' />
+          <div className='absolute left-0 bottom-0 z-3 flex flex-col w-full '>
             <Whisper
               followCursor
               placement='top'
+              preventOverflow
               speaker={
-                <Tooltip>
+                <Tooltip arrow={false}>
                   <TimelineTooltip
                     src={activeEpisode?.url ?? ''}
                     time={previewTime}
@@ -214,9 +199,11 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
                 </Tooltip>
               }
             >
-              <div className='px-4'>
+              <div className='mx-4'>
                 <Slider
                   progress
+                  className='h-[5px]'
+                  barClassName='h-full '
                   max={duration}
                   ref={sliderRef}
                   prefill={preloadPercent}
@@ -234,7 +221,7 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
                 />
               </div>
             </Whisper>
-            <div className='flex h-12 w-full  justify-between items-center '>
+            <div className='flex h-12 w-full  justify-between items-center mx-1'>
               <div className='flex flex-row'>
                 <div
                   className='cursor-pointer w-8 h-8 hover:bg-black-100 rounded-md flex items-center justify-center'
@@ -253,33 +240,6 @@ const Video = ({ episodes }: { episodes: Episode[] }): JSX.Element => {
                 )}
               </div>
               <div className='flex flex-row items-center justify-center'>
-                <Dropdown
-                  placement='topEnd'
-                  activeKey={controlsState.playbackSpeed}
-                  onSelect={(playbackSpeed: number) => {
-                    setControlsState({ ...controlsState, playbackSpeed });
-                    (videoRef.current ?? { playbackRate: 1 }).playbackRate =
-                      playbackSpeed;
-                  }}
-                  renderToggle={props => (
-                    <span
-                      {...props}
-                      className='mr-2 hover:bg-black-100 h-8 flex items-center justify-center rounded-md px-2'
-                    >
-                      {controlsState.playbackSpeed} x
-                    </span>
-                  )}
-                >
-                  {playbackOptions.map(el => (
-                    <Dropdown.Item
-                      eventKey={el}
-                      key={el}
-                      active={el === controlsState.playbackSpeed}
-                    >
-                      {el}x
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
                 <div
                   className='cursor-pointer w-8 h-8 hover:bg-black-100 rounded-md flex items-center justify-center mr-2  py-3 mt-1'
                   onClick={changeMuted(!controlsState.muted)}

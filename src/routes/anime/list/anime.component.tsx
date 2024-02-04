@@ -21,7 +21,6 @@ const Anime = (): JSX.Element => {
   const router = useRouter();
 
   const { data, isLoading, search } = useAppSelector(state => state.anime.list);
-  console.log(data);
 
   useEffect(() => {
     dispatch(getVideoTags());
@@ -37,7 +36,6 @@ const Anime = (): JSX.Element => {
 
     const callback = () => {
       dispatch(getAnimeList(searchData));
-      console.log(dispatch(getAnimeList(searchData)));
     };
 
     searchTimeoutHandler(callback);
