@@ -48,14 +48,6 @@ const Home = (): JSX.Element => {
         />
 
         <div className='flex flex-col'>
-          <div className='w-full bg-[#1a1d24] p-1 flex justify-center'>
-            <span className='text-left text-xs px-4'>
-              Welcome! If you have any questions or proposals, you can react me in discord channel
-              <a href='https://discord.gg/5cf9tsRV'>
-                <u>Discord</u>
-              </a>
-            </span>
-          </div>
           <SearchBar />
 
           {isLoading ? (
