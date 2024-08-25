@@ -55,7 +55,7 @@ const WidgetTesting = (): JSX.Element => {
         //@ts-expect-error
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         window.MdBot.init({
-          type: 'popup',
+          type: 'container',
           apiKey: 'streaming_web-yakov-karda-gmail-com'
         });
       }
