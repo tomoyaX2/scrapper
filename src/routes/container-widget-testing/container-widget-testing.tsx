@@ -49,6 +49,18 @@ const WidgetTesting = (): JSX.Element => {
 
     document.body.appendChild(script);
 
+    script.onload = () => {
+      //@ts-expect-error
+      if (window.MdBot) {
+        //@ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        window.MdBot.init({
+          type: 'popup',
+          apiKey: 'streaming_web-yakov-karda-gmail-com'
+        });
+      }
+    };
+
     // Cleanup script when component unmounts
     return () => {
       document.body.removeChild(script);
