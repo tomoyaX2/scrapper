@@ -73,7 +73,9 @@ const WidgetTesting = (): JSX.Element => {
         <div className='flex flex-col'>
           <SearchBar />
         </div>
-        <md-bot-standard />
+        <div style={{ width: 600, height: 600 }}>
+          <md-bot-standard />
+        </div>
       </>
     );
   }
