@@ -34,6 +34,7 @@ export const SearchBar = (): JSX.Element => {
     groupsSelector,
     albumsSelector
   } = useAppSelector(optionsSelector);
+  console.log(window, 'window');
   const { visibleTags, tagsList } = tagsSelector;
   const { typesList } = typesSelector;
   const { languagesList } = languagesSelector;

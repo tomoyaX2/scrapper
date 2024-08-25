@@ -1,6 +1,5 @@
 const merge = require('webpack-merge').default;
-const { apiUrl } =
-  process.env.NODE_ENV == 'production' ? process.env : require('./config.json');
+const { apiUrl } = process.env;
 // const { i18n } = require('./next-i18next.config');
 
 /** @type {import('next').NextConfig} */
