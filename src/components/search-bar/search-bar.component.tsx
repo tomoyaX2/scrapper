@@ -34,7 +34,7 @@ export const SearchBar = (): JSX.Element => {
     groupsSelector,
     albumsSelector
   } = useAppSelector(optionsSelector);
-  console.log(window, 'window');
+
   const { visibleTags, tagsList } = tagsSelector;
   const { typesList } = typesSelector;
   const { languagesList } = languagesSelector;
@@ -147,7 +147,7 @@ export const SearchBar = (): JSX.Element => {
           />
         </div>
 
-        <div className='flex lg:flex-row md:flex-row sm:flex-col xsm:flex-col w-full lg:mt-4 md:mt-4 sm:mt-0 xsm:mt-0 justify-center items-center'>
+        <div className='flex lg:flex-row md:flex-row sm:flex-col xsm:flex-col w-full lg:mt-4 md:mt-4 sm:mt-0 xsm:mt-0 justify-center items-center flex-wrap'>
           {(isExpanded || !!series?.length) && (
             <TagPicker
               data={searchInputOptionsFactory(

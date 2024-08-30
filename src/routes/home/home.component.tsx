@@ -15,6 +15,7 @@ import { Album } from '@routes/home/album';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import ReactGA from 'react-ga4';
 import { getUser } from 'src/store/user';
+import { Spinner } from 'src/components/common/icons/spinner';
 
 const Home = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -32,6 +33,8 @@ const Home = (): JSX.Element => {
   }, []);
 
   const router = useRouter();
+
+  console.log(isLoading, 'isLoading');
   if (router.isReady) {
     return (
       <>
@@ -52,17 +55,8 @@ const Home = (): JSX.Element => {
 
           {isLoading ? (
             <div className='flex flex-col items-center justify-center w-full'>
-              <div className='flex flex-row items-center justify-center flex-wrap xl:px-12 md:px-4 xsm:px-1 py-4'>
-                {new Array(25)
-                  .map((_, index) => ({
-                    id: `${index}`,
-                    preview: `${window.location.origin}/images/blur.png`,
-                    path: '',
-                    title: ''
-                  }))
-                  .map(album => (
-                    <Album album={album} key={album.id} />
-                  ))}
+              <div className='flex flex-row items-center justify-center flex-wrap xl:px-12 md:px-4 xsm:px-1 py-4 h-[55vh]'>
+                <Spinner />
               </div>
             </div>
           ) : (

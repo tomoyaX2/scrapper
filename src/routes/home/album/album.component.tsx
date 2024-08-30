@@ -50,6 +50,7 @@ const Album = ({
     setImagePath(`${cdnUrl}/images-new/${path.split('/')[1]}/10002.webp`);
   const isInreadableTitle = title?.substring(0, 30).endsWith('(');
   const isVisibleControls = galleryId || (isHome && user.isAdmin);
+
   return (
     //div since i should make a column direction
     <div className='flex flex-col'>

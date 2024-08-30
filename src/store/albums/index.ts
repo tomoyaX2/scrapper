@@ -59,12 +59,16 @@ export const albumsSlice = createSlice({
       }
     }
   },
-  extraReducers: builder =>
+  extraReducers: builder => {
     builder.addCase(getAlbums.fulfilled, (state, action) => {
       state.data = action.payload.data;
       state.total = parseInt(action.payload.total);
       state.isLoading = false;
-    })
+    });
+    builder.addCase(getAlbums.pending, state => {
+      state.isLoading = true;
+    });
+  }
 });
 export default albumsSlice.reducer;
 export const { resetAlbumState, changeSearchState } = albumsSlice.actions;
